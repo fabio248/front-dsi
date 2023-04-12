@@ -106,7 +106,7 @@ export function Users_Layouts(props) {
         />
 
         <Header as="h5">Direction</Header>
-        <Button.Group>
+        <Button.Group content="centered" className="my_button">
           <Button
             active={direction === "left"}
             onClick={() =>

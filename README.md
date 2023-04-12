@@ -1,11 +1,10 @@
 <h1 align="center" > # Front App Vet </h1>
 
-<!-- finalidad del proyecto -->
-
+<h3 color="blue">Finalidad del proyecto</h3>
 projecto creado con la finalidad de satisfacer las peticiones de una empresa veterinaria
 
-<!-- antes de compilar el programa instalen todas las dependencias de npm-->
+<h3 color="blue" >antes de compilar el programa instalen todas las dependencias de npm</h3>
 npm install
 
-<!-- Iniciar o arrancar el sistema:  -->
+<h3 color="blue" >Iniciar o arrancar el sistema: </h3>
 npm run dev

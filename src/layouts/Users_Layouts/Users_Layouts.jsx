@@ -93,9 +93,9 @@ export function Users_Layouts(props) {
   const vertical = direction === "bottom" || direction === "top";
 
   return (
-    <div className="tema">
+    <div className="tema-stile">
       <h2>Esto es un ejemplo</h2>
-      <div className="stile">
+      <div className="tema-stile__add">
         <Checkbox
           checked={dimmed}
           label="Dim Page"

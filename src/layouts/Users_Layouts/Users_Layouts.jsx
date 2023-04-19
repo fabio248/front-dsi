@@ -1,6 +1,7 @@
-import React from "react";
+import * as React from "react";
 import {
   Button,
+  ButtonGroup,
   Checkbox,
   Grid,
   Header,
@@ -80,7 +81,7 @@ function exampleReducer(state, action) {
 }
 
 export function Users_Layouts(props) {
-  const { children } = props;
+  const { children1 } = props;
 
   const [state, dispatch] = React.useReducer(exampleReducer, {
     animation: "overlay",
@@ -94,7 +95,7 @@ export function Users_Layouts(props) {
 
   return (
     <div className="tema-stile">
-      <h2>Esto es un ejemplo</h2>
+      <h2>Esto es un ejemplo con semantic ui</h2>
       <div className="tema-stile__add">
         <Checkbox
           checked={dimmed}
@@ -106,7 +107,7 @@ export function Users_Layouts(props) {
         />
 
         <Header as="h5">Direction</Header>
-        <Button.Group content="centered" className="my_button">
+        <ButtonGroup className="my_button">
           <Button
             active={direction === "left"}
             onClick={() =>
@@ -139,7 +140,7 @@ export function Users_Layouts(props) {
           >
             Bottom
           </Button>
-        </Button.Group>
+        </ButtonGroup>
 
         <Header as="h5">All Direction Animations</Header>
         <Button
@@ -220,7 +221,7 @@ export function Users_Layouts(props) {
           </Sidebar.Pusher>
         </Sidebar.Pushable>
       </div>
-      {children}
+      {children1}
     </div>
   );
 }

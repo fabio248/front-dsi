@@ -26,7 +26,7 @@ export class ApiAuth {
       };
       //   fetch funcion que genera la peticion al back con la URL(a donde debe ir) y params(que parametros envias)
       const response = await fetch(url, params);
-      const result = response.json();
+      const result = await response.json();
 
       if (response.status !== 200) throw result; //valida la respuesta del back
 

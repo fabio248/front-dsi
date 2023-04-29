@@ -4,10 +4,12 @@ import "./App.css";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Vet_routes />
-      <Users_routes />
-    </BrowserRouter>
+    <>
+      <BrowserRouter>
+        <Users_routes />
+        <Vet_routes />
+      </BrowserRouter>
+    </>
   );
 }
 

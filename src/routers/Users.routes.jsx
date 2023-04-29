@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, BrowserRouter } from "react-router-dom";
 import { User_pages } from "../pages";
 import { Users_Layouts } from "../layouts";
 

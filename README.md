@@ -3,7 +3,7 @@
 <h3 color="blue">purpose of the project</h3>
 #: proyecto creado con la finalidad de satisfacer las peticiones de una empresa veterinaria
 
-<h3 color="blue" >Install de dependencies</h3>
+<h3 color="blue" >Install the dependencies</h3>
 #: npm install
 
 <h3 color="blue" >Start the system: </h3>

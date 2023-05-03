@@ -38,16 +38,14 @@ export function Users_Layouts(props) {
       <Toolbar />
       <Divider />
       <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
+      <ListItem disablePadding>
+            <ListItemButton component="a" href="/admin">
               <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                <InboxIcon />
               </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemText primary="Inbox" />
             </ListItemButton>
           </ListItem>
-        ))}
       </List>
       <Divider />
       <List>

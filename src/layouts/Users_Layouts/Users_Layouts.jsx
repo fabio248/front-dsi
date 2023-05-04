@@ -17,6 +17,13 @@ import MailIcon from "@mui/icons-material/Mail";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import StarBorder from '@mui/icons-material/StarBorder';
+import SummarizeIcon from '@mui/icons-material/Summarize';
+import InfoIcon from '@mui/icons-material/Info';
+import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import FingerprintIcon from '@mui/icons-material/Fingerprint';
+import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual';
 import { Button } from "@mui/material";
 
 import "./Users_Layouts.css";
@@ -39,26 +46,57 @@ export function Users_Layouts(props) {
       <Divider />
       <List>
       <ListItem disablePadding>
-            <ListItemButton component="a" href="/admin">
+            <ListItemButton component="a" href="/catalogo">
               <ListItemIcon>
-                <InboxIcon />
+                <SummarizeIcon />
               </ListItemIcon>
-              <ListItemText primary="Inbox" />
+              <ListItemText primary="Catálogo Servicios Ofrecidos" />
             </ListItemButton>
-          </ListItem>
+      </ListItem>
+      <ListItem disablePadding>
+            <ListItemButton component="a" href="/informacion">
+              <ListItemIcon>
+                <InfoIcon />
+              </ListItemIcon>
+              <ListItemText primary="Información sobre el establecimiento" />
+            </ListItemButton>
+      </ListItem>
       </List>
       <Divider />
       <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
+      <ListItem disablePadding>
+            <ListItemButton component="a" href="/contacto">
               <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                <ContactPhoneIcon />
               </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemText primary="Medio de Contacto" />
             </ListItemButton>
-          </ListItem>
-        ))}
+      </ListItem> 
+      <ListItem disablePadding>
+            <ListItemButton component="a" href="/historia">
+              <ListItemIcon>
+                <MenuBookIcon />
+              </ListItemIcon>
+              <ListItemText primary="Historia MITSUM" />
+            </ListItemButton>
+      </ListItem>
+      <Divider />
+      <ListItem disablePadding>
+            <ListItemButton component="a" href="/biografia">
+              <ListItemIcon>
+                <FingerprintIcon />
+              </ListItemIcon>
+              <ListItemText primary="Biografia Veterinario Saul Medina" />
+            </ListItemButton>
+      </ListItem>
+      <ListItem disablePadding>
+            <ListItemButton component="a" href="/galeria">
+              <ListItemIcon>
+                <PhotoSizeSelectActualIcon />
+              </ListItemIcon>
+              <ListItemText primary="Galería de fotos" />
+            </ListItemButton>
+      </ListItem>
       </List>
     </div>
   );
@@ -139,19 +177,7 @@ export function Users_Layouts(props) {
           <Toolbar />
           {children}
           <Typography paragraph>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Rhoncus
-            dolor purus non enim praesent elementum facilisis leo vel. Risus at
-            ultrices mi tempus imperdiet. Semper risus in hendrerit gravida
-            rutrum quisque non tellus. Convallis convallis tellus id interdum
-            velit laoreet id donec ultrices. Odio morbi quis commodo odio aenean
-            sed adipiscing. Amet nisl suscipit adipiscing bibendum est ultricies
-            integer quis. Cursus euismod quis viverra nibh cras. Metus vulputate
-            eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo
-            quis imperdiet massa tincidunt. Cras tincidunt lobortis feugiat
-            vivamus at augue. At augue eget arcu dictum varius duis at
-            consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem
-            donec massa sapien faucibus et molestie ac.
+            
           </Typography>
           <Typography paragraph></Typography>
         </Box>

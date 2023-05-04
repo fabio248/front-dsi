@@ -6,8 +6,8 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <Users_routes />
-        <Vet_routes />
+      <Users_routes />
+      <Vet_routes />
       </BrowserRouter>
     </>
   );

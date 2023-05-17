@@ -8,10 +8,20 @@ menu.ui.buttons{
     color: red;
 }
 
-.my_button{
-    background-color: red;
+.MuiButtonBase-root.my_button{
+  background-color: #4b88e9;
+  display: flex;
+  float: right;
+  justify-content: right;
+}
+.login{
+  margin-top: 20%;
+  margin-left: 20%;
+  
+}
+.btn-login{
+  padding: 30px;
+}
+Button{
   color: #bb3f3f;
-  font-size: 1.2rem;
-  border-radius: 15px;
-  padding: 10px;
 }

@@ -8,6 +8,7 @@ import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
+import PetsIcon from '@mui/icons-material/Pets';
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -27,7 +28,7 @@ import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual
 import { Button } from "@mui/material";
 import { FaFacebook } from 'react-icons/fa';
 import { FaWhatsapp } from 'react-icons/fa';
-
+import images from './images/logo.jpg';
 import "./Users_Layouts.css";
 
 const drawerWidth = 240;
@@ -41,12 +42,9 @@ export function Users_Layouts(props) {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-
   const drawer = (
     <div>
-      <div className="login">
-        <Button className="btn-login" variant="contained">INICIAR SESION</Button>
-      </div>
+      
       <Toolbar />
       <Divider />
       <List>
@@ -63,11 +61,11 @@ export function Users_Layouts(props) {
 
       <List>
       <ListItem disablePadding>
-            <ListItemButton component="a" href="/informacion">
+            <ListItemButton component="a" href="/mascotas">
               <ListItemIcon>
-                <InfoIcon />
+                <PetsIcon />
               </ListItemIcon>
-              <ListItemText primary="Información sobre el establecimiento" />
+              <ListItemText primary="Mascotas" />
             </ListItemButton>
       </ListItem>
       </List>
@@ -75,33 +73,17 @@ export function Users_Layouts(props) {
 
       <List>
       <ListItem disablePadding>
-            <ListItemButton component="a" href="/historia">
+            <ListItemButton component="a" href="/visualizar">
               <ListItemIcon>
                 <MenuBookIcon />
               </ListItemIcon>
-              <ListItemText primary="Historia MITSUM" />
+              <ListItemText primary="Visualizar Citas" />
             </ListItemButton>
       </ListItem>
       <Divider />
 
-      <ListItem disablePadding>
-            <ListItemButton component="a" href="/biografia">
-              <ListItemIcon>
-                <FingerprintIcon />
-              </ListItemIcon>
-              <ListItemText primary="Biografia Veterinario Saul Medina" />
-            </ListItemButton>
-      </ListItem>
       <Divider />
 
-      <ListItem disablePadding>
-            <ListItemButton component="a" href="/galeria">
-              <ListItemIcon>
-                <PhotoSizeSelectActualIcon />
-              </ListItemIcon>
-              <ListItemText primary="Galería de fotos" />
-            </ListItemButton>
-      </ListItem>
       </List>
   
        <IconButton

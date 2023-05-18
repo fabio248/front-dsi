@@ -1,9 +1,9 @@
 import React from 'react'
 
-export function User_pages() {
+export function Historia_pages() {
   return (
     <div>
-      <h1>INICIO</h1>
+      <h1>Historia MITSUM</h1>
     
     </div>
   )

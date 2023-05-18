@@ -15,3 +15,9 @@
       border-radius: 15px;
       padding: 10px;
     }
+    .MuiButtonBase-root.my_button{
+      background-color: #4b88e9;
+      display: flex;
+      float: right;
+      justify-content: right;
+    }

@@ -19,7 +19,7 @@ export function Users_routes() {
   return (
     <Routes>
       <Route path="/" element={Layout(Users_Layouts, User_pages)} />
-      <Route path="/catalogo" element={Layout(Users_Layouts, Catalogo_pages)} />
+      <Route path="/catalogo" element={Layout(Users_Layouts, User_pages)} />
       <Route path="/informacion" element={Layout(Users_Layouts, Informacion_pages)} />
       <Route path="/historia" element={Layout(Users_Layouts, Historia_pages)} />
       <Route path="/galeria" element={Layout(Users_Layouts, Galeria_pages)} />

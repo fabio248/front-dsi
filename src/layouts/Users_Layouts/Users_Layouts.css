@@ -7,19 +7,18 @@ text-align:justify;
 menu.ui.buttons{
     color: red;
 }
-
+.my_button{
+  background-color: red;
+color: #bb3f3f;
+font-size: 1.2rem;
+border-radius: 15px;
+padding: 10px;
+}
 .MuiButtonBase-root.my_button{
-  background-color: #4b88e9;
+  background-color: #71a2f0;
   margin-left: 900px;
 }
-.login{
-  width: 5%;
-  height: 5%;
-  
-}
-.btn-login{
-  padding: 30px;
-}
+
 Button{
   color: #bb3f3f;
 }

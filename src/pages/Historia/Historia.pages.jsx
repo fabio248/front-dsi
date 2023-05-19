@@ -1,5 +1,4 @@
 import React from 'react'
-//import huella from '../../../public/galeria/huella.jpg';
 
 
 export function Historia_pages() {

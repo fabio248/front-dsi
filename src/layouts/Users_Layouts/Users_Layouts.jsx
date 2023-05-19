@@ -8,7 +8,6 @@ import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
-import PetsIcon from '@mui/icons-material/Pets';
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -28,7 +27,7 @@ import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual
 import { Button } from "@mui/material";
 import { FaFacebook } from 'react-icons/fa';
 import { FaWhatsapp } from 'react-icons/fa';
-import images from './images/logo.jpg';
+
 import "./Users_Layouts.css";
 
 const drawerWidth = 240;
@@ -42,9 +41,12 @@ export function Users_Layouts(props) {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
   const drawer = (
     <div>
-      
+      <div className="login">
+        <Button className="btn-login" variant="contained">INICIAR SESION</Button>
+      </div>
       <Toolbar />
       <Divider />
       <List>
@@ -61,11 +63,11 @@ export function Users_Layouts(props) {
 
       <List>
       <ListItem disablePadding>
-            <ListItemButton component="a" href="/mascotas">
+            <ListItemButton component="a" href="/informacion">
               <ListItemIcon>
-                <PetsIcon />
+                <InfoIcon />
               </ListItemIcon>
-              <ListItemText primary="Mascotas" />
+              <ListItemText primary="Información sobre el establecimiento" />
             </ListItemButton>
       </ListItem>
       </List>
@@ -73,20 +75,32 @@ export function Users_Layouts(props) {
 
       <List>
       <ListItem disablePadding>
-            <ListItemButton component="a" href="/visualizar">
+            <ListItemButton component="a" href="/historia">
               <ListItemIcon>
                 <MenuBookIcon />
               </ListItemIcon>
-              <ListItemText primary="Visualizar Citas" />
+              <ListItemText primary="Quienes Somos" />
             </ListItemButton>
       </ListItem>
       <Divider />
 
-      <Divider />
-
+      <ListItem disablePadding>
+            <ListItemButton component="a" href="/galeria">
+              <ListItemIcon>
+                <PhotoSizeSelectActualIcon />
+              </ListItemIcon>
+              <ListItemText primary="Galería de fotos" />
+            </ListItemButton>
+      </ListItem>
       </List>
-  
-       <IconButton
+      <div
+        style={{
+          position: 'absolute',
+          left: '10px',
+          bottom: '10px',
+        }}
+      >
+<IconButton
      color="inherit"
      aria-label="Facebook"
      component="a"
@@ -103,6 +117,8 @@ export function Users_Layouts(props) {
      target="_blank" >
      <FaWhatsapp />
      </IconButton>
+      </div>
+       
      </div>);
 
   const container =

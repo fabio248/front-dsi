@@ -9,7 +9,7 @@ export const ENV = {
     API_ROUTES:{
         //Todo esto seran los mismos nombres de las rutas del back segun como se defina
         LOGIN:"/login",
-        REGISTER:"/register",
+        REGISTER:"/users/register",
         USERS:"/users",
         USERS_ID:"/users/:id",
     }

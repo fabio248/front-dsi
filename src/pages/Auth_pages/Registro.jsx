@@ -19,7 +19,11 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import dayjs from 'dayjs';
 import {format} from 'date-fns';
+import {User} from '../../api/User.api'
+import { Login } from "./Login";
 
+
+const authController = new User();
 
 function Copyright(props) {
   return (
@@ -36,17 +40,26 @@ function Copyright(props) {
 
 
 function initialdata(){
-    return {firstName: "", lastName: "", password: "", repeatPassword: "", fechaNacimiento: ""};
+    return {
+      firstName: "",
+      lastName: "",
+      password: "",
+      repeatPassword: "",
+      fechaNacimiento: "" };
 }
 
-// TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
 
 export function Registro() {
-    const [error, setError] = useState("");
+    
+  const [error, setError] = useState("");
+  
+  function openLogin(){
+    
+  }
 
-    const formik = useFormik({
+  const formik = useFormik({
     initialValues: initialdata(),
     validationSchema: RegisterFormvalidations(),
     validateOnChange: false, 
@@ -55,15 +68,16 @@ export function Registro() {
         try {
             setError("");
             console.log(formValue);
+            //await authController.registerUser(formValue);
+            openLogin();
         } catch (error) {
             setError("Error al enviar datos de registro");
         }
     }});
-  
     const handleDateChange = (date) => {
-      const formattedDate = date.$d ? format(date.$d, "dd/MM/yyyy") : "";
-      formik.setFieldValue("fechaNacimiento", formattedDate);
-    };
+    const formattedDate = date.$d ? format(date.$d, "dd/MM/yyyy") : "";
+    formik.setFieldValue("fechaNacimiento", formattedDate);
+  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -188,7 +202,7 @@ export function Registro() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/login" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>

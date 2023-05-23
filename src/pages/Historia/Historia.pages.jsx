@@ -8,9 +8,9 @@ export function Historia_pages() {
     <div>
        {/* LightWidget WIDGET */}
        <script src="https://cdn.lightwidget.com/widgets/lightwidget.js"></script>
-       <iframe src="//lightwidget.com/widgets/ef110ff3fd485acab9ebfc5665a79167.html" 
+       <iframe src="//lightwidget.com/widgets/f6fd46029b3253689639b2126424e352.html"
        allowtransparency="true" class="lightwidget-widget" 
-      style={{ width: '100%',height: '200px', border: '0', overflow: 'hidden' }}>
+      style={{ width: '100%',height: '190px', border: '0', overflow: 'hidden' }}>
       </iframe>
 
       <h2 style={{ textAlign: 'center' }}>{titulo}</h2>
@@ -19,14 +19,14 @@ export function Historia_pages() {
       ))}
    
       <div style={{ textAlign: 'center' }}>
-      <img src="../../../public/galeria/huella.png" alt="Huella" style={{ width: '800px', height: 'auto' }}  />
+      <img src="../../../public/galeria/huella.png" alt="Huella" style={{ width: '100%', height: 'auto' }}  />
       </div>
 
       <h2 style={{ textAlign: 'center' }}>Misión</h2>
       <p style={{ textAlign: 'center' }}>{mision}</p>
 
       <div style={{ textAlign: 'center' }}>
-      <img src="../../../public/galeria/huella.png" alt="Huella" style={{ width: '800px', height: 'auto' }}  />
+      <img src="../../../public/galeria/huella.png" alt="Huella" style={{ width: '100%', height: 'auto' }}  />
       </div>
 
       <h2 style={{ textAlign: 'center' }}>Visión</h2>

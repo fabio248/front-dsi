@@ -25,3 +25,12 @@ Button{
 .container{
   right: 0;
 }
+
+.contenedor-imagen {
+  max-width: 100%; 
+}
+
+.imagen {
+  width: 100%; 
+  height: auto; 
+}

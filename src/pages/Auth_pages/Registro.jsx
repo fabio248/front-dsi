@@ -6,8 +6,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -20,13 +18,15 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import dayjs from 'dayjs';
+import {format} from 'date-fns';
+
 
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
+      <Link color="inherit" href="">
+        DSI Project
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -36,7 +36,7 @@ function Copyright(props) {
 
 
 function initialdata(){
-    return {firstName: "", lastName: "", password: "", repeatPassword: "", fechaNacimiento: "11/02/2002"};
+    return {firstName: "", lastName: "", password: "", repeatPassword: "", fechaNacimiento: ""};
 }
 
 // TODO remove, this demo shouldn't need to reset the theme.
@@ -44,7 +44,6 @@ function initialdata(){
 const defaultTheme = createTheme();
 
 export function Registro() {
-    const [valueCalendar, setValueCalendar] = useState("");
     const [error, setError] = useState("");
 
     const formik = useFormik({
@@ -60,8 +59,12 @@ export function Registro() {
             setError("Error al enviar datos de registro");
         }
     }});
+  
+    const handleDateChange = (date) => {
+      const formattedDate = date.$d ? format(date.$d, "dd/MM/yyyy") : "";
+      formik.setFieldValue("fechaNacimiento", formattedDate);
+    };
 
-    //console.log(valueCalendar);
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
@@ -84,6 +87,7 @@ export function Registro() {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
+                  required
                   autoComplete="given-name"
                   name="firstName"
                   fullWidth
@@ -92,7 +96,8 @@ export function Registro() {
                   autoFocus
                   value={formik.values.firstName}
                   onChange={formik.handleChange}
-                  error={ formik.errors.firstName }
+                  error={formik.touched.firstName && Boolean(formik.errors.firstName)}
+                  helperText={formik.touched.firstName && formik.errors.firstName}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -104,20 +109,30 @@ export function Registro() {
                   name="lastName"
                   autoComplete="family-name"
                   value={formik.values.lastName}
+                  error={formik.touched.lastName && Boolean(formik.errors.lastName)}
+                  helperText={formik.touched.lastName && formik.errors.lastName}
                   onChange={formik.handleChange}
                 />
               </Grid>
+
               <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="fechaNacimiento"
-                  label="Fecha de nacimiento"
-                  name="fechaNacimiento"
-                  value={formik.values.fechaNacimiento}
-                  onChange={formik.handleChange}
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={['DatePicker']}>
+               
+                <DatePicker
+                renderInput={(props) => <TextField {...props} />}
+                label = "Fecha de nacimiento"
+                error={formik.touched.fechaNacimiento && Boolean(formik.errors.fechaNacimiento)}
+                helperText={formik.touched.fechaNacimiento && formik.errors.fechaNacimiento}
+                value={dayjs}
+                onChange={handleDateChange}
+                onBlur={formik.handleBlur("fechaNacimiento")}
                 />
+
+                </DemoContainer>
+                </LocalizationProvider>
               </Grid>
+
               <Grid item xs={12}>
                 <TextField
                   required
@@ -125,10 +140,11 @@ export function Registro() {
                   id="email"
                   label="Correo electrónico"
                   name="email"
-                  error={ formik.errors.email }
                   autoComplete="email"
                   value={formik.values.email}
                   onChange={formik.handleChange}
+                  error={formik.touched.email && Boolean(formik.errors.email)}
+                  helperText={formik.touched.email && formik.errors.email}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -136,13 +152,14 @@ export function Registro() {
                   required
                   fullWidth
                   name="password"
-                  label="Password"
+                  label="Contraseña"
                   type="password"
                   id="password"
-                  error={ formik.errors.password }
                   autoComplete="new-password"
                   value={formik.values.password}
                   onChange={formik.handleChange}
+                  error={formik.touched.password && Boolean(formik.errors.password)}
+                  helperText={formik.touched.password && formik.errors.password}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -150,12 +167,14 @@ export function Registro() {
                   required
                   fullWidth
                   name="repeatPassword"
-                  label="Repeat Password"
+                  label="Repite la contraseña"
                   type="password"
                   id="repeatPassword"
                   autoComplete="new-password"
                   value={formik.values.repeatPassword}
                   onChange={formik.handleChange}
+                  error={formik.touched.repeatPassword && Boolean(formik.errors.repeatPassword)}
+                  helperText={formik.touched.repeatPassword && formik.errors.repeatPassword}
                 />
               </Grid>
             </Grid>

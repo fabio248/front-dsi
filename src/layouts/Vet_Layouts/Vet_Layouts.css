@@ -1,6 +1,23 @@
-.color{
-    background-color: red;
-}
-.txt{
-    background-color: red;
-}
+.tema{
+    display: contents;
+    text-align:justify;
+    
+    }
+    
+    menu.ui.buttons{
+        color: red;
+    }
+    
+    .my_button{
+        background-color: red;
+      color: #bb3f3f;
+      font-size: 1.2rem;
+      border-radius: 15px;
+      padding: 10px;
+    }
+    .MuiButtonBase-root.my_button{
+      background-color: #4b88e9;
+      display: flex;
+      float: right;
+      justify-content: right;
+    }

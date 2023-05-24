@@ -20,7 +20,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import dayjs from 'dayjs';
 import {format} from 'date-fns';
 import {User} from '../../api/User.api'
-import { Login } from "./Login";
 
 
 const authController = new User();

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useState} from 'react';
-import {useFormik} from 'formik';
+import { useState } from 'react';
+import { useFormik } from 'formik';
 import {RegisterFormvalidations} from '../../components/Admin/Auth/RegistroFormValidation';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -44,6 +44,7 @@ function initialdata(){
       firstName: "",
       lastName: "",
       password: "",
+      email: "",
       repeatPassword: "",
       fechaNacimiento: "" };
 }
@@ -73,10 +74,10 @@ export function Registro() {
         } catch (error) {
             setError("Error al enviar datos de registro");
         }
-    }});
-    const handleDateChange = (date) => {
-    const formattedDate = date.$d ? format(date.$d, "dd/MM/yyyy") : "";
-    formik.setFieldValue("fechaNacimiento", formattedDate);
+  }});
+  const handleDateChange = (date) => {
+  const formattedDate = date.$d ? format(date.$d, "dd/MM/yyyy") : "";
+  formik.setFieldValue("fechaNacimiento", formattedDate);
   };
 
   return (

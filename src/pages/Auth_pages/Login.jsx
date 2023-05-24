@@ -1,4 +1,7 @@
 import * as React from 'react';
+import { useState } from 'react';
+import { useFormik } from 'formik';
+import {LoginFormvalidations} from '../../components/Admin/Auth/LoginFormValidation';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,13 +15,15 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Divider } from '@mui/material';
+import { Google } from "@mui/icons-material";
 
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+      DSI Project
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -26,19 +31,32 @@ function Copyright(props) {
   );
 }
 
-// TODO remove, this demo shouldn't need to reset the theme.
+function initialdata(){
+    return {
+      email: "",
+      password: ""
+    };
+}
 
 const defaultTheme = createTheme();
 
 export function Login() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
+
+  const [error, setError] = useState("");
+
+  const formik = useFormik({
+    initialValues: initialdata(),
+    validationSchema: LoginFormvalidations(),
+    validateOnChange: false, 
+    onSubmit: async(formValue) => {
+
+        try {
+            setError("");
+            console.log(formValue);
+        } catch (error) {
+            setError("Error al enviar datos de registro");
+        }
+    }});
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -72,28 +90,36 @@ export function Login() {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Sign in
+              Inicia sesión
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <Box component="form" noValidate onSubmit={formik.handleSubmit} sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
                 fullWidth
                 id="email"
-                label="Email Address"
+                label="Correo electrónico"
                 name="email"
                 autoComplete="email"
                 autoFocus
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                error={formik.touched.email && Boolean(formik.errors.email)}
+                helperText={formik.touched.email && formik.errors.email}
               />
               <TextField
                 margin="normal"
                 required
                 fullWidth
                 name="password"
-                label="Password"
+                label="Contraseña"
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                error={formik.touched.password && Boolean(formik.errors.password)}
+                helperText={formik.touched.password && formik.errors.password}
               />
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
@@ -105,17 +131,26 @@ export function Login() {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
-                Sign In
+               Inicia sesión
+              </Button>
+              <Divider> O </Divider>
+              <Button
+              variant="outlined"
+              sx={{ mt: 2, mb: 2 }}
+              startIcon={<Google/>}
+              fullWidth
+              >
+              Inicia sesión con Google
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
+                  <Link href="/forgoPass" variant="body2">
+                  ¿Olvidó su contraseña?
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
-                    {"Don't have an account? Sign Up"}
+                  <Link href="/register" variant="body2">
+                    {"¿No tienes una cuenta? Regístrate"}
                   </Link>
                 </Grid>
               </Grid>

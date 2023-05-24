@@ -42,7 +42,15 @@ export function Users_Layouts(props) {
 
   const drawer = ( 
     <div>
-      <Toolbar />
+              <div className="image-container">
+        <img
+          src="../../../public/galeria/logo.jpg"
+          alt="logo"
+          className="imagen-appbar"
+        />
+      </div>
+      
+      <Toolbar /> 
       <Divider />
       <List>
         <ListItem disablePadding style={{ height: '80px' }}>

@@ -30,8 +30,18 @@ Button{
   max-width: 100%; 
 }
 
-.imagen {
-  width: 100%; 
-  height: auto; 
+.image-container {
+  position: relative;
+  height: 64px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+.imagen-appbar {
+  height: auto;
+  width: auto;
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}

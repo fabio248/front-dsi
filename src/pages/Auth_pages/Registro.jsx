@@ -55,9 +55,6 @@ export function Registro() {
     
   const [error, setError] = useState("");
   
-  function openLogin(){
-    
-  }
 
   const formik = useFormik({
     initialValues: initialdata(),
@@ -68,8 +65,7 @@ export function Registro() {
         try {
             setError("");
             console.log(formValue);
-            //await authController.registerUser(formValue);
-            openLogin();
+            await authController.registerUser(formValue);
         } catch (error) {
             setError("Error al enviar datos de registro");
         }

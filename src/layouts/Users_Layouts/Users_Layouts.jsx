@@ -40,6 +40,10 @@ export function Users_Layouts(props) {
     setMobileOpen(!mobileOpen);
   };
 
+  const render_cliente = () => {
+
+  }
+
   const drawer = ( 
     <div>
               <div className="image-container">
@@ -158,16 +162,10 @@ export function Users_Layouts(props) {
                     }}
                   >
                     <Button
-                      className="btn-register"
-                      variant="contained"
-                      style={{ backgroundColor: '#44ACC1', marginRight: '10px' }}
-                    >
-                      REGISTRARSE
-                    </Button>
-                    <Button
                       className="btn-login"
                       variant="contained"
                       style={{ backgroundColor: '#44ACC1' }}
+                      href = "/login"
                     >
                       INICIAR SESION
                     </Button>

@@ -18,7 +18,6 @@ export class User {
           birthday: data.fechaNacimiento,
           email: data.email,
           password: data.password,
-          recoveryToken: '',
         }),
       };
       const response = await fetch(url, params);

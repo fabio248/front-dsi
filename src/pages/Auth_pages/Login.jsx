@@ -17,6 +17,9 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Divider } from '@mui/material';
 import { Google } from "@mui/icons-material";
+import {ApiAuth} from '../../api/Auth.api'
+
+const authController = new ApiAuth();
 
 function Copyright(props) {
   return (
@@ -53,6 +56,7 @@ export function Login() {
         try {
             setError("");
             console.log(formValue);
+            authController.login(formValue);
         } catch (error) {
             setError("Error al enviar datos de registro");
         }

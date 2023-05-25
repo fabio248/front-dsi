@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { useFormik } from 'formik';
-import {RegisterFormvalidations} from '../../components/Admin/Auth/RegistroFormValidation';
+import {RegisterFormvalidations, initialData} from '../../components/Admin/Auth/RegistroFormValidation';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -19,10 +19,10 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import dayjs from 'dayjs';
 import {format} from 'date-fns';
-import {User} from '../../api/User.api'
+import {ApiAuth} from '../../api/Auth.api'
 
 
-const authController = new User();
+const authController = new ApiAuth();
 
 function Copyright(props) {
   return (
@@ -37,18 +37,6 @@ function Copyright(props) {
   );
 }
 
-
-function initialdata(){
-    return {
-      firstName: "",
-      lastName: "",
-      password: "",
-      email: "",
-      repeatPassword: "",
-      fechaNacimiento: "" };
-}
-
-
 const defaultTheme = createTheme();
 
 export function Registro() {
@@ -57,7 +45,7 @@ export function Registro() {
   
 
   const formik = useFormik({
-    initialValues: initialdata(),
+    initialValues: initialData(),
     validationSchema: RegisterFormvalidations(),
     validateOnChange: false, 
     onSubmit: async(formValue) => {

@@ -17,3 +17,13 @@ export function RegisterFormvalidations() {
       .oneOf([yup.ref("password")], "Las contraseñas no coinciden"),
 });
 }
+
+export function initialData(){
+  return {
+    firstName: "",
+    lastName: "",
+    password: "",
+    email: "",
+    repeatPassword: "",
+    fechaNacimiento: "" };
+}

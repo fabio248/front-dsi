@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { useFormik } from 'formik';
-import {LoginFormvalidations} from '../../components/Admin/Auth/LoginFormValidation';
+import {LoginFormvalidations, initialData} from '../../components/Admin/Auth/LoginFormValidation';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -19,9 +19,6 @@ import { Divider } from '@mui/material';
 import { Google } from "@mui/icons-material";
 import {ApiAuth} from '../../api/Auth.api'
 import { useAuth } from "../../hooks"
-import { decoderToken } from '../../utils';
-
-const authLoginController = new ApiAuth();
 
 function Copyright(props) {
   return (
@@ -36,14 +33,8 @@ function Copyright(props) {
   );
 }
 
-function initialdata(){
-    return {
-      email: "",
-      password: ""
-    };
-}
-
 const defaultTheme = createTheme();
+const authLoginController = new ApiAuth();
 
 export function Login() {
 
@@ -51,7 +42,7 @@ export function Login() {
   const [error, setError] = useState("");
 
   const formik = useFormik({
-    initialValues: initialdata(),
+    initialValues: initialData(),
     validationSchema: LoginFormvalidations(),
     validateOnChange: false, 
     onSubmit: async(formValue) => {
@@ -62,6 +53,7 @@ export function Login() {
 
             authLoginController.setAccessToken(response.accessToken);
             authLoginController.setRefreshToken(response.accessToken);
+
             login(response.accessToken);
         } catch (error) {
             setError("Error al enviar datos de registro");

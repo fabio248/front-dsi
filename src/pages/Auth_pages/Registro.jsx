@@ -21,9 +21,6 @@ import dayjs from 'dayjs';
 import {format} from 'date-fns';
 import {ApiAuth} from '../../api/Auth.api'
 
-
-const authController = new ApiAuth();
-
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -38,6 +35,7 @@ function Copyright(props) {
 }
 
 const defaultTheme = createTheme();
+const authController = new ApiAuth();
 
 export function Registro() {
     

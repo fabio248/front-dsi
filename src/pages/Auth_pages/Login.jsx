@@ -18,8 +18,10 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Divider } from '@mui/material';
 import { Google } from "@mui/icons-material";
 import {ApiAuth} from '../../api/Auth.api'
+import { useAuth } from "../../hooks"
+import { decoderToken } from '../../utils';
 
-const authController = new ApiAuth();
+const authLoginController = new ApiAuth();
 
 function Copyright(props) {
   return (
@@ -45,6 +47,7 @@ const defaultTheme = createTheme();
 
 export function Login() {
 
+  const { login } = useAuth();
   const [error, setError] = useState("");
 
   const formik = useFormik({
@@ -55,8 +58,11 @@ export function Login() {
 
         try {
             setError("");
-            console.log(formValue);
-            authController.login(formValue);
+            const response = await authLoginController.login(formValue);
+
+            authLoginController.setAccessToken(response.accessToken);
+            authLoginController.setRefreshToken(response.accessToken);
+            login(response.accessToken);
         } catch (error) {
             setError("Error al enviar datos de registro");
         }

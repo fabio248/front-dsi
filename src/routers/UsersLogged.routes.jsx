@@ -19,10 +19,10 @@ export function Users_Logged_routes() {
 
   return (
     <Routes>
-      <Route path="/" element={Layout(Users_Logged_Layouts, User_pages)} />
-      <Route path="/catalogol" element={Layout(Users_Logged_Layouts, Catalogo_pages)} />
-      <Route path="/mascotas" element={Layout(Users_Logged_Layouts, Mascotas_pages)} />
-      <Route path="/visualizar" element={Layout(Users_Logged_Layouts, Visualizar_pages)} />
+      <Route path="/client" element={Layout(Users_Logged_Layouts, User_pages)} />
+      <Route path="/client/catalogol" element={Layout(Users_Logged_Layouts, Catalogo_pages)} />
+      <Route path="/client/mascotas" element={Layout(Users_Logged_Layouts, Mascotas_pages)} />
+      <Route path="/client/visualizar" element={Layout(Users_Logged_Layouts, Visualizar_pages)} />
     </Routes>
   );
 }

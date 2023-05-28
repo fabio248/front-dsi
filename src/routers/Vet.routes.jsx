@@ -1,4 +1,4 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { Auth_pages, Login } from "../pages";
 import { Vet_Layouts } from "../layouts";
@@ -9,7 +9,21 @@ import { useAuth } from "../hooks";
 export function Vet_routes() {
 
   const { user } = useAuth();
+  const [rol, setRol] = useState("default");
 
+  //console.log(user.role);
+  //console.log(user);
+
+  
+  useEffect(() => {
+    if (user != null) {
+      const { role } = user.data;
+      console.log(role);
+      setRol(role);
+      //console.log(user.data.rol);
+    }
+  }, [])
+  
   const Layout = (Layout, Pages) => {
     return (
       <>
@@ -19,12 +33,11 @@ export function Vet_routes() {
       </>
     );
   };
-
   return (
     <Routes>
 
       {/* validar un elemento user para verificar el acceso del usuario */}
-      {!user ? (
+      {!user && rol != "admin"? (
         <Route path="/admin/*" element={ <Login /> }/>
         ) : (
           <>

@@ -17,8 +17,14 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Divider } from '@mui/material';
 import { Google } from "@mui/icons-material";
-import {ApiAuth} from '../../api/Auth.api'
-import { useAuth } from "../../hooks"
+import {ApiAuth} from '../../api/Auth.api';
+import { useAuth } from "../../hooks";
+import {
+  useSession,
+  useSupabaseClient,
+  useSessionContext,
+} from '@supabase/auth-helpers-react';
+import { decoderToken } from "../../utils"
 
 function Copyright(props) {
   return (
@@ -60,6 +66,29 @@ export function Login() {
         }
     }});
 
+
+    const session = useSession(); ///tokens
+    const supabase = useSupabaseClient(); //talk to supabase
+    const { isLoading } = useSessionContext();
+
+    async function googleSingIn() {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          scopes: 'https://www.googleapis.com/auth/calendar',
+        },
+      });
+      if (error) {
+        alert('Error logging in to google provider with supabase');
+        console.log(error);
+      }
+    }
+    if (session !== null) {
+        const user = decoderToken(session.access_token);
+        console.log(user);
+    }
+
+    console.log(session);
   return (
     <ThemeProvider theme={defaultTheme}>
       <Grid container component="main" sx={{ height: '100vh' }}>
@@ -141,6 +170,9 @@ export function Login() {
               sx={{ mt: 2, mb: 2 }}
               startIcon={<Google/>}
               fullWidth
+              onClick={() => {
+                googleSingIn();
+              }}
               >
               Inicia sesión con Google
               </Button>

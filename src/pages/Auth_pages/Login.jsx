@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { useFormik } from 'formik';
-import {LoginFormvalidations} from '../../components/Admin/Auth/LoginFormValidation';
+import {
+  LoginFormvalidations, 
+  initialData
+} from '../../components/Admin/Auth/LoginFormValidation';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -14,9 +17,20 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { 
+  createTheme, 
+  ThemeProvider 
+} from '@mui/material/styles';
 import { Divider } from '@mui/material';
 import { Google } from "@mui/icons-material";
+import {ApiAuth} from '../../api/Auth.api';
+import { useAuth } from "../../hooks";
+import {
+  useSession,
+  useSupabaseClient,
+  useSessionContext,
+} from '@supabase/auth-helpers-react';
+import { decoderToken } from "../../utils"
 
 function Copyright(props) {
   return (
@@ -31,33 +45,58 @@ function Copyright(props) {
   );
 }
 
-function initialdata(){
-    return {
-      email: "",
-      password: ""
-    };
-}
-
 const defaultTheme = createTheme();
+const authLoginController = new ApiAuth();
 
 export function Login() {
 
+  const { login } = useAuth();
   const [error, setError] = useState("");
 
   const formik = useFormik({
-    initialValues: initialdata(),
+    initialValues: initialData(),
     validationSchema: LoginFormvalidations(),
     validateOnChange: false, 
     onSubmit: async(formValue) => {
 
         try {
             setError("");
-            console.log(formValue);
+            const response = await authLoginController.login(formValue);
+
+            authLoginController.setAccessToken(response.accessToken);
+            authLoginController.setRefreshToken(response.accessToken);
+             
+            login(response.accessToken);
+            
+            window.location.href = window.location.href.replace('login','admin')
         } catch (error) {
             setError("Error al enviar datos de registro");
         }
     }});
 
+
+    const session = useSession(); ///tokens
+    const supabase = useSupabaseClient(); //talk to supabase
+    const { isLoading } = useSessionContext();
+
+    async function googleSingIn() {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          scopes: 'https://www.googleapis.com/auth/calendar',
+        },
+      });
+      if (error) {
+        alert('Error logging in to google provider with supabase');
+        console.log(error);
+      }
+    }
+    if (session !== null) {
+        const user = decoderToken(session.access_token);
+        console.log(user);
+    }
+
+    //console.log(session);
   return (
     <ThemeProvider theme={defaultTheme}>
       <Grid container component="main" sx={{ height: '100vh' }}>
@@ -139,6 +178,9 @@ export function Login() {
               sx={{ mt: 2, mb: 2 }}
               startIcon={<Google/>}
               fullWidth
+              onClick={() => {
+                googleSingIn();
+              }}
               >
               Inicia sesión con Google
               </Button>

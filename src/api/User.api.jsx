@@ -1,33 +1,30 @@
-import { ENV } from '../utils/Constanst';
+import { ENV } from '../utils';
+import { decoderToken } from '../utils';
 
 export class User {
-  async registerUser(data) {
+  async getUser(accessToken) {
     try {
-      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.REGISTER}`;
+
+      const USER_ID = decoderToken(accessToken).identify;
+
+      //url de conexion con el backend      
+      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.USERS_ID}/${USER_ID}`;
       const params = {
-        method: 'POST', //tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
+        method: "GET",
         headers: {
-          //el tipo de contenido (este puede ser Authorization, Content-Type, conection etc)
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
         },
-        //este puede variar si es texto plano del body es un stringfy o tambien puede ser formData
-        body: JSON.stringify({
-          //parametros a enviar
-          firstName: data.firstName,
-          lastName: data.lastName,
-          birthday: data.fechaNacimiento,
-          email: data.email,
-          password: data.password,
-          recoveryToken: '',
-        }),
       };
+
       const response = await fetch(url, params);
       const result = await response.json();
 
-      if (response.status !== 200) throw result; //valida la respuesta del back
+      if (response.status !== 200) throw result;
+
       return result;
     } catch (error) {
-      throw error; //manejo del error
+      throw error;
     }
   }
+
 }

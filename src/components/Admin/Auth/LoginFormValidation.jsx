@@ -10,3 +10,10 @@ export function LoginFormvalidations() {
     password: yup.string().required("Campo obligatorio")
 });
 }
+
+export function initialData(){
+  return {
+    email: "",
+    password: ""
+  };
+}

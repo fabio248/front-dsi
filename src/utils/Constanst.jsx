@@ -8,9 +8,14 @@ export const ENV = {
 
   API_ROUTES: {
     //Todo esto seran los mismos nombres de las rutas del back segun como se defina
-    LOGIN: 'login',
-    REGISTER: 'users/register',
+    LOGIN: 'auth/login',
+    REGISTER: 'users',
     USERS: 'users',
-    USERS_ID: 'users/:id',
+    USERS_ID: 'users',
+    REFRESH_ACCESS_TOKEN: 'auth/refreshToken'
+  },
+  JWT: {
+    ACCESS: "access",
+    REFRESH: "refresh",
   },
 };

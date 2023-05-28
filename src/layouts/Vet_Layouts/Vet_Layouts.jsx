@@ -11,7 +11,7 @@ import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 
 import "./Vet_Layouts.css";
-
+import { useAuth } from "../../hooks/UseAuth"
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -30,6 +30,7 @@ import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import PetsIcon from '@mui/icons-material/Pets';
 import { Button } from "@mui/material";
+import { Logout } from "../../components/Admin/Auth/Logout";
 
 /*export function Vet_Layouts(props) {
   const { children } = props;
@@ -59,11 +60,10 @@ export function Vet_Layouts(props) {
 
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
-
+  
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-
   const drawer = (
     <div>
       <Toolbar />
@@ -127,11 +127,7 @@ export function Vet_Layouts(props) {
                 <MenuIcon />
               </IconButton>
               <Typography variant="h6" noWrap component="div">
-                <Button 
-                variant="contained"
-                onClick={() => alert('LISTO')}
-                size="large"
-                className="my_button">Cerrar sesion</Button>
+                <Logout />
               </Typography>
             </Toolbar>
           </AppBar>

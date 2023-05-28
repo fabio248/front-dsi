@@ -13,7 +13,7 @@ export function Logout() {
     const onLogout = () => {
       logout();
       singOut();
-      navigate("/admin")
+      navigate("/")
     };
 
     const supabase = useSupabaseClient();

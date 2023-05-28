@@ -1,0 +1,36 @@
+.tema{
+display: contents;
+text-align:justify;
+
+}
+
+menu.ui.buttons{
+    color: red;
+}
+.my_button{
+  background-color: red;
+color: #bb3f3f;
+font-size: 1.2rem;
+border-radius: 15px;
+padding: 10px;
+}
+.MuiButtonBase-root.my_button{
+  background-color: #71a2f0;
+  margin-left: 900px;
+}
+
+Button{
+  color: #bb3f3f;
+}
+.container{
+  right: 0;
+}
+
+.contenedor-imagen {
+  max-width: 100%; 
+}
+
+.imagen {
+  width: 100%; 
+  height: auto; 
+}

@@ -50,11 +50,7 @@ const authController = new ApiAuth();
 export function Registro() {
     
   const [error, setError] = useState("");
-  const [completed, setCompleted] = useState(false);
 
-  const handleClick = () => {
-    setCompleted(false);
-  };
   
   const formik = useFormik({
     initialValues: initialData(),
@@ -63,12 +59,11 @@ export function Registro() {
     onSubmit: async(formValue) => {
 
         try {
-            setError("");
-            setCompleted(true);
-            console.log(formValue);
-            await authController.registerUser(formValue);
+          setError("Created user successfully");
+          console.log(formValue);
+          await authController.registerUser(formValue);
         } catch (error) {
-            setError("Error al enviar datos de registro");
+            setError(error.message);
         }
   }});
   const handleDateChange = (date) => {
@@ -133,15 +128,13 @@ export function Registro() {
                     textField: {
                       helperText: formik.errors.fechaNacimiento,
                       fullWidth: true,
+                      required: true
                     },
-                  }}
-                  inputProps = {{
-                   sx: { "& .MuiSvgIcon-root" : { color: "blue"}} 
                   }}
                   label = "Fecha de nacimiento"
                   name = "fechaNacimiento"
                   id = "fechaNacimiento"
-                  value={dayjs}
+                  value={dayjs.locale()}
                   onChange={handleDateChange}
                   onBlur={formik.handleBlur("fechaNacimiento")}
                 />
@@ -197,13 +190,11 @@ export function Registro() {
               type="submit"
               fullWidth
               variant="contained"
-              onClick={handleClick}
               sx={{ mt: 3, mb: 2, bgcolor: "#009688", ":hover" : { bgcolor: "#00897b"}}}
             >
               Registrarme
             </Button>
-            
-            {completed && (
+            {error == "Created user successfully" && (
               <Alerta
                 type = {"success"}
                 title = {"¡Registro exitoso!"}
@@ -211,7 +202,7 @@ export function Registro() {
                 strong = {"Puede iniciar sesión ahora."}
               />
             )}
-            {!formik.isValid && (
+            {(!formik.isValid || (error == "Email already taken")) && (
               <Alerta
                 type = {"error"}
                 title = {"¡Ha ocurrido un problema!"}

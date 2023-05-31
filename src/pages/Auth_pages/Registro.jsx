@@ -15,7 +15,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
-import {format} from 'date-fns';
+import {format, set} from 'date-fns';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -51,6 +51,10 @@ export function Registro() {
     
   const [error, setError] = useState("");
   const [completed, setCompleted] = useState(false);
+
+  const handleClick = () => {
+    setCompleted(false);
+  };
   
   const formik = useFormik({
     initialValues: initialData(),
@@ -62,7 +66,7 @@ export function Registro() {
             setError("");
             setCompleted(true);
             console.log(formValue);
-            //await authController.registerUser(formValue);
+            await authController.registerUser(formValue);
         } catch (error) {
             setError("Error al enviar datos de registro");
         }
@@ -78,7 +82,7 @@ export function Registro() {
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: 4,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -128,10 +132,15 @@ export function Registro() {
                   slotProps={{
                     textField: {
                       helperText: formik.errors.fechaNacimiento,
-
+                      fullWidth: true,
                     },
                   }}
+                  inputProps = {{
+                   sx: { "& .MuiSvgIcon-root" : { color: "blue"}} 
+                  }}
                   label = "Fecha de nacimiento"
+                  name = "fechaNacimiento"
+                  id = "fechaNacimiento"
                   value={dayjs}
                   onChange={handleDateChange}
                   onBlur={formik.handleBlur("fechaNacimiento")}
@@ -188,10 +197,12 @@ export function Registro() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2, bgcolor: "#009688"}}
+              onClick={handleClick}
+              sx={{ mt: 3, mb: 2, bgcolor: "#009688", ":hover" : { bgcolor: "#00897b"}}}
             >
               Registrarme
             </Button>
+            
             {completed && (
               <Alerta
                 type = {"success"}

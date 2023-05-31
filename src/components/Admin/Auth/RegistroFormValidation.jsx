@@ -5,7 +5,7 @@ export function RegisterFormvalidations() {
   return yup.object({
     firstName: yup.string().required("Campo obligatorio"),
     lastName: yup.string().required("Campo obligatorio"),
-    fechaNacimiento: yup.string().required("Campo obligatorio"),
+    fechaNacimiento: yup.date().required("La fecha es obligatoria"),
     email: yup
       .string()
       .email("El email no es válido")

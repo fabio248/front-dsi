@@ -1,7 +1,11 @@
-import * as React from 'react';
 import { useState } from 'react';
 import { useFormik } from 'formik';
-import {RegisterFormvalidations, initialData} from '../../components/Admin/Auth/RegistroFormValidation';
+import {
+  RegisterFormvalidations, 
+  initialData
+} from '../../components/Admin/Auth/RegistroFormValidation';
+
+// MUI MATERIAL COMPONENTS
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -10,15 +14,21 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
+import {format} from 'date-fns';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import PersonAddAltSharpIcon from '@mui/icons-material/PersonAddAltSharp';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import dayjs from 'dayjs';
-import {format} from 'date-fns';
+import { 
+  createTheme, 
+  ThemeProvider 
+} from '@mui/material/styles';
+import { Alerta } from '../../components/Users_componentes/Alert'
+
+// API - GOOGLE
 import {ApiAuth} from '../../api/Auth.api'
 
 function Copyright(props) {
@@ -40,8 +50,8 @@ const authController = new ApiAuth();
 export function Registro() {
     
   const [error, setError] = useState("");
+  const [completed, setCompleted] = useState(false);
   
-
   const formik = useFormik({
     initialValues: initialData(),
     validationSchema: RegisterFormvalidations(),
@@ -50,8 +60,9 @@ export function Registro() {
 
         try {
             setError("");
+            setCompleted(true);
             console.log(formValue);
-            await authController.registerUser(formValue);
+            //await authController.registerUser(formValue);
         } catch (error) {
             setError("Error al enviar datos de registro");
         }
@@ -71,10 +82,9 @@ export function Registro() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
+          }}>
+          <Avatar sx={{ m: 1, bgcolor: '#03a9f4' }}>
+            <PersonAddAltSharpIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
             Registrarme
@@ -110,25 +120,25 @@ export function Registro() {
                   onChange={formik.handleChange}
                 />
               </Grid>
-
               <Grid item xs={12}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']}>
-               
                 <DatePicker
-                renderInput={(props) => <TextField {...props} />}
-                label = "Fecha de nacimiento"
-                error={formik.touched.fechaNacimiento && Boolean(formik.errors.fechaNacimiento)}
-                helperText={formik.touched.fechaNacimiento && formik.errors.fechaNacimiento}
-                value={dayjs}
-                onChange={handleDateChange}
-                onBlur={formik.handleBlur("fechaNacimiento")}
-                />
+                  onError={(newError) => setError(newError)}
+                  slotProps={{
+                    textField: {
+                      helperText: formik.errors.fechaNacimiento,
 
+                    },
+                  }}
+                  label = "Fecha de nacimiento"
+                  value={dayjs}
+                  onChange={handleDateChange}
+                  onBlur={formik.handleBlur("fechaNacimiento")}
+                />
                 </DemoContainer>
                 </LocalizationProvider>
               </Grid>
-
               <Grid item xs={12}>
                 <TextField
                   required
@@ -178,14 +188,30 @@ export function Registro() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 3, mb: 2, bgcolor: "#009688"}}
             >
               Registrarme
             </Button>
+            {completed && (
+              <Alerta
+                type = {"success"}
+                title = {"¡Registro exitoso!"}
+                message = {"Se ha completado satisfactoriamente el registro de su usuario"}
+                strong = {"Puede iniciar sesión ahora."}
+              />
+            )}
+            {!formik.isValid && (
+              <Alerta
+                type = {"error"}
+                title = {"¡Ha ocurrido un problema!"}
+                message = {"No ha podido completar su registro"}
+                strong = {"Verifica tu información."}
+              />
+            )}
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="/login" variant="body2">
-                  Already have an account? Sign in
+                  ¿Ya tienes una cuenta? Inicia sesión
                 </Link>
               </Grid>
             </Grid>

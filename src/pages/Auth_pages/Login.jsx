@@ -31,6 +31,7 @@ import {
   useSessionContext,
 } from '@supabase/auth-helpers-react';
 import { decoderToken } from "../../utils"
+import { Alerta } from '../../components/Users_componentes/Alert'
 
 function Copyright(props) {
   return (
@@ -193,6 +194,16 @@ export function Login() {
               >
               Inicia sesión con Google
               </Button>
+
+              {error && (
+              <Alerta
+                type = {"error"}
+                title = {"¡Fallo inicio de sesión!"}
+                message = {"Correo electrónico o contraseña incorrecta"}
+                strong = {"Verifica tus credenciales."}
+              />
+              )}
+
               <Grid container>
                 <Grid item xs>
                   <Link href="/forgoPass" variant="body2">

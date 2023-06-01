@@ -57,27 +57,37 @@ export function Login() {
   const formik = useFormik({
     initialValues: initialData(),
     validationSchema: LoginFormvalidations(),
-    validateOnChange: false,
-    onSubmit: async (formValue) => {
-      try {
-        setError('');
-        const response = await authLoginController.login(formValue);
-        console.log(response);
-        authLoginController.setAccessToken(response.accessToken);
-        authLoginController.setRefreshToken(response.accessToken);
+    validateOnChange: false, 
+    onSubmit: async(formValue) => {
 
-        login(response.accessToken);
+        try {
+            setError("");
+            const response = await authLoginController.login(formValue);
 
-        window.location.href = window.location.href.replace('login', 'admin');
-      } catch (error) {
-        setError('Error al enviar datos de registro');
+            authLoginController.setAccessToken(response.accessToken);
+            authLoginController.setRefreshToken(response.accessToken);
+             
+            login(response.accessToken);
+
+            const { role } = decoderToken(response.accessToken);
+
+            window.location.href = window.location.href.replace('login', verifyRole(role))
+        } catch (error) {
+            setError("Error al enviar datos de registro");
+        }
+    }});
+
+    function verifyRole(role){
+      if (role == 'admin') {
+        return 'admin'
       }
-    },
-  });
+      else { return 'client'}
+    }
 
-  const session = useSession(); ///tokens
-  const supabase = useSupabaseClient(); //talk to supabase
-  const { isLoading } = useSessionContext();
+
+    const session = useSession(); ///tokens
+    const supabase = useSupabaseClient(); //talk to supabase
+    const { isLoading } = useSessionContext();
 
   async function googleSingIn() {
     const { error } = await supabase.auth.signInWithOAuth({

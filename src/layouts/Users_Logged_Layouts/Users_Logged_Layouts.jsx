@@ -26,6 +26,7 @@ import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual
 import { Button } from "@mui/material";
 import { FaFacebook } from 'react-icons/fa';
 import { FaWhatsapp } from 'react-icons/fa';
+import { Logout } from '../../components/Admin/Auth/Logout';
 
 import "./Users_Logged_Layouts.css";
 
@@ -138,14 +139,8 @@ export function Users_Logged_Layouts(props) {
                       bottom: '10px',
                     }}
                   >
-                    
-                    <Button
-                      className="btn-login"
-                      variant="contained"
-                      style={{ backgroundColor: '#44ACC1' }}
-                    >
-                      CERRAR SESION
-                    </Button>
+                    {/* CERRAR SESION*/}
+                    <Logout />
                   </div>
                 </Typography>
               </Toolbar>

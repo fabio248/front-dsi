@@ -29,11 +29,9 @@ export function Vet_routes() {
   };
   return (
     <Routes>
-      <Route path="/admin" element = {
-        <ProtectedRoute isAllowed={!!user && isAdmin()} redirectTo="/login">
-          {Layout(Vet_Layouts, Auth_pages)}
-        </ProtectedRoute>
-      }></Route>
+      <Route element = {<ProtectedRoute isAllowed={!!user && isAdmin()} redirectTo="/login"/>}>
+        <Route path="/admin" element = {Layout(Vet_Layouts, Auth_pages)}></Route>
+      </Route>
     </Routes>
   );
 }

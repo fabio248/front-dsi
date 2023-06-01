@@ -29,29 +29,7 @@ import Typography from "@mui/material/Typography";
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import PetsIcon from '@mui/icons-material/Pets';
-import { Button } from "@mui/material";
 import { Logout } from "../../components/Admin/Auth/Logout";
-
-/*export function Vet_Layouts(props) {
-  const { children } = props;
-  const [value, setValue] = React.useState(dayjs("2022-04-17"));
-  return (
-    <>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DemoContainer components={["DateCalendar", "DateCalendar"]}>
-          <DemoItem label="Uncontrolled calendar">
-            <DateCalendar defaultValue={dayjs("2022-04-17")} />
-          </DemoItem>
-        </DemoContainer>
-      </LocalizationProvider>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <TimeClock />
-      </LocalizationProvider>
-      <Vet_components />
-      {children}
-    </>
-  );
-}*/
 
 const drawerWidth = 240;
 

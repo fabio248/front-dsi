@@ -51,7 +51,7 @@ const authLoginController = new ApiAuth();
 export function Login() {
 
   const { login } = useAuth();
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const formik = useFormik({
     initialValues: initialData(),
@@ -67,12 +67,21 @@ export function Login() {
             authLoginController.setRefreshToken(response.accessToken);
              
             login(response.accessToken);
-            
-            window.location.href = window.location.href.replace('login','admin')
+
+            const { role } = decoderToken(response.accessToken);
+
+            window.location.href = window.location.href.replace('login', verifyRole(role))
         } catch (error) {
             setError("Error al enviar datos de registro");
         }
     }});
+
+    function verifyRole(role){
+      if (role == 'admin') {
+        return 'admin'
+      }
+      else { return 'client'}
+    }
 
 
     const session = useSession(); ///tokens

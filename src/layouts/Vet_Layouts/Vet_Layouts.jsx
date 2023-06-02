@@ -29,6 +29,7 @@ import Typography from '@mui/material/Typography';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import PetsIcon from '@mui/icons-material/Pets';
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import { Logout } from '../../components/Admin/Auth/Logout';
 
 const drawerWidth = 240;
@@ -56,7 +57,7 @@ export function Vet_Layouts(props) {
         </ListItem>
         <Divider />
         <ListItem disablePadding>
-          <ListItemButton component='a' href=''>
+          <ListItemButton component='a' href='/admin/calendar'>
             <ListItemIcon>
               <PetsIcon />
             </ListItemIcon>
@@ -67,7 +68,7 @@ export function Vet_Layouts(props) {
       <Divider />
       <List>
         <ListItem disablePadding>
-          <ListItemButton component='a' href=''>
+          <ListItemButton component='a' href='/admin/ver_calendar'>
             <ListItemIcon>
               <CalendarMonthIcon />
             </ListItemIcon>
@@ -78,9 +79,9 @@ export function Vet_Layouts(props) {
       <Divider />
       <List>
         <ListItem disablePadding>
-          <ListItemButton component='a' href='/'>
+          <ListItemButton component='a' href='/admin/user_and_pets'>
             <ListItemIcon>
-              <CalendarMonthIcon />
+              <PersonAddAltIcon />
             </ListItemIcon>
             <ListItemText primary='Agregar Clientes y sus mascotas' />
           </ListItemButton>

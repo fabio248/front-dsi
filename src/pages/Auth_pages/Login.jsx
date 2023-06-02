@@ -27,8 +27,8 @@ import {
   useSupabaseClient,
   useSessionContext,
 } from '@supabase/auth-helpers-react';
-import { decoderToken } from "../../utils"
-import { Alerta } from '../../components/Users_componentes/Alert'
+import { decoderToken } from '../../utils';
+import { Alerta } from '../../components/Users_componentes/Alert';
 
 function Copyright(props) {
   return (
@@ -58,37 +58,40 @@ export function Login() {
   const formik = useFormik({
     initialValues: initialData(),
     validationSchema: LoginFormvalidations(),
-    validateOnChange: false, 
-    onSubmit: async(formValue) => {
+    validateOnChange: false,
+    onSubmit: async (formValue) => {
+      try {
+        setError('');
+        const response = await authLoginController.login(formValue);
 
-        try {
-            setError("");
-            const response = await authLoginController.login(formValue);
+        authLoginController.setAccessToken(response.accessToken);
+        authLoginController.setRefreshToken(response.accessToken);
 
-            authLoginController.setAccessToken(response.accessToken);
-            authLoginController.setRefreshToken(response.accessToken);
-             
-            login(response.accessToken);
+        login(response.accessToken);
 
-            const { role } = decoderToken(response.accessToken);
+        const { role } = decoderToken(response.accessToken);
 
-            window.location.href = window.location.href.replace('login', verifyRole(role))
-        } catch (error) {
-            setError("Error al enviar datos de registro");
-        }
-    }});
-
-    function verifyRole(role){
-      if (role == 'admin') {
-        return 'admin'
+        window.location.href = window.location.href.replace(
+          'login',
+          verifyRole(role)
+        );
+      } catch (error) {
+        setError('Error al enviar datos de registro');
       }
-      else { return 'client'}
+    },
+  });
+
+  function verifyRole(role) {
+    if (role == 'admin') {
+      return 'admin';
+    } else {
+      return 'client';
     }
+  }
 
-
-    const session = useSession(); ///tokens
-    const supabase = useSupabaseClient(); //talk to supabase
-    const { isLoading } = useSessionContext();
+  const session = useSession(); ///tokens
+  const supabase = useSupabaseClient(); //talk to supabase
+  const { isLoading } = useSessionContext();
 
   async function googleSingIn() {
     const { error } = await supabase.auth.signInWithOAuth({
@@ -107,7 +110,7 @@ export function Login() {
     console.log(user);
   }
 
-  //console.log(session);
+  console.log(session);
   return (
     <ThemeProvider theme={defaultTheme}>
       <Grid container component='main' sx={{ height: '100vh' }}>
@@ -218,12 +221,12 @@ export function Login() {
               </Button>
 
               {error && (
-              <Alerta
-                type = {"error"}
-                title = {"¡Fallo inicio de sesión!"}
-                message = {"Correo electrónico o contraseña incorrecta"}
-                strong = {"Verifica tus credenciales."}
-              />
+                <Alerta
+                  type={'error'}
+                  title={'¡Fallo inicio de sesión!'}
+                  message={'Correo electrónico o contraseña incorrecta'}
+                  strong={'Verifica tus credenciales.'}
+                />
               )}
 
               <Grid container>

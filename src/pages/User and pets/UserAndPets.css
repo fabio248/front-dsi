@@ -1,0 +1,9 @@
+.container {
+  margin-top: '1rem';
+  display: 'flex';
+  justify-content: 'space-between';
+}
+
+h2 {
+  text-align: left;
+}

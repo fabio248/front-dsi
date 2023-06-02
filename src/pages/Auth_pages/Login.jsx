@@ -1,10 +1,13 @@
-import * as React from 'react';
 import { useState } from 'react';
 import { useFormik } from 'formik';
+
+// Datos iniciales y esquema de validación del formulario
 import {
   LoginFormvalidations,
   initialData,
 } from '../../components/Admin/Auth/LoginFormValidation';
+
+// MUI MATERIAL COMPONENTS
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -21,16 +24,27 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Divider } from '@mui/material';
 import { Google } from '@mui/icons-material';
+
+// Componentes y funciones personalizadas
+import { Alerta } from '../../components/Users_componentes/Alert'
+import { ForgotPassword } from '../../components/Admin/Auth/ForgotPassword';
+import { decoderToken } from "../../utils"
+
+// API - Clase para autentificación
 import { ApiAuth } from '../../api/Auth.api';
+
+// API - hook para validar sesión activa
 import { useAuth } from '../../hooks';
+
+// Google Authentication
 import {
   useSession,
   useSupabaseClient,
   useSessionContext,
 } from '@supabase/auth-helpers-react';
-import { decoderToken } from "../../utils"
-import { Alerta } from '../../components/Users_componentes/Alert'
-import { ForgotPassword } from '../../components/Admin/Auth/ForgotPassword';
+
+// API Object
+const authLoginController = new ApiAuth();
 
 function Copyright(props) {
   return (
@@ -51,7 +65,6 @@ function Copyright(props) {
 }
 
 const defaultTheme = createTheme();
-const authLoginController = new ApiAuth();
 
 export function Login() {
   const { login } = useAuth();
@@ -64,22 +77,29 @@ export function Login() {
     onSubmit: async(formValue) => {
 
         try {
-            setError("");
+            setError('');
+
+            // Ejecuta funcion asincrona con la peticion de logueo al BackEnd
             const response = await authLoginController.login(formValue);
 
+            // Almacena los token en LocalStorage
             authLoginController.setAccessToken(response.accessToken);
             authLoginController.setRefreshToken(response.accessToken);
-             
+            
+            // Guarda logueo en contexto de la aplicación
             login(response.accessToken);
 
+            // Se obtiene el rol del usuario
             const { role } = decoderToken(response.accessToken);
 
+            // Redirige en base al rol del usuario logueado.
             window.location.href = window.location.href.replace('login', verifyRole(role))
         } catch (error) {
             setError("Error al enviar datos de registro");
         }
     }});
 
+    // Verificación del rol ingresado
     function verifyRole(role){
       if (role == 'admin') {
         return 'admin'
@@ -223,10 +243,10 @@ export function Login() {
 
               {error && (
               <Alerta
-                type = {"error"}
-                title = {"¡Fallo inicio de sesión!"}
-                message = {"Correo electrónico o contraseña incorrecta"}
-                strong = {"Verifica tus credenciales."}
+                type = {'error'}
+                title = {'¡Fallo inicio de sesión!'}
+                message = {'Correo electrónico o contraseña incorrecta'}
+                strong = {'Verifica tus credenciales.'}
               />
               )}
 
@@ -234,6 +254,8 @@ export function Login() {
                 <Grid item xs>
                   
                   {/* FORGOT PASSWORD COMPONENT */}
+                  { /* Contiene un cuadro Dialogo para ingresar 
+                    correo de recuperación de contraseña*/     }
                   < ForgotPassword />
 
                 </Grid>

@@ -24,6 +24,8 @@ import {
   createTheme, 
   ThemeProvider 
 } from '@mui/material/styles';
+
+// Componentes y funciones personalizadas
 import { Alerta } from '../../components/Users_componentes/Alert'
 
 // API - Clase para autentificación
@@ -34,13 +36,17 @@ const authController = new ApiAuth();
 
 function Copyright(props) {
   return (
-    <Typography variant='body2' color='text.secondary' align='center' {...props}>
-      {'Copyright © '}
-      <Link color='inherit' href=''>
-        DSI Project
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
+    <Typography 
+        variant='body2'
+        color='text.secondary'
+        align='center' 
+        {...props}>
+        {'Copyright © '}
+        <Link color='inherit' href=''>
+            DSI Project
+        </Link>{' '}
+        {new Date().getFullYear()}
+        {'.'}
     </Typography>
   );
 }
@@ -71,7 +77,7 @@ export function ChangePassword() {
             try {
                 setError('');
                 
-                // Ejecuta funcion asincrona con petición a la API
+                // Ejecuta funcion asincrona con la peticion de cambio de contraseña al BackEnd
                 await authController.changePassword(formValue, changePasswordToken);
                 
                 setSuccess(true);

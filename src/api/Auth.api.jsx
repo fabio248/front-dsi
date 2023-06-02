@@ -131,4 +131,32 @@ export class ApiAuth {
       throw error; //manejo del error
     }
   }
+
+  //CHANGE PASSWORD
+  async changePassword(data, changePasswordToken) {
+    try {
+      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.CHANGEPASSWORD}`; // RUTA
+      const params = {
+        method: "POST", //tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
+        headers: {
+          //el tipo de contenido (este puede ser Authorization, Content-Type, conection etc)
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          //parametros a enviar
+          newPassword: data.password,
+          token: changePasswordToken
+        }),
+      };
+      //   fetch funcion que genera la peticion al back con la URL(a donde debe ir) y params(que parametros envias)
+      const response = await fetch(url, params);
+      const result = await response.json();
+
+      if (response.status !== 200) throw result; //valida la respuesta del back
+
+      return result;
+    } catch (error) {
+      throw error; //manejo del error
+    }
+  }
 }

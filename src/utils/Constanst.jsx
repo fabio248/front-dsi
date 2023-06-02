@@ -11,6 +11,7 @@ export const ENV = {
     LOGIN: 'auth/login',
     REGISTER: 'users',
     FORGOPASSWORD: 'auth/forgotPassword',
+    CHANGEPASSWORD: 'auth/change-password',
     USERS: 'users',
     USERS_ID: 'users',
     REFRESH_ACCESS_TOKEN: 'auth/refreshToken'

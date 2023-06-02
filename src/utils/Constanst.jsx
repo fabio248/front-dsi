@@ -10,6 +10,7 @@ export const ENV = {
     //Todo esto seran los mismos nombres de las rutas del back segun como se defina
     LOGIN: 'auth/login',
     REGISTER: 'users',
+    FORGOPASSWORD: 'auth/forgotPassword',
     USERS: 'users',
     USERS_ID: 'users',
     REFRESH_ACCESS_TOKEN: 'auth/refreshToken'

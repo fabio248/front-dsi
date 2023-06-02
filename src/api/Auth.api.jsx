@@ -58,7 +58,7 @@ export class ApiAuth {
 
       return result;
     } catch (error) {
-      throw error; //menejo del error
+      throw error; //manejo del error
     }
   }
 
@@ -103,5 +103,32 @@ export class ApiAuth {
   removeTokens() {
     localStorage.removeItem(ENV.JWT.ACCESS);
     localStorage.removeItem(ENV.JWT.REFRESH);
+  }
+
+  //FORGOT PASSWORD
+  async forgotPassword(data) {
+    try {
+      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.FORGOPASSWORD}`; // RUTA
+      const params = {
+        method: "POST", //tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
+        headers: {
+          //el tipo de contenido (este puede ser Authorization, Content-Type, conection etc)
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          //parametros a enviar
+          email: data.email,
+        }),
+      };
+      //   fetch funcion que genera la peticion al back con la URL(a donde debe ir) y params(que parametros envias)
+      const response = await fetch(url, params);
+      const result = await response.json();
+
+      if (response.status !== 200) throw result; //valida la respuesta del back
+
+      return result;
+    } catch (error) {
+      throw error; //manejo del error
+    }
   }
 }

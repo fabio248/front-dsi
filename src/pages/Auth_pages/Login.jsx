@@ -1,10 +1,13 @@
-import * as React from 'react';
 import { useState } from 'react';
 import { useFormik } from 'formik';
+
+// Datos iniciales y esquema de validación del formulario
 import {
   LoginFormvalidations,
   initialData,
 } from '../../components/Admin/Auth/LoginFormValidation';
+
+// MUI MATERIAL COMPONENTS
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -16,20 +19,32 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import PetsIcon from '@mui/icons-material/Pets';
+import { ArrowBackIos } from '@mui/icons-material';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Divider } from '@mui/material';
 import { Google } from '@mui/icons-material';
+
+// Componentes y funciones personalizadas
+import { Alerta } from '../../components/Users_componentes/Alert'
+import { ForgotPassword } from '../../components/Admin/Auth/ForgotPassword';
+import { decoderToken } from "../../utils"
+
+// API - Clase para autentificación
 import { ApiAuth } from '../../api/Auth.api';
+
+// API - hook para validar sesión activa
 import { useAuth } from '../../hooks';
+
+// Google Authentication
 import {
   useSession,
   useSupabaseClient,
   useSessionContext,
 } from '@supabase/auth-helpers-react';
-import { decoderToken } from "../../utils"
-import { Alerta } from '../../components/Users_componentes/Alert'
-import { ForgotPassword } from '../../components/Admin/Auth/ForgotPassword';
+
+// API Object
+const authLoginController = new ApiAuth();
 
 function Copyright(props) {
   return (
@@ -50,7 +65,6 @@ function Copyright(props) {
 }
 
 const defaultTheme = createTheme();
-const authLoginController = new ApiAuth();
 
 export function Login() {
   const { login } = useAuth();
@@ -63,22 +77,29 @@ export function Login() {
     onSubmit: async(formValue) => {
 
         try {
-            setError("");
+            setError('');
+
+            // Ejecuta funcion asincrona con la peticion de logueo al BackEnd
             const response = await authLoginController.login(formValue);
 
+            // Almacena los token en LocalStorage
             authLoginController.setAccessToken(response.accessToken);
             authLoginController.setRefreshToken(response.accessToken);
-             
+            
+            // Guarda logueo en contexto de la aplicación
             login(response.accessToken);
 
+            // Se obtiene el rol del usuario
             const { role } = decoderToken(response.accessToken);
 
+            // Redirige en base al rol del usuario logueado.
             window.location.href = window.location.href.replace('login', verifyRole(role))
         } catch (error) {
             setError("Error al enviar datos de registro");
         }
     }});
 
+    // Verificación del rol ingresado
     function verifyRole(role){
       if (role == 'admin') {
         return 'admin'
@@ -133,13 +154,24 @@ export function Login() {
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
           <Box
             sx={{
-              my: 8,
+              my: 4,
               mx: 4,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
             }}
           >
+            <Grid container spacing = {4} sx = {{ mt: 0}}>
+                <Grid item xs = {4}>
+                    <Button 
+                    fullWidth
+                    startIcon={<ArrowBackIos />}
+                    href='/'
+                    variant='text'>
+                        REGRESAR
+                    </Button>
+                </Grid>
+            </Grid>
             <Avatar sx={{ m: 1, bgcolor: '#795548' }}>
               <PetsIcon />
             </Avatar>
@@ -194,18 +226,9 @@ export function Login() {
               >
                 Inicia sesión
               </Button>
-              <Button
-                type='submit'
-                fullWidth
-                variant='text'
-                sx={{ mt: 3, mb: 2 }}
-                LinkComponent={Link}
-                href='\'
-              >
-                Regresar
-              </Button>
 
               <Divider> O </Divider>
+
               <Button
                 variant='outlined'
                 sx={{ mt: 2, mb: 2 }}
@@ -220,10 +243,10 @@ export function Login() {
 
               {error && (
               <Alerta
-                type = {"error"}
-                title = {"¡Fallo inicio de sesión!"}
-                message = {"Correo electrónico o contraseña incorrecta"}
-                strong = {"Verifica tus credenciales."}
+                type = {'error'}
+                title = {'¡Fallo inicio de sesión!'}
+                message = {'Correo electrónico o contraseña incorrecta'}
+                strong = {'Verifica tus credenciales.'}
               />
               )}
 
@@ -231,6 +254,8 @@ export function Login() {
                 <Grid item xs>
                   
                   {/* FORGOT PASSWORD COMPONENT */}
+                  { /* Contiene un cuadro Dialogo para ingresar 
+                    correo de recuperación de contraseña*/     }
                   < ForgotPassword />
 
                 </Grid>

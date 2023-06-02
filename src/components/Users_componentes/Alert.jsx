@@ -1,12 +1,13 @@
 import { useState }from 'react';
+
+// MUI MATERIAL COMPONENTS
 import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import { AlertTitle } from '@mui/material';
 
-
-
-export function Alerta ({ type = "warning", message = "This is an alert", title = "WARNING",  strong = "Check it out"}) {
+// Alertas para validaciones ( Éxito, Fracaso, Advertencia o Infomración)
+export function Alerta ({ type = 'warning', message = 'This is an alert', title = 'WARNING',  strong = 'Check it out'}) {
   const [open, setOpen] = useState(true);
 
   const handleClick = () => {

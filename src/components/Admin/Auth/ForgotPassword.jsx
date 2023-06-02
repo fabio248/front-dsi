@@ -1,9 +1,13 @@
 import { useState } from 'react';
 import { useFormik } from 'formik';
+
+// Datos iniciales y esquema de validación del formulario
 import { 
     ForgotPassInitialData,
     ForgotPasswordValidation
  } from '../Auth/ChangePasswordValidation'
+
+// MUI MATERIAL COMPONENTS
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link'
 import Dialog from '@mui/material/Dialog';
@@ -15,9 +19,14 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import KeyIcon from '@mui/icons-material/Key';
+
+// Componentes y funciones personalizadas
 import { Alerta } from '../../Users_componentes/Alert'
+
+// API - Clase para autentificación
 import { ApiAuth } from '../../../api/Auth.api'
 
+// API Object
 const authController = new ApiAuth();
 
 export function ForgotPassword() {
@@ -32,7 +41,7 @@ export function ForgotPassword() {
 
   function handleClose(){
     setOpen(false);
-    formikChange.setFieldValue('email', '')
+    formikChange.setFieldValue('email', '') // Limpia campo
   };
   
   const formikChange = useFormik({
@@ -42,7 +51,10 @@ export function ForgotPassword() {
     onSubmit: async(formValue) => {
         try {
             setErrorChange('');
+
+            // Ejecuta funcion asincrona con la peticion de envio de email por olvidar contraseña al BackEnd
             await authController.forgotPassword(formValue);
+
             setSuccess(true);
             handleClose();
         } catch (error) {
@@ -110,18 +122,18 @@ export function ForgotPassword() {
       </Dialog>
       { success && (
         <Alerta
-        type = {"info"}
-        title = {"¡Envío exitoso!"}
-        message = {"Se ha notificado el cambio de contraseña a tu email"}
-        strong = {"Verifica tu correo electrónico"}
+        type = {'info'}
+        title = {'¡Envío exitoso!'}
+        message = {'Se ha notificado el cambio de contraseña a tu email'}
+        strong = {'Verifica tu correo electrónico'}
         />
         )}
       {errorChange && (
         <Alerta
-        type = {"error"}
-        title = {"¡Fallo envío!"}
-        message = {"Correo electrónico no encontrado"}
-        strong = {"Verifica email ingresado."}
+        type = {'error'}
+        title = {'¡Fallo envío!'}
+        message = {'Correo electrónico no encontrado'}
+        strong = {'Verifica email ingresado.'}
         />
         )}
     </div>

@@ -15,7 +15,7 @@ import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import PetsIcon from '@mui/icons-material/Pets';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Divider } from '@mui/material';
@@ -29,6 +29,7 @@ import {
 } from '@supabase/auth-helpers-react';
 import { decoderToken } from "../../utils"
 import { Alerta } from '../../components/Users_componentes/Alert'
+import { ForgotPassword } from '../../components/Admin/Auth/ForgotPassword';
 
 function Copyright(props) {
   return (
@@ -119,7 +120,7 @@ export function Login() {
           md={7}
           sx={{
             backgroundImage:
-              'url(https://source.unsplash.com/random?wallpapers)',
+              'url(https://source.unsplash.com/random?pets)',
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light'
@@ -139,8 +140,8 @@ export function Login() {
               alignItems: 'center',
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-              <LockOutlinedIcon />
+            <Avatar sx={{ m: 1, bgcolor: '#795548' }}>
+              <PetsIcon />
             </Avatar>
             <Typography component='h1' variant='h5'>
               Inicia sesión
@@ -199,7 +200,7 @@ export function Login() {
                 variant='text'
                 sx={{ mt: 3, mb: 2 }}
                 LinkComponent={Link}
-                href='\catalogo'
+                href='\'
               >
                 Regresar
               </Button>
@@ -228,9 +229,10 @@ export function Login() {
 
               <Grid container>
                 <Grid item xs>
-                  <Link href='/forgoPass' variant='body2'>
-                    ¿Olvidó su contraseña?
-                  </Link>
+                  
+                  {/* FORGOT PASSWORD COMPONENT */}
+                  < ForgotPassword />
+
                 </Grid>
                 <Grid item>
                   <Link href='/register' variant='body2'>

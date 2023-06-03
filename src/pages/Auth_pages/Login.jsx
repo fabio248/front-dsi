@@ -26,9 +26,9 @@ import { Divider } from '@mui/material';
 import { Google } from '@mui/icons-material';
 
 // Componentes y funciones personalizadas
-import { Alerta } from '../../components/Users_componentes/Alert'
+import { Alerta } from '../../components/Users_componentes/Alert';
 import { ForgotPassword } from '../../components/Admin/Auth/ForgotPassword';
-import { decoderToken } from "../../utils"
+import { decoderToken } from '../../utils';
 
 // API - Clase para autentificación
 import { ApiAuth } from '../../api/Auth.api';
@@ -73,44 +73,47 @@ export function Login() {
   const formik = useFormik({
     initialValues: initialData(),
     validationSchema: LoginFormvalidations(),
-    validateOnChange: false, 
-    onSubmit: async(formValue) => {
+    validateOnChange: false,
+    onSubmit: async (formValue) => {
+      try {
+        setError('');
 
-        try {
-            setError('');
+        // Ejecuta funcion asincrona con la peticion de logueo al BackEnd
+        const response = await authLoginController.login(formValue);
 
-            // Ejecuta funcion asincrona con la peticion de logueo al BackEnd
-            const response = await authLoginController.login(formValue);
+        // Almacena los token en LocalStorage
+        authLoginController.setAccessToken(response.accessToken);
+        authLoginController.setRefreshToken(response.accessToken);
 
-            // Almacena los token en LocalStorage
-            authLoginController.setAccessToken(response.accessToken);
-            authLoginController.setRefreshToken(response.accessToken);
-            
-            // Guarda logueo en contexto de la aplicación
-            login(response.accessToken);
+        // Guarda logueo en contexto de la aplicación
+        login(response.accessToken);
 
-            // Se obtiene el rol del usuario
-            const { role } = decoderToken(response.accessToken);
+        // Se obtiene el rol del usuario
+        const { role } = decoderToken(response.accessToken);
 
-            // Redirige en base al rol del usuario logueado.
-            window.location.href = window.location.href.replace('login', verifyRole(role))
-        } catch (error) {
-            setError("Error al enviar datos de registro");
-        }
-    }});
-
-    // Verificación del rol ingresado
-    function verifyRole(role){
-      if (role == 'admin') {
-        return 'admin'
+        // Redirige en base al rol del usuario logueado.
+        window.location.href = window.location.href.replace(
+          'login',
+          verifyRole(role)
+        );
+      } catch (error) {
+        setError('Error al enviar datos de registro');
       }
-      else { return 'client'}
+    },
+  });
+
+  // Verificación del rol ingresado
+  function verifyRole(role) {
+    if (role == 'admin') {
+      return 'admin';
+    } else {
+      return 'client';
     }
+  }
 
-
-    const session = useSession(); ///tokens
-    const supabase = useSupabaseClient(); //talk to supabase
-    const { isLoading } = useSessionContext();
+  const session = useSession(); ///tokens
+  const supabase = useSupabaseClient(); //talk to supabase
+  const { isLoading } = useSessionContext();
 
   async function googleSingIn() {
     const { error } = await supabase.auth.signInWithOAuth({
@@ -129,7 +132,6 @@ export function Login() {
     console.log(user);
   }
 
-  //console.log(session);
   return (
     <ThemeProvider theme={defaultTheme}>
       <Grid container component='main' sx={{ height: '100vh' }}>
@@ -140,8 +142,7 @@ export function Login() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage:
-              'url(https://source.unsplash.com/random?pets)',
+            backgroundImage: 'url(https://source.unsplash.com/random?pets)',
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light'
@@ -161,16 +162,17 @@ export function Login() {
               alignItems: 'center',
             }}
           >
-            <Grid container spacing = {4} sx = {{ mt: 0}}>
-                <Grid item xs = {4}>
-                    <Button 
-                    fullWidth
-                    startIcon={<ArrowBackIos />}
-                    href='/'
-                    variant='text'>
-                        REGRESAR
-                    </Button>
-                </Grid>
+            <Grid container spacing={4} sx={{ mt: 0 }}>
+              <Grid item xs={4}>
+                <Button
+                  fullWidth
+                  startIcon={<ArrowBackIos />}
+                  href='/'
+                  variant='text'
+                >
+                  REGRESAR
+                </Button>
+              </Grid>
             </Grid>
             <Avatar sx={{ m: 1, bgcolor: '#795548' }}>
               <PetsIcon />
@@ -242,22 +244,20 @@ export function Login() {
               </Button>
 
               {error && (
-              <Alerta
-                type = {'error'}
-                title = {'¡Fallo inicio de sesión!'}
-                message = {'Correo electrónico o contraseña incorrecta'}
-                strong = {'Verifica tus credenciales.'}
-              />
+                <Alerta
+                  type={'error'}
+                  title={'¡Fallo inicio de sesión!'}
+                  message={'Correo electrónico o contraseña incorrecta'}
+                  strong={'Verifica tus credenciales.'}
+                />
               )}
 
               <Grid container>
                 <Grid item xs>
-                  
                   {/* FORGOT PASSWORD COMPONENT */}
-                  { /* Contiene un cuadro Dialogo para ingresar 
-                    correo de recuperación de contraseña*/     }
-                  < ForgotPassword />
-
+                  {/* Contiene un cuadro Dialogo para ingresar 
+                    correo de recuperación de contraseña*/}
+                  <ForgotPassword />
                 </Grid>
                 <Grid item>
                   <Link href='/register' variant='body2'>

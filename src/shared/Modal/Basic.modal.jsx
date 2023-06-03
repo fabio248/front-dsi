@@ -2,9 +2,10 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Box, styled } from '@mui/system';
 import Modal from '@mui/base/Modal';
-import Button from '@mui/base/Button';
+// import Button from '@mui/base/Button';
 import { useSpring, animated } from '@react-spring/web';
 import { Stepper, Container, Typography, StepLabel, Step } from '@mui/material';
+import { Grid, TextField, Button } from '@mui/material';
 
 //pantallas a renderizar
 import Cliente_Register from '../../pages/User and pets/Cliente.Register';
@@ -19,6 +20,7 @@ export function Basic_modal(props) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [data, setData] = React.useState('');
   const { title } = props;
 
   const [activeStep, setActiveStep] = React.useState(0);
@@ -28,6 +30,7 @@ export function Basic_modal(props) {
   };
 
   const handleBack = () => {
+    console.log('hola');
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
@@ -35,21 +38,20 @@ export function Basic_modal(props) {
   function mostrarPaginas(handleNext) {
     switch (activeStep) {
       case 0:
-        return <Cliente_Register />;
+        return 'Datos Generales del cliente';
         break;
       case 1:
-        return <Mascotas_register />;
+        return 'Datos Generales de la Mascota';
         break;
     }
   }
+
   return (
     <div>
       <TriggerButton onClick={handleOpen}>
         Registrar Cliente y su mascota
       </TriggerButton>
       <StyledModal
-        aria-labelledby='spring-modal-title'
-        aria-describedby='spring-modal-description'
         open={open}
         onClose={handleClose}
         closeAfterTransition
@@ -57,8 +59,13 @@ export function Basic_modal(props) {
       >
         <Fade in={open}>
           <Box sx={style}>
-            <h2 id='spring-modal-title'>{title}</h2>
-            <span id='spring-modal-description' style={{ marginTop: 16 }}>
+            <h2 id='spring-modal-title' style={{ textAlign: 'center' }}>
+              {title}
+            </h2>
+            <span
+              id='spring-modal-description'
+              style={{ marginTop: '25px', textAlign: 'center' }}
+            >
               <Container sx={{ mt: 5 }}>
                 <Stepper activeStep={activeStep}>
                   {steps.map((label, index) => {
@@ -73,7 +80,11 @@ export function Basic_modal(props) {
                 </Stepper>
                 {activeStep === steps.length ? (
                   <React.Fragment>
-                    <Typography variant='h3' sx={{ mt: 2, mb: 1 }}>
+                    <Typography
+                      variant='h4'
+                      style={{ textAlign: 'center' }}
+                      sx={{ mt: 2, mb: 1 }}
+                    >
                       Solicitud lista para enviar!!
                     </Typography>
                     <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
@@ -93,30 +104,51 @@ export function Basic_modal(props) {
                 ) : (
                   <React.Fragment>
                     {mostrarPaginas(handleNext)}
-                    <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                      <Button
-                        style={{
-                          backgroundColor: 'gray',
-                          color: 'skyblue',
-                        }}
-                        variant='contained'
-                        disabled={activeStep === 0}
-                        onClick={handleBack}
-                        sx={{ mr: 1 }}
+                    <Grid>
+                      <Box
+                        sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}
                       >
-                        Regresar
-                      </Button>
-                      <Box sx={{ flex: '1 1 auto' }} />
-                      <Button
-                        style={{ backgroundColor: 'gray', color: 'skyblue' }}
-                        onClick={handleNext}
-                        variant='contained'
+                        {activeStep == 0 ? (
+                          <>
+                            <TextField label='Nombre' />
+                          </>
+                        ) : (
+                          <>
+                            <TextField label='Mascota' />
+                          </>
+                        )}
+                      </Box>
+                      <Box
+                        sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}
                       >
-                        {activeStep === steps.length - 1
-                          ? 'Finalizar'
-                          : 'Siguiente'}
-                      </Button>
-                    </Box>
+                        <Button
+                          style={{ backgroundColor: 'gray', color: 'skyblue' }}
+                          variant='contained'
+                          disabled={activeStep == 0}
+                          onClick={handleBack}
+                          sx={{ mr: 1 }}
+                        >
+                          Regresar
+                        </Button>
+
+                        <Box sx={{ flex: '1 1 auto' }} />
+                        <Button
+                          style={{
+                            display: '',
+                            backgroundColor: 'gray',
+                            color: 'skyblue',
+                          }}
+                          onClick={handleNext}
+                          variant='contained'
+                          type='submit'
+                          sx={{ mr: 1 }}
+                        >
+                          {activeStep === steps.length - 1
+                            ? 'Finalizar'
+                            : 'Siguiente'}
+                        </Button>
+                      </Box>
+                    </Grid>
                   </React.Fragment>
                 )}
               </Container>
@@ -214,11 +246,12 @@ const style = (theme) => ({
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  minWidth: 400,
+  maxWidth: 1000,
+  height: 'auto',
   borderRadius: '12px',
   padding: '16px 32px 24px 32px',
   backgroundColor: theme.palette.mode === 'dark' ? '#0A1929' : 'white',
-  boxShadow: 16,
 });
 
 const TriggerButton = styled(Button)(
@@ -228,23 +261,10 @@ const TriggerButton = styled(Button)(
     font-weight: 600;
     box-sizing: border-box;
     min-height: calc(1.5em + 22px);
-    border-radius: 12px;
+    border-radius: 8px;
     padding: 6px 12px;
-    line-height: 1.5;
+    line-height: 2;
     background: transparent;
     border: 1px solid ${theme.palette.mode === 'dark' ? grey[800] : grey[200]};
-    color: ${theme.palette.mode === 'dark' ? grey[100] : grey[900]};
-  
-    &:hover {
-      background: ${theme.palette.mode === 'dark' ? grey[800] : grey[50]};
-      border-color: ${theme.palette.mode === 'dark' ? grey[600] : grey[300]};
-    }
-  
-    &:focus-visible {
-      border-color: ${blue[400]};
-      outline: 3px solid ${
-        theme.palette.mode === 'dark' ? blue[500] : blue[200]
-      };
-    }
     `
 );

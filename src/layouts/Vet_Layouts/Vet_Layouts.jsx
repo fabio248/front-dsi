@@ -57,7 +57,10 @@ export function Vet_Layouts(props) {
       <Divider />
       <List>
         <ListItem disablePadding>
-          <ListItemButton component='a' href='/admin/ver_calendar'>
+          <ListItemButton
+            component='a'
+            href='https://calendar.google.com/calendar/u/0/r'
+          >
             <ListItemIcon>
               <CalendarMonthIcon />
             </ListItemIcon>

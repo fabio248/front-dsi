@@ -5,15 +5,15 @@ const SERVER_IP = 'localhost:3000';
 export const ENV = {
   BASE_PATH: `http://${SERVER_IP}`, // URL que renderiza la app
   BASE_API: `http://${SERVER_IP}/api/v1`, // Esta url cambiará segun como se defina en el back
-  BASE_SUPABASE : `http://localhost:5173/login`,
 
   API_ROUTES: {
     //Todo esto seran los mismos nombres de las rutas del back segun como se defina
     LOGIN: 'auth/login',
-    GOOGLEAUTH: 'auth/saveData',
+    REGISTER: 'users',
     FORGOPASSWORD: 'auth/forgotPassword',
     CHANGEPASSWORD: 'auth/change-password',
     USERS: 'users',
+    USERS_ID: 'users',
     REFRESH_ACCESS_TOKEN: 'auth/refreshToken'
   },
   JWT: {

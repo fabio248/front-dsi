@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tab, Tabs, Button, Box, Typography } from '@mui/material';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import PropTypes from 'prop-types';
@@ -9,18 +9,29 @@ import './Users.css';
 export function Users() {
   const [showModal, setShowModal] = useState(false);
   const [value, setValue] = useState(0);
+  const [isLoading, setIsLoading] = useState(false); // Estado de carga
 
   const onOpenCloseModal = () => setShowModal((prevState) => !prevState);
   const handleChange = (event, newValue) => setValue(newValue);
+
+  const handleRegistrarUsuario = () => {
+    setIsLoading(true); // Activar el estado de carga
+    // Simulación de una llamada asíncrona (puedes reemplazarlo con tu lógica real)
+    setTimeout(() => {
+      setIsLoading(false); // Desactivar el estado de carga
+      onOpenCloseModal(); // Abrir o cerrar el modal después de la carga
+    }, 500);
+  };
 
   return (
     <div className='users-page'>
       <Button
         className='user-page_add'
         variant='contained'
-        onClick={onOpenCloseModal}
+        onClick={handleRegistrarUsuario} // Utilizar la función de carga
+        disabled={isLoading} // Deshabilitar el botón durante la carga
       >
-        Registrar Usuario
+        {isLoading ? 'Cargando...' : 'Registrar Usuario'}
       </Button>
 
       <Box sx={{ width: '100%' }}>

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 
 // Datos iniciales y esquema de validación del formulario
@@ -29,6 +30,7 @@ import { Google } from '@mui/icons-material';
 import { Alerta } from '../../components/Users_componentes/Alert';
 import { ForgotPassword } from '../../components/Admin/Auth/ForgotPassword';
 import { decoderToken } from '../../utils';
+import { ENV } from '../../utils/'
 
 // API - Clase para autentificación
 import { ApiAuth } from '../../api/Auth.api';
@@ -37,11 +39,7 @@ import { ApiAuth } from '../../api/Auth.api';
 import { useAuth } from '../../hooks';
 
 // Google Authentication
-import {
-  useSession,
-  useSupabaseClient,
-  useSessionContext,
-} from '@supabase/auth-helpers-react';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 
 // API Object
 const authLoginController = new ApiAuth();
@@ -69,11 +67,12 @@ const defaultTheme = createTheme();
 export function Login() {
   const { login } = useAuth();
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: initialData(),
     validationSchema: LoginFormvalidations(),
-    validateOnChange: false,
+    validateOnChange: false, 
     onSubmit: async (formValue) => {
       try {
         setError('');
@@ -84,7 +83,7 @@ export function Login() {
         // Almacena los token en LocalStorage
         authLoginController.setAccessToken(response.accessToken);
         authLoginController.setRefreshToken(response.accessToken);
-
+          
         // Guarda logueo en contexto de la aplicación
         login(response.accessToken);
 
@@ -99,39 +98,86 @@ export function Login() {
       } catch (error) {
         setError('Error al enviar datos de registro');
       }
-    },
-  });
+    }});
 
-  // Verificación del rol ingresado
-  function verifyRole(role) {
-    if (role == 'admin') {
-      return 'admin';
-    } else {
-      return 'client';
+    // Verificación del rol ingresado
+    function verifyRole(role){
+      if (role == 'admin') {
+        return 'admin';
+      } else { 
+        return 'client';
+      }
     }
-  }
 
-  const session = useSession(); ///tokens
-  const supabase = useSupabaseClient(); //talk to supabase
-  const { isLoading } = useSessionContext();
+    // AUTENTIFICACIÓN CON GOOGLE
+    const supabase = useSupabaseClient(); // Talk to supabase
 
-  async function googleSingIn() {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        scopes: 'https://www.googleapis.com/auth/calendar',
-      },
-    });
-    if (error) {
-      alert('Error logging in to google provider with supabase');
-      console.log(error);
+    // CONECCIÓN CON LA API DE GOOGLE
+    async function googleSingIn() {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: ENV.BASE_SUPABASE,
+          scopes: 'https://www.googleapis.com/auth/calendar', 
+        },
+      });
+      if (error) {
+        alert('Error logging in to google provider with supabase');
+        console.log(error);
+      }
     }
-  }
-  if (session !== null) {
-    const user = decoderToken(session.access_token);
-    console.log(user);
-  }
+    
+    // RECUPERACIÓN DE LA SESIÓN DE GOOGLE Y ALMACENAMIENTO DE DATOS EN EL BACKEND
+    useEffect(() => {
+      async function signinGoogleVet() {
+        await supabase.auth.getSession().then(
+          async (value) => {
+            // SI LA SESSION EXISTE 
+            if(value.data?.session){
+              const session = value.data.session; // ALMACENA LA INFORMACIÓN DE LA SESIÓN
+              const tokenData = decoderToken(session.access_token); // ALMACENA LA INFORMACIÓN DE TOKEN DE ACCESO
+              const fullnameSplit = session.user.user_metadata.full_name.trim().split(' ');
+              var firstName, lastName;
+        
+              if (fullnameSplit.length > 2) {
+                firstName = fullnameSplit.slice(0, 2).join(' ');
+                lastName = fullnameSplit.slice(2).join(' ');
+              }
+              else {
+                firstName = fullnameSplit[0]; 
+                lastName = fullnameSplit[1];
+              }
+              // RECUPERACIÓN DE DATOS DE INTERÉS PARA LA APLICACIÓN
+              const dataGoogle =({
+                firstName: firstName,
+                lastName: lastName,
+                birthday: '',
+                email: session.user.email,
+                phone: session.user.phone,
+                password: tokenData.sub,
+                role: 'client'
+              });
+              try {
+                // Ejecuta funcion asincrona con la peticion de logueo al BackEnd
+                const response = await authLoginController.googleAuth(dataGoogle);
+                
+                // Almacena los token en LocalStorage
+                authLoginController.setAccessToken(response.accessToken);
+                authLoginController.setRefreshToken(response.accessToken);
+                
+                // Guarda logueo en contexto de la aplicación
+                login(response.accessToken);
 
+                navigate('/client');
+              } catch (error) {
+                console.log(error);
+              }
+            }
+          }
+        )
+      }
+      signinGoogleVet();
+    }, [])
   return (
     <ThemeProvider theme={defaultTheme}>
       <Grid container component='main' sx={{ height: '100vh' }}>
@@ -162,15 +208,15 @@ export function Login() {
               alignItems: 'center',
             }}
           >
-            <Grid container spacing={4} sx={{ mt: 0 }}>
-              <Grid item xs={4}>
-                <Button
-                  fullWidth
-                  startIcon={<ArrowBackIos />}
-                  href='/'
-                  variant='text'
+            <Grid container spacing = {4} sx = {{ mt: 0}}>
+              <Grid item xs = {4}>
+                <Button 
+                fullWidth
+                startIcon={<ArrowBackIos />}
+                href='/'
+                variant='text'
                 >
-                  REGRESAR
+                    REGRESAR
                 </Button>
               </Grid>
             </Grid>
@@ -244,20 +290,22 @@ export function Login() {
               </Button>
 
               {error && (
-                <Alerta
-                  type={'error'}
-                  title={'¡Fallo inicio de sesión!'}
-                  message={'Correo electrónico o contraseña incorrecta'}
-                  strong={'Verifica tus credenciales.'}
-                />
+              <Alerta
+                type = {'error'}
+                title = {'¡Fallo inicio de sesión!'}
+                message = {'Correo electrónico o contraseña incorrecta'}
+                strong = {'Verifica tus credenciales.'}
+              />
               )}
 
               <Grid container>
                 <Grid item xs>
+                  
                   {/* FORGOT PASSWORD COMPONENT */}
-                  {/* Contiene un cuadro Dialogo para ingresar 
-                    correo de recuperación de contraseña*/}
-                  <ForgotPassword />
+                  { /* Contiene un cuadro Dialogo para ingresar 
+                    correo de recuperación de contraseña*/ }
+                  < ForgotPassword />
+
                 </Grid>
                 <Grid item>
                   <Link href='/register' variant='body2'>

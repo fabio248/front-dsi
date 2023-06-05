@@ -9,7 +9,7 @@ export class User {
       const USER_ID = decoderToken(accessToken).identify;
 
       // URL de conexion con el backend
-      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.USERS_ID}/${USER_ID}`;
+      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.USERS}/${USER_ID}`;
       const params = {
         method: 'GET', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
         headers: {

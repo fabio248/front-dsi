@@ -5,7 +5,7 @@ export class ApiAuth {
   //REGISTRO
   async registerUser(data) {
     try {
-      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.REGISTER}`;
+      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.USERS}`;
       const params = {
         method: 'POST', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
         headers: {
@@ -32,9 +32,10 @@ export class ApiAuth {
     }
   }
 
+  // REGISTRO HECHO POR ADMINISTRADOR
   async registerUserForVet(data) {
     try {
-      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.REGISTER}`;
+      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.USERS}`;
       const params = {
         method: 'POST', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
         headers: {
@@ -182,6 +183,39 @@ export class ApiAuth {
           // Parametros a enviar
           newPassword: data.password,
           token: changePasswordToken,
+        }),
+      };
+      // Fetch funcion que genera la peticion al back con la URL(a donde debe ir) y params(que parametros envias)
+      const response = await fetch(url, params);
+      const result = await response.json();
+
+      if (response.status !== 200) throw result; // Valida la respuesta del back
+
+      return result;
+    } catch (error) {
+      throw error; // Manejo del error
+    }
+  }
+  
+  //AUTENTIFICACIÓN CON GOOGLE
+  async googleAuth(data) {
+    try {
+      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.GOOGLEAUTH}`;
+      const params = {
+        method: 'POST', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
+        headers: {
+          // El tipo de contenido (este puede ser Authorization, Content-Type, conection etc)
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          // Parametros a enviar
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          password: data.password,
+          birthday: data.birthday,
+          role: data.role,
+          phone: data.phone
         }),
       };
       // Fetch funcion que genera la peticion al back con la URL(a donde debe ir) y params(que parametros envias)

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 
 // Datos iniciales y esquema de validación del formulario
@@ -29,6 +30,7 @@ import { Google } from '@mui/icons-material';
 import { Alerta } from '../../components/Users_componentes/Alert'
 import { ForgotPassword } from '../../components/Admin/Auth/ForgotPassword';
 import { decoderToken } from "../../utils"
+import { ENV } from '../../utils/'
 
 // API - Clase para autentificación
 import { ApiAuth } from '../../api/Auth.api';
@@ -37,11 +39,7 @@ import { ApiAuth } from '../../api/Auth.api';
 import { useAuth } from '../../hooks';
 
 // Google Authentication
-import {
-  useSession,
-  useSupabaseClient,
-  useSessionContext,
-} from '@supabase/auth-helpers-react';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 
 // API Object
 const authLoginController = new ApiAuth();
@@ -69,6 +67,7 @@ const defaultTheme = createTheme();
 export function Login() {
   const { login } = useAuth();
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: initialData(),
@@ -107,29 +106,75 @@ export function Login() {
       else { return 'client'}
     }
 
+    // AUTENTIFICACIÓN CON GOOGLE
+    const supabase = useSupabaseClient(); // Talk to supabase
 
-    const session = useSession(); ///tokens
-    const supabase = useSupabaseClient(); //talk to supabase
-    const { isLoading } = useSessionContext();
-
-  async function googleSingIn() {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        scopes: 'https://www.googleapis.com/auth/calendar',
-      },
-    });
-    if (error) {
-      alert('Error logging in to google provider with supabase');
-      console.log(error);
+    // CONECCIÓN CON LA API DE GOOGLE
+    async function googleSingIn() {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: ENV.BASE_SUPABASE,
+          scopes: 'https://www.googleapis.com/auth/calendar', 
+        },
+      });
+      if (error) {
+        alert('Error logging in to google provider with supabase');
+        console.log(error);
+      }
     }
-  }
-  if (session !== null) {
-    const user = decoderToken(session.access_token);
-    console.log(user);
-  }
+    
+    // RECUPERACIÓN DE LA SESIÓN DE GOOGLE Y ALMACENAMIENTO DE DATOS EN EL BACKEND
+    useEffect(() => {
+      async function signinGoogleVet() {
+        await supabase.auth.getSession().then(
+          async (value) => {
+            // SI LA SESSION EXISTE 
+            if(value.data?.session){
+              const session = value.data.session; // ALMACENA LA INFORMACIÓN DE LA SESIÓN
+              const tokenData = decoderToken(session.access_token); // ALMACENA LA INFORMACIÓN DE TOKEN DE ACCESO
+              const fullnameSplit = session.user.user_metadata.full_name.trim().split(' ');
+              var firstName, lastName;
+        
+              if (fullnameSplit.length > 2) {
+                firstName = fullnameSplit.slice(0, 2).join(' ');
+                lastName = fullnameSplit.slice(2).join(' ');
+              }
+              else {
+                firstName = fullnameSplit[0]; 
+                lastName = fullnameSplit[1];
+              }
+              // RECUPERACIÓN DE DATOS DE INTERÉS PARA LA APLICACIÓN
+              const dataGoogle =({
+                firstName: firstName,
+                lastName: lastName,
+                birthday: '',
+                email: session.user.email,
+                phone: session.user.phone,
+                password: tokenData.sub,
+                role: 'client'
+              });
+              try {
+                // Ejecuta funcion asincrona con la peticion de logueo al BackEnd
+                const response = await authLoginController.googleAuth(dataGoogle);
+                
+                // Almacena los token en LocalStorage
+                authLoginController.setAccessToken(response.accessToken);
+                authLoginController.setRefreshToken(response.accessToken);
+                
+                // Guarda logueo en contexto de la aplicación
+                login(response.accessToken);
 
-  //console.log(session);
+                navigate('/client');
+              } catch (error) {
+                console.log(error);
+              }
+            }
+          }
+        )
+      }
+      signinGoogleVet();
+    }, [])
   return (
     <ThemeProvider theme={defaultTheme}>
       <Grid container component='main' sx={{ height: '100vh' }}>

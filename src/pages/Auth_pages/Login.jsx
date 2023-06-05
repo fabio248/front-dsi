@@ -27,9 +27,9 @@ import { Divider } from '@mui/material';
 import { Google } from '@mui/icons-material';
 
 // Componentes y funciones personalizadas
-import { Alerta } from '../../components/Users_componentes/Alert'
+import { Alerta } from '../../components/Users_componentes/Alert';
 import { ForgotPassword } from '../../components/Admin/Auth/ForgotPassword';
-import { decoderToken } from "../../utils"
+import { decoderToken } from '../../utils';
 import { ENV } from '../../utils/'
 
 // API - Clase para autentificación
@@ -73,37 +73,40 @@ export function Login() {
     initialValues: initialData(),
     validationSchema: LoginFormvalidations(),
     validateOnChange: false, 
-    onSubmit: async(formValue) => {
+    onSubmit: async (formValue) => {
+      try {
+        setError('');
 
-        try {
-            setError('');
+        // Ejecuta funcion asincrona con la peticion de logueo al BackEnd
+        const response = await authLoginController.login(formValue);
 
-            // Ejecuta funcion asincrona con la peticion de logueo al BackEnd
-            const response = await authLoginController.login(formValue);
+        // Almacena los token en LocalStorage
+        authLoginController.setAccessToken(response.accessToken);
+        authLoginController.setRefreshToken(response.accessToken);
+          
+        // Guarda logueo en contexto de la aplicación
+        login(response.accessToken);
 
-            // Almacena los token en LocalStorage
-            authLoginController.setAccessToken(response.accessToken);
-            authLoginController.setRefreshToken(response.accessToken);
-            
-            // Guarda logueo en contexto de la aplicación
-            login(response.accessToken);
+        // Se obtiene el rol del usuario
+        const { role } = decoderToken(response.accessToken);
 
-            // Se obtiene el rol del usuario
-            const { role } = decoderToken(response.accessToken);
-
-            // Redirige en base al rol del usuario logueado.
-            window.location.href = window.location.href.replace('login', verifyRole(role))
-        } catch (error) {
-            setError("Error al enviar datos de registro");
-        }
+        // Redirige en base al rol del usuario logueado.
+        window.location.href = window.location.href.replace(
+          'login',
+          verifyRole(role)
+        );
+      } catch (error) {
+        setError('Error al enviar datos de registro');
+      }
     }});
 
     // Verificación del rol ingresado
     function verifyRole(role){
       if (role == 'admin') {
-        return 'admin'
+        return 'admin';
+      } else { 
+        return 'client';
       }
-      else { return 'client'}
     }
 
     // AUTENTIFICACIÓN CON GOOGLE
@@ -185,8 +188,7 @@ export function Login() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage:
-              'url(https://source.unsplash.com/random?pets)',
+            backgroundImage: 'url(https://source.unsplash.com/random?pets)',
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light'
@@ -207,15 +209,16 @@ export function Login() {
             }}
           >
             <Grid container spacing = {4} sx = {{ mt: 0}}>
-                <Grid item xs = {4}>
-                    <Button 
-                    fullWidth
-                    startIcon={<ArrowBackIos />}
-                    href='/'
-                    variant='text'>
-                        REGRESAR
-                    </Button>
-                </Grid>
+              <Grid item xs = {4}>
+                <Button 
+                fullWidth
+                startIcon={<ArrowBackIos />}
+                href='/'
+                variant='text'
+                >
+                    REGRESAR
+                </Button>
+              </Grid>
             </Grid>
             <Avatar sx={{ m: 1, bgcolor: '#795548' }}>
               <PetsIcon />
@@ -300,7 +303,7 @@ export function Login() {
                   
                   {/* FORGOT PASSWORD COMPONENT */}
                   { /* Contiene un cuadro Dialogo para ingresar 
-                    correo de recuperación de contraseña*/     }
+                    correo de recuperación de contraseña*/ }
                   < ForgotPassword />
 
                 </Grid>

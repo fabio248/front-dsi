@@ -1,5 +1,5 @@
 // Para mantener un orden de datos se importa una carpeta de constantes
-import { ENV } from "../utils";
+import { ENV } from '../utils';
 
 export class ApiAuth {
   //REGISTRO
@@ -31,11 +31,42 @@ export class ApiAuth {
       throw error; // Manejo del error
     }
   }
-  
+
+  async registerUserForVet(data) {
+    try {
+      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.REGISTER}`;
+      const params = {
+        method: 'POST', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
+        headers: {
+          // El tipo de contenido (este puede ser Authorization, Content-Type, conection etc)
+          'Content-Type': 'application/json',
+        },
+        // Este puede variar si es texto plano del body es un stringfy o tambien puede ser formData
+        body: JSON.stringify({
+          // Parametros a enviar
+          firstName: data.firstName,
+          lastName: data.lastName,
+          birthday: data.birthday,
+          email: data.email,
+          password: data.password,
+          role: data.role,
+        }),
+      };
+      console.log(params);
+      const response = await fetch(url, params);
+      const result = await response.json();
+
+      if (response.status !== 201) throw result; // Valida la respuesta del back
+      return result;
+    } catch (error) {
+      throw error; // Manejo del error
+    }
+  }
+
   //LOGIN
   async login(data) {
     try {
-      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.LOGIN}`; 
+      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.LOGIN}`;
       const params = {
         method: 'POST', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
         headers: {
@@ -49,7 +80,7 @@ export class ApiAuth {
           password: data.password,
         }),
       };
-      
+
       const response = await fetch(url, params);
       const result = await response.json();
 
@@ -62,29 +93,29 @@ export class ApiAuth {
   }
 
   async refreshAccessToken(refreshToken) {
-      try {
-        const url = `${ENV.BASE_API}/${ENV.API_ROUTES.REFRESH_ACCESS_TOKEN}`;
+    try {
+      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.REFRESH_ACCESS_TOKEN}`;
 
-        const params = {
-          method: 'POST', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
-          headers: {
-            // El tipo de contenido (este puede ser Authorization, Content-Type, conection etc)
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            // Parametros a enviar
-            token: refreshToken,
-          }),
-        };
-        const response = await fetch(url, params);
-        const result = await response.json();
+      const params = {
+        method: 'POST', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
+        headers: {
+          // El tipo de contenido (este puede ser Authorization, Content-Type, conection etc)
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          // Parametros a enviar
+          token: refreshToken,
+        }),
+      };
+      const response = await fetch(url, params);
+      const result = await response.json();
 
-        if (response.status !== 200) throw result; // Valida la respuesta del back
+      if (response.status !== 200) throw result; // Valida la respuesta del back
 
-        return result;
-      } catch (error) {
-        throw error; // Manejo del error
-      }
+      return result;
+    } catch (error) {
+      throw error; // Manejo del error
+    }
   }
 
   // GUARDA ACCESSTOKEN EN LOCALSTORAGE
@@ -150,7 +181,7 @@ export class ApiAuth {
         body: JSON.stringify({
           // Parametros a enviar
           newPassword: data.password,
-          token: changePasswordToken
+          token: changePasswordToken,
         }),
       };
       // Fetch funcion que genera la peticion al back con la URL(a donde debe ir) y params(que parametros envias)

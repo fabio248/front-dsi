@@ -7,3 +7,4 @@ export * from './Users';
 export * from './Visualizar';
 export * from './Mascotas';
 export * from './User and pets';
+export * from './Admin_Users';

@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { Auth_pages, UserAndPets } from '../pages';
+import { Auth_pages, UserAndPets, Users } from '../pages';
 import { Vet_Layouts } from '../layouts';
 import { useAuth } from '../hooks';
 import { ProtectedRoute } from '../components/Admin/Auth/ProtectedRoutes';
@@ -50,6 +49,7 @@ export function Vet_routes() {
             console.log('Hola como estas2');
           })}
         ></Route>
+        <Route path='/admin/users' element={Layout(Vet_Layouts, Users)}></Route>
       </Route>
     </Routes>
   );

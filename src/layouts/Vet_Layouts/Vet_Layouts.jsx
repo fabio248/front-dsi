@@ -37,7 +37,7 @@ export function Vet_Layouts(props) {
       <Toolbar />
       <List>
         <ListItem disablePadding>
-          <ListItemButton component='a' href=''>
+          <ListItemButton component='a' href='/admin/users'>
             <ListItemIcon>
               <PeopleAltIcon />
             </ListItemIcon>

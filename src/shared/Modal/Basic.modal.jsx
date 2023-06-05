@@ -216,7 +216,7 @@ const Fade = React.forwardRef(function Fade(props, ref) {
 });
 
 Fade.propTypes = {
-  children: PropTypes.element.isRequired,
+  // children: PropTypes.element.isRequired,
   in: PropTypes.bool,
   onEnter: PropTypes.func,
   onExited: PropTypes.func,

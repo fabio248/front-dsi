@@ -1,10 +1,14 @@
-import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
+
+// Datos iniciales y esquema de validación del formulario
 import {
   LoginFormvalidations,
   initialData,
 } from '../../components/Admin/Auth/LoginFormValidation';
+
+// MUI MATERIAL COMPONENTS
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -15,20 +19,30 @@ import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import PetsIcon from '@mui/icons-material/Pets';
+import { ArrowBackIos } from '@mui/icons-material';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Divider } from '@mui/material';
 import { Google } from '@mui/icons-material';
-import { ApiAuth } from '../../api/Auth.api';
-import { useAuth } from '../../hooks';
-import {
-  useSession,
-  useSupabaseClient,
-  useSessionContext,
-} from '@supabase/auth-helpers-react';
-import { decoderToken } from "../../utils"
+
+// Componentes y funciones personalizadas
 import { Alerta } from '../../components/Users_componentes/Alert'
+import { ForgotPassword } from '../../components/Admin/Auth/ForgotPassword';
+import { decoderToken } from "../../utils"
+import { ENV } from '../../utils/'
+
+// API - Clase para autentificación
+import { ApiAuth } from '../../api/Auth.api';
+
+// API - hook para validar sesión activa
+import { useAuth } from '../../hooks';
+
+// Google Authentication
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
+
+// API Object
+const authLoginController = new ApiAuth();
 
 function Copyright(props) {
   return (
@@ -49,11 +63,11 @@ function Copyright(props) {
 }
 
 const defaultTheme = createTheme();
-const authLoginController = new ApiAuth();
 
 export function Login() {
   const { login } = useAuth();
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: initialData(),
@@ -62,22 +76,29 @@ export function Login() {
     onSubmit: async(formValue) => {
 
         try {
-            setError("");
+            setError('');
+
+            // Ejecuta funcion asincrona con la peticion de logueo al BackEnd
             const response = await authLoginController.login(formValue);
 
+            // Almacena los token en LocalStorage
             authLoginController.setAccessToken(response.accessToken);
             authLoginController.setRefreshToken(response.accessToken);
-             
+            
+            // Guarda logueo en contexto de la aplicación
             login(response.accessToken);
 
+            // Se obtiene el rol del usuario
             const { role } = decoderToken(response.accessToken);
 
+            // Redirige en base al rol del usuario logueado.
             window.location.href = window.location.href.replace('login', verifyRole(role))
         } catch (error) {
             setError("Error al enviar datos de registro");
         }
     }});
 
+    // Verificación del rol ingresado
     function verifyRole(role){
       if (role == 'admin') {
         return 'admin'
@@ -85,29 +106,75 @@ export function Login() {
       else { return 'client'}
     }
 
+    // AUTENTIFICACIÓN CON GOOGLE
+    const supabase = useSupabaseClient(); // Talk to supabase
 
-    const session = useSession(); ///tokens
-    const supabase = useSupabaseClient(); //talk to supabase
-    const { isLoading } = useSessionContext();
-
-  async function googleSingIn() {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        scopes: 'https://www.googleapis.com/auth/calendar',
-      },
-    });
-    if (error) {
-      alert('Error logging in to google provider with supabase');
-      console.log(error);
+    // CONECCIÓN CON LA API DE GOOGLE
+    async function googleSingIn() {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: ENV.BASE_SUPABASE,
+          scopes: 'https://www.googleapis.com/auth/calendar', 
+        },
+      });
+      if (error) {
+        alert('Error logging in to google provider with supabase');
+        console.log(error);
+      }
     }
-  }
-  if (session !== null) {
-    const user = decoderToken(session.access_token);
-    console.log(user);
-  }
+    
+    // RECUPERACIÓN DE LA SESIÓN DE GOOGLE Y ALMACENAMIENTO DE DATOS EN EL BACKEND
+    useEffect(() => {
+      async function signinGoogleVet() {
+        await supabase.auth.getSession().then(
+          async (value) => {
+            // SI LA SESSION EXISTE 
+            if(value.data?.session){
+              const session = value.data.session; // ALMACENA LA INFORMACIÓN DE LA SESIÓN
+              const tokenData = decoderToken(session.access_token); // ALMACENA LA INFORMACIÓN DE TOKEN DE ACCESO
+              const fullnameSplit = session.user.user_metadata.full_name.trim().split(' ');
+              var firstName, lastName;
+        
+              if (fullnameSplit.length > 2) {
+                firstName = fullnameSplit.slice(0, 2).join(' ');
+                lastName = fullnameSplit.slice(2).join(' ');
+              }
+              else {
+                firstName = fullnameSplit[0]; 
+                lastName = fullnameSplit[1];
+              }
+              // RECUPERACIÓN DE DATOS DE INTERÉS PARA LA APLICACIÓN
+              const dataGoogle =({
+                firstName: firstName,
+                lastName: lastName,
+                birthday: '',
+                email: session.user.email,
+                phone: session.user.phone,
+                password: tokenData.sub,
+                role: 'client'
+              });
+              try {
+                // Ejecuta funcion asincrona con la peticion de logueo al BackEnd
+                const response = await authLoginController.googleAuth(dataGoogle);
+                
+                // Almacena los token en LocalStorage
+                authLoginController.setAccessToken(response.accessToken);
+                authLoginController.setRefreshToken(response.accessToken);
+                
+                // Guarda logueo en contexto de la aplicación
+                login(response.accessToken);
 
-  //console.log(session);
+                navigate('/client');
+              } catch (error) {
+                console.log(error);
+              }
+            }
+          }
+        )
+      }
+      signinGoogleVet();
+    }, [])
   return (
     <ThemeProvider theme={defaultTheme}>
       <Grid container component='main' sx={{ height: '100vh' }}>
@@ -119,7 +186,7 @@ export function Login() {
           md={7}
           sx={{
             backgroundImage:
-              'url(https://source.unsplash.com/random?wallpapers)',
+              'url(https://source.unsplash.com/random?pets)',
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light'
@@ -132,15 +199,26 @@ export function Login() {
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
           <Box
             sx={{
-              my: 8,
+              my: 4,
               mx: 4,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-              <LockOutlinedIcon />
+            <Grid container spacing = {4} sx = {{ mt: 0}}>
+                <Grid item xs = {4}>
+                    <Button 
+                    fullWidth
+                    startIcon={<ArrowBackIos />}
+                    href='/'
+                    variant='text'>
+                        REGRESAR
+                    </Button>
+                </Grid>
+            </Grid>
+            <Avatar sx={{ m: 1, bgcolor: '#795548' }}>
+              <PetsIcon />
             </Avatar>
             <Typography component='h1' variant='h5'>
               Inicia sesión
@@ -193,18 +271,9 @@ export function Login() {
               >
                 Inicia sesión
               </Button>
-              <Button
-                type='submit'
-                fullWidth
-                variant='text'
-                sx={{ mt: 3, mb: 2 }}
-                LinkComponent={Link}
-                href='\catalogo'
-              >
-                Regresar
-              </Button>
 
               <Divider> O </Divider>
+
               <Button
                 variant='outlined'
                 sx={{ mt: 2, mb: 2 }}
@@ -219,18 +288,21 @@ export function Login() {
 
               {error && (
               <Alerta
-                type = {"error"}
-                title = {"¡Fallo inicio de sesión!"}
-                message = {"Correo electrónico o contraseña incorrecta"}
-                strong = {"Verifica tus credenciales."}
+                type = {'error'}
+                title = {'¡Fallo inicio de sesión!'}
+                message = {'Correo electrónico o contraseña incorrecta'}
+                strong = {'Verifica tus credenciales.'}
               />
               )}
 
               <Grid container>
                 <Grid item xs>
-                  <Link href='/forgoPass' variant='body2'>
-                    ¿Olvidó su contraseña?
-                  </Link>
+                  
+                  {/* FORGOT PASSWORD COMPONENT */}
+                  { /* Contiene un cuadro Dialogo para ingresar 
+                    correo de recuperación de contraseña*/     }
+                  < ForgotPassword />
+
                 </Grid>
                 <Grid item>
                   <Link href='/register' variant='body2'>

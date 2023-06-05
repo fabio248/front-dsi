@@ -20,7 +20,7 @@ export function Users() {
     setTimeout(() => {
       setIsLoading(false); // Desactivar el estado de carga
       onOpenCloseModal(); // Abrir o cerrar el modal después de la carga
-    }, 500);
+    }, 50);
   };
 
   return (

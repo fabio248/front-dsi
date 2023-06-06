@@ -21,7 +21,7 @@ import Avatar from '@mui/material/Avatar';
 import KeyIcon from '@mui/icons-material/Key';
 
 // Componentes y funciones personalizadas
-import { Alerta } from '../../Users_componentes/Alert'
+import { Alerta } from '../../../shared/Alert'
 
 // API - Clase para autentificación
 import { ApiAuth } from '../../../api/Auth.api'

@@ -27,7 +27,7 @@ import { Divider } from '@mui/material';
 import { Google } from '@mui/icons-material';
 
 // Componentes y funciones personalizadas
-import { Alerta } from '../../components/Users_componentes/Alert';
+import { Alerta } from '../../shared/Alert';
 import { ForgotPassword } from '../../components/Admin/Auth/ForgotPassword';
 import { decoderToken } from '../../utils';
 import { ENV } from '../../utils/'

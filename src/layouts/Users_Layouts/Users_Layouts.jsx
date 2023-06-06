@@ -26,6 +26,7 @@ import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual
 import { Button } from "@mui/material";
 import { FaFacebook } from 'react-icons/fa';
 import { FaWhatsapp } from 'react-icons/fa';
+import { NavLink } from 'react-router-dom'
 
 import "./Users_Layouts.css";
 
@@ -55,52 +56,76 @@ export function Users_Layouts(props) {
       </div>
       
       <Toolbar /> 
-      <Divider />
       <List>
+      <Divider />
         <ListItem disablePadding style={{ height: '80px' }}>
-          <ListItemButton component="a" href="/catalogo">
-            <ListItemIcon>
-              <SummarizeIcon />
-            </ListItemIcon>
-            <ListItemText primary="Servicios Ofrecidos" />
-          </ListItemButton>
+          <NavLink 
+          to='/catalogo'
+          style={{
+            textDecoration: 'none', // Quitar subrayado
+            color: 'black', // Color de texto deseado
+          }}>
+            <ListItemButton>
+              <ListItemIcon>
+                <SummarizeIcon />
+              </ListItemIcon>
+              <ListItemText primary="Servicios Ofrecidos" />
+            </ListItemButton>
+          </NavLink>
         </ListItem>
-      </List>
       <Divider />
 
-      <List>
+      <NavLink 
+      to='/informacion'
+      style={{
+        textDecoration: 'none', // Quitar subrayado
+        color: 'black', // Color de texto deseado
+      }}>
         <ListItem disablePadding style={{ height: '80px' }}>
-          <ListItemButton component="a" href="/informacion">
-            <ListItemIcon>
-              <InfoIcon />
-            </ListItemIcon>
-            <ListItemText primary="Información del Establecimiento" />
-          </ListItemButton>
+            <ListItemButton>
+              <ListItemIcon>
+                <InfoIcon />
+              </ListItemIcon>
+              <ListItemText primary="Información del Establecimiento" />
+            </ListItemButton>
         </ListItem>
-      </List>
+      </NavLink>
       <Divider />
 
-      <List>
+      <NavLink 
+      to='/historia'
+      style={{
+        textDecoration: 'none', // Quitar subrayado
+        color: 'black', // Color de texto deseado
+      }}>
         <ListItem disablePadding style={{ height: '80px' }}>
-          <ListItemButton component="a" href="/historia">
-            <ListItemIcon>
-              <MenuBookIcon />
-            </ListItemIcon>
-            <ListItemText primary="Quienes Somos" />
-          </ListItemButton>
+            <ListItemButton>
+              <ListItemIcon>
+                <MenuBookIcon />
+              </ListItemIcon>
+              <ListItemText primary="Quienes Somos" />
+            </ListItemButton>
         </ListItem>
-      </List>
+      </NavLink>
       <Divider />
 
+      <NavLink 
+          to='/galeria'
+          style={{
+            textDecoration: 'none', // Quitar subrayado
+            color: 'black', // Color de texto deseado
+          }}>
       <ListItem disablePadding style={{ height: '80px' }}>
-        <ListItemButton component="a" href="/galeria">
-          <ListItemIcon>
-            <PhotoSizeSelectActualIcon />
-          </ListItemIcon>
-          <ListItemText primary="Galería de fotos" />
-        </ListItemButton>
+          <ListItemButton>
+            <ListItemIcon>
+              <PhotoSizeSelectActualIcon />
+            </ListItemIcon>
+            <ListItemText primary="Galería de fotos" />
+          </ListItemButton>
       </ListItem>
+      </NavLink>
       <Divider />
+      </List>
       <div style={{ position: 'absolute', left: '10px', bottom: '10px' }}>
         <IconButton
           color="inherit"

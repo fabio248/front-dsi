@@ -25,6 +25,7 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Divider } from '@mui/material';
 import { Google } from '@mui/icons-material';
+import { CircularProgress } from '@mui/material';
 
 // Componentes y funciones personalizadas
 import { Alerta } from '../../shared/Alert';
@@ -67,6 +68,8 @@ const defaultTheme = createTheme();
 export function Login() {
   const { login } = useAuth();
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
   const navigate = useNavigate();
 
   const formik = useFormik({
@@ -85,16 +88,13 @@ export function Login() {
         authLoginController.setRefreshToken(response.accessToken);
           
         // Guarda logueo en contexto de la aplicación
-        login(response.accessToken);
+        await login(response.accessToken);
 
         // Se obtiene el rol del usuario
         const { role } = decoderToken(response.accessToken);
 
         // Redirige en base al rol del usuario logueado.
-        window.location.href = window.location.href.replace(
-          'login',
-          verifyRole(role)
-        );
+        navigate('/' + verifyRole(role));
       } catch (error) {
         setError('Error al enviar datos de registro');
       }
@@ -126,14 +126,15 @@ export function Login() {
         console.log(error);
       }
     }
-    
+
     // RECUPERACIÓN DE LA SESIÓN DE GOOGLE Y ALMACENAMIENTO DE DATOS EN EL BACKEND
     useEffect(() => {
       async function signinGoogleVet() {
         await supabase.auth.getSession().then(
           async (value) => {
             // SI LA SESSION EXISTE 
-            if(value.data?.session){
+            if(value.data?.session){ 
+              setLoading(true);
               const session = value.data.session; // ALMACENA LA INFORMACIÓN DE LA SESIÓN
               const tokenData = decoderToken(session.access_token); // ALMACENA LA INFORMACIÓN DE TOKEN DE ACCESO
               const fullnameSplit = session.user.user_metadata.full_name.trim().split(' ');
@@ -166,18 +167,32 @@ export function Login() {
                 authLoginController.setRefreshToken(response.accessToken);
                 
                 // Guarda logueo en contexto de la aplicación
-                login(response.accessToken);
-
-                navigate('/client');
+                await login(response.accessToken);
+                const { role } = decoderToken(response.accessToken);
+                console.log(loading);
+                console.log(dataGoogle);
+                if (loading) {
+                  const timer = setInterval(() => {
+                    setProgress((prevProgress) => {
+                      if(prevProgress >= 100){
+                        navigate('/' + verifyRole(role))
+                      } 
+                      else {
+                        return prevProgress + 10;
+                      }
+                    });
+                  }, 80);
+                }
+                
               } catch (error) {
                 console.log(error);
               }
             }
           }
-        )
-      }
-      signinGoogleVet();
-    }, [])
+          )
+        }
+        signinGoogleVet();
+    }, [loading])
   return (
     <ThemeProvider theme={defaultTheme}>
       <Grid container component='main' sx={{ height: '100vh' }}>
@@ -262,10 +277,7 @@ export function Login() {
                 }
                 helperText={formik.touched.password && formik.errors.password}
               />
-              <FormControlLabel
-                control={<Checkbox value='remember' color='primary' />}
-                label='Remember me'
-              />
+              
               <Button
                 type='submit'
                 fullWidth
@@ -296,6 +308,58 @@ export function Login() {
                 message = {'Correo electrónico o contraseña incorrecta'}
                 strong = {'Verifica tus credenciales.'}
               />
+              )}
+
+              {/* Mostrar CircularProgress si loading es true */}
+              {loading && (
+                <div
+                  style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: 9999,
+                    background: 'rgba(255, 255, 255, 0.5)',
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <CircularProgress 
+                      size={140} 
+                      variant = 'determinate'
+                      sx={{ color: '#795548' }}
+                      value={progress} />
+                    <div
+                      style={{
+                        position: 'absolute',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: '100%',
+                        height: '100%',
+                      }}
+                    >
+                      <Avatar
+                        sx={{
+                          width: 100,
+                          height: 100,
+                          backgroundColor: '#795548'
+                        }}
+                      >
+                        <PetsIcon sx={{ fontSize: 60 }}/>
+                      </Avatar>
+                    </div>
+                  </div>
+                </div>
               )}
 
               <Grid container>

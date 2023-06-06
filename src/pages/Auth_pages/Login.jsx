@@ -152,7 +152,7 @@ export function Login() {
               const dataGoogle =({
                 firstName: firstName,
                 lastName: lastName,
-                birthday: '',
+                birthday: null,
                 email: session.user.email,
                 phone: session.user.phone,
                 password: tokenData.sub,

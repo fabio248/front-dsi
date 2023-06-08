@@ -1,10 +1,6 @@
 import React from "react";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
-import { User_pages } from "../pages";
-import { Catalogo_pages } from "../pages";
-import { Informacion_pages } from "../pages";
-import { Historia_pages } from "../pages";
-import { Galeria_pages } from "../pages";
+import { Catalogo_pages, Informacion_pages, Historia_pages, Galeria_pages } from "../pages";
 import { Users_Layouts } from "../layouts";
 
 export function Users_routes() {

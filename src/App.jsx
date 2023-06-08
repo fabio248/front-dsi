@@ -1,4 +1,4 @@
-import { Vet_routes, Users_routes, Users_Logged_routes, Auth_routes } from "./routers";
+import { Vet_routes, Users_routes, Clients_routes, Auth_routes } from "./routers";
 import {AuthProvider} from "./context";
 import { BrowserRouter } from "react-router-dom";
 import "./App.css";
@@ -10,7 +10,7 @@ function App() {
         <BrowserRouter>
           <Auth_routes />
           <Users_routes />
-          <Users_Logged_routes />
+          <Clients_routes />
           <Vet_routes />
         </BrowserRouter>
       </AuthProvider>

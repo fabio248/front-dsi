@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Basic_modal } from '../../shared';
+import { Basic_modal } from '../../../shared';
 import { Box } from '@mui/material';
 
 export function UserAndPets() {

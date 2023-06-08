@@ -8,8 +8,8 @@ import { Stepper, Container, Typography, StepLabel, Step } from '@mui/material';
 import { Grid, TextField, Button } from '@mui/material';
 
 //pantallas a renderizar
-import Cliente_Register from '../../pages/User and pets/Cliente.Register';
-import Mascotas_register from '../../pages/User and pets/mascotas.register';
+import Cliente_Register from '../../pages/Vet_pages/User and pets/Cliente.Register';
+import Mascotas_register from '../../pages/Vet_pages/User and pets/mascotas.register';
 
 const steps = [
   'Registro de informacion del cliente',

@@ -27,30 +27,12 @@ export function Vet_routes() {
   };
   return (
     <Routes>
-      <Route
-        element={
-          <ProtectedRoute isAllowed={!!user && isAdmin()} redirectTo='/login' />
-        }
-      >
+      {/*<Route element = {<ProtectedRoute isAllowed={!!user && isAdmin()} redirectTo="/login/*"/>}>*/}
+        <Route path='/admin/userAndPets' element={Layout(Vet_Layouts, UserAndPets)}></Route>
         <Route path='/admin' element={Layout(Vet_Layouts, Auth_pages)}></Route>
-        <Route
-          path='/admin/user_and_pets'
-          element={Layout(Vet_Layouts, UserAndPets)}
-        ></Route>
-        <Route
-          path='/admin/ver_calendar'
-          element={Layout(Vet_Layouts, () => {
-            console.log('Hola como estas');
-          })}
-        ></Route>
-        <Route
-          path='/admin/calendar'
-          element={Layout(Vet_Layouts, () => {
-            console.log('Hola como estas2');
-          })}
-        ></Route>
         <Route path='/admin/users' element={Layout(Vet_Layouts, Users)}></Route>
-      </Route>
+        <Route path='/admin/calendar' element={Layout(Vet_Layouts, () => { console.log('Hola como estas2');})}></Route>
+      {/*</Route>*/}
     </Routes>
   );
 }

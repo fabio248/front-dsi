@@ -26,12 +26,12 @@ export function Clients_routes() {
 
   return (
     <Routes>
-      {/*<Route element = {<ProtectedRoute isAllowed={!!user && isClient()} redirectTo="/login"/>}>*/}
+      <Route element = {<ProtectedRoute isAllowed={!!user && isClient()} redirectTo="/login"/>}>
         <Route path="/client" element={Layout(Clients_Layouts, User_pages)} />
         <Route path="/client/catalogo" element={Layout(Clients_Layouts, Catalogo_pages)} />
         <Route path="/client/mascotas" element={Layout(Clients_Layouts, Mascotas_pages)} />
         <Route path="/client/visualizar" element={Layout(Clients_Layouts, Visualizar_pages)} />
-      {/*</Route>*/}
+      </Route>
     </Routes>
   );
 }

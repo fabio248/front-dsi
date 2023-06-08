@@ -71,7 +71,7 @@ export function Vet_Layouts(props) {
       <Divider />
       <List>
         <ListItem disablePadding>
-          <ListItemButton component='a' href='/admin/user_and_pets'>
+          <ListItemButton component='a' href='/admin/userAndPets'>
             <ListItemIcon>
               <PersonAddAltIcon />
             </ListItemIcon>

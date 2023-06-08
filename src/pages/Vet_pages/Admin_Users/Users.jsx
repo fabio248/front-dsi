@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Tab, Tabs, Button, Box, Typography } from '@mui/material';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import PropTypes from 'prop-types';
-import { ListUsers, UserForm } from '../../components';
-import { Modal_users } from '../../shared';
+import { ListUsers, UserForm } from '../../../components';
+import { Modal_users } from '../../../shared';
 import './Users.css';
 
 export function Users() {

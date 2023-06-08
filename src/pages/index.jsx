@@ -1,10 +1,5 @@
 export * from './Auth_pages';
-export * from './Catalogo';
-export * from './Informacion';
-export * from './Historia';
-export * from './Galeria';
-export * from './Users';
-export * from './Visualizar';
-export * from './Mascotas';
-export * from './User and pets';
-export * from './Admin_Users';
+export * from './Home';
+export * from './Clients_page';
+export * from './Vet_pages';
+

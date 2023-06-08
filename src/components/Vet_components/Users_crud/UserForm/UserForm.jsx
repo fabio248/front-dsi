@@ -217,9 +217,14 @@ const UserForm = (props) => {
             </Grid>
           </Grid>
           <br />
-          <Button type='submit'>
-            {user ? 'Actualizar Usuario' : 'Registrar Usuario'}
+          <Grid sx = {{ display: 'flex', flexDirection:'row', justifyContent: 'center', margin: '0 auto' }}>
+          <Button type='submit' size = 'medium' sx = {{ mx: 2 }}>
+            {user ? 'Actualizar' : 'Registrar'}
           </Button>
+          <Button color = 'error' onClick = {close} size = 'medium' sx = {{ mx: 2 }}>
+            Cancelar
+          </Button>
+          </Grid>
         </form>
       </div>
     </>

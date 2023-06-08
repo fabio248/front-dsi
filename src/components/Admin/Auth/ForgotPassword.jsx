@@ -65,7 +65,7 @@ export function ForgotPassword() {
 
   return (
     <div>
-      <Link component='div' onClick={handleClickOpen} variant='body2'>
+      <Link component='div' onClick={handleClickOpen} variant='body2' sx = {{ cursor: 'pointer'}}>
         ¿Olvidó su contraseña?
       </Link>
       <Dialog open={open} onClose={handleClose}>

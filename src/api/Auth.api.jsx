@@ -57,7 +57,7 @@ export class ApiAuth {
       const response = await fetch(url, params);
       const result = await response.json();
 
-      if (response.status !== 201) throw result; // Valida la respuesta del back
+      if (response.status != 201) throw result; // Valida la respuesta del back
       return result;
     } catch (error) {
       throw error; // Manejo del error
@@ -196,7 +196,7 @@ export class ApiAuth {
       throw error; // Manejo del error
     }
   }
-  
+
   //AUTENTIFICACIÓN CON GOOGLE
   async googleAuth(data) {
     try {
@@ -215,7 +215,7 @@ export class ApiAuth {
           password: data.password,
           birthday: data.birthday,
           role: data.role,
-          phone: data.phone
+          phone: data.phone,
         }),
       };
       // Fetch funcion que genera la peticion al back con la URL(a donde debe ir) y params(que parametros envias)

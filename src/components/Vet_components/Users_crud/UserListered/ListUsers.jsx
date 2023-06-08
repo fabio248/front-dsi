@@ -8,6 +8,7 @@ import { Button, Icon, CircularProgress } from '@mui/material';
 const userController = new User();
 const AuthController = new ApiAuth();
 export function ListUsers(props) {
+  const { reload } = props;
   const [users, setUsers] = useState(false);
 
   useEffect(() => {
@@ -19,10 +20,10 @@ export function ListUsers(props) {
         setUsers(response.data);
       } catch (error) {}
     })();
-  }, []);
+  }, [reload]);
 
   if (!users) return <CircularProgress />;
-  if (size(users) === 0) return 'No hay ningún usuario';
+  if (size(users) == 0) return 'No hay ningún usuario';
   return (
     <div>
       {map(users, (user) => (

@@ -48,4 +48,26 @@ export class User {
       next(error);
     }
   }
+  async UpdateUser(accessToken) {
+    try {
+      // URL de conexion con el backend
+      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.USERS}`;
+      const params = {
+        method: 'PATCH', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
+        headers: {
+          // El tipo de contenido (este puede ser Authorization, Content-Type, conection etc)
+          Authorization: `Bearer ${accessToken}`,
+        },
+      };
+
+      const response = await fetch(url, params);
+      const result = await response.json();
+
+      if (response.status !== 200) throw result; // Valida la respuesta del back
+
+      return result;
+    } catch (error) {
+      throw error; // Manejo del error
+    }
+  }
 }

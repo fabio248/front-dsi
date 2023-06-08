@@ -1,9 +1,18 @@
 import React, { useState } from 'react';
-import { Grid, TextField, Button } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
+
+//esquemas de validaciones y manipulacion de datos
 import { useFormik } from 'formik';
 import { initialValues, validationSchemaRegister } from './UserFormValidate';
+
+//Backend petitions
 import { ApiAuth } from '../../../../api/Auth.api';
+
+//MUI Material
+import Autocomplete from '@mui/material/Autocomplete';
+import { Grid, TextField, Button } from '@mui/material';
+import MaskedInput from 'react-text-mask';
+
+//estilos
 import './UserForm.css';
 
 const userControl = new ApiAuth();
@@ -13,12 +22,16 @@ const UserForm = (props) => {
   const [isError, setIsError] = useState(false);
 
   const formik = useFormik({
-    initialValues: initialValues(),
-    validationSchema: validationSchemaRegister(),
+    initialValues: initialValues(user),
+    validationSchema: validationSchemaRegister(user),
     validateOnChange: false,
     onSubmit: async (formValue) => {
       try {
-        await userControl.registerUserForVet(formValue);
+        if (!user) {
+          await userControl.registerUserForVet(formValue);
+        } else {
+        }
+        onReload();
         close();
       } catch (error) {
         console.error(error);
@@ -26,24 +39,21 @@ const UserForm = (props) => {
     },
   });
 
-  const handleInputChange = (event) => {
-    const inputValue = event.target.value;
-    if (inputValue === '') {
-      setIsError(true);
-    } else {
-      setIsError(false);
-    }
-  };
-
   const roles = [
     { label: 'client', key: 'user', value: 'client' },
     { label: 'admin', key: 'admin', value: 'admin' },
   ];
 
+  const maskDUI = (value) => {
+    const duiRegex = /^(\d{8})(\d{1})$/;
+    const maskedValue = value.replace(duiRegex, '$1-$2');
+    return maskedValue;
+  };
   return (
     <>
       <div>
         <form onSubmit={formik.handleSubmit}>
+          <br />
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -138,6 +148,71 @@ const UserForm = (props) => {
                 renderInput={(params) => (
                   <TextField {...params} label='Selecciona un Rol' />
                 )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                id='phone'
+                name='phone'
+                label='Teléfono'
+                variant='outlined'
+                size='small'
+                value={formik.values.phone}
+                onChange={formik.handleChange}
+                error={formik.touched.phone && Boolean(formik.errors.phone)}
+                helperText={formik.touched.phone && formik.errors.phone}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                name='direction'
+                label='Dirección'
+                variant='outlined'
+                size='small'
+                value={formik.values.direction}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.direction && Boolean(formik.errors.direction)
+                }
+                helperText={formik.touched.direction && formik.errors.direction}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                id='DUI'
+                name='DUI'
+                label='DUI'
+                variant='outlined'
+                size='small'
+                value={formik.values.DUI}
+                placeholder='00000000-0'
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                error={formik.touched.DUI && Boolean(formik.errors.DUI)}
+                helperText={formik.touched.DUI && formik.errors.DUI}
+                InputProps={{
+                  inputComponent: MaskedInput,
+                  inputProps: {
+                    mask: [
+                      /\d/,
+                      /\d/,
+                      /\d/,
+                      /\d/,
+                      /\d/,
+                      /\d/,
+                      /\d/,
+                      /\d/,
+                      '-',
+                      /\d/,
+                    ],
+                    guide: false,
+                    placeholderChar: '\u2000', // Espacio en blanco para mostrar el formato del DUI
+                  },
+                  value: maskDUI(formik.values.DUI), // Aplicar la máscara al valor del DUI
+                }}
               />
             </Grid>
           </Grid>

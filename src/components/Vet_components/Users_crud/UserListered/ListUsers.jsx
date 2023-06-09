@@ -22,7 +22,7 @@ export function ListUsers(props) {
     })();
   }, [reload]);
 
-  if (!users) return <CircularProgress /> + 'No hay ningún usuario';
+  if (!users) return <CircularProgress />;
   if (size(users) == null) return 'No hay ningún usuario';
   return (
     <div>

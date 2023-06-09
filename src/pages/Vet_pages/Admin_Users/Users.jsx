@@ -2,16 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Tab, Tabs, Button, Box, Typography } from '@mui/material';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import PropTypes from 'prop-types';
-import { ListUsers, UserForm } from '../../components';
-import { Modal_users } from '../../shared';
+import { ListUsers, UserForm } from '../../../components';
+import { Modal_users } from '../../../shared';
 import './Users.css';
 
 export function Users() {
   const [showModal, setShowModal] = useState(false);
+  const [reload, setReload] = useState(false);
   const [value, setValue] = useState(0);
   const [isLoading, setIsLoading] = useState(false); // Estado de carga
 
   const onOpenCloseModal = () => setShowModal((prevState) => !prevState);
+  const onReload = () => setReload((prevState) => !prevState);
   const handleChange = (event, newValue) => setValue(newValue);
 
   const handleRegistrarUsuario = () => {
@@ -20,7 +22,7 @@ export function Users() {
     setTimeout(() => {
       setIsLoading(false); // Desactivar el estado de carga
       onOpenCloseModal(); // Abrir o cerrar el modal después de la carga
-    }, 50);
+    }, 250);
   };
 
   return (
@@ -48,7 +50,8 @@ export function Users() {
             />
           </Tabs>
         </Box>
-        <ListUsers />
+        {/* renderizando a los usuarios */}
+        <ListUsers reload={reload} onReload={onReload} />
       </Box>
 
       {showModal && (
@@ -57,7 +60,7 @@ export function Users() {
           close={onOpenCloseModal}
           title='Crear Nuevo Usuario'
         >
-          <UserForm close={onOpenCloseModal} />
+          <UserForm close={onOpenCloseModal} onReload={onReload} />
         </Modal_users>
       )}
     </div>

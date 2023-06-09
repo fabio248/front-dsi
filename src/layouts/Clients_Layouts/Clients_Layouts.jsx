@@ -27,12 +27,12 @@ import { Button } from "@mui/material";
 import { FaFacebook } from 'react-icons/fa';
 import { FaWhatsapp } from 'react-icons/fa';
 import { Logout } from '../../components/Admin/Auth/Logout';
-
-import "./Users_Logged_Layouts.css";
+import { NavLink } from 'react-router-dom';
+import "./Clients_Layouts.css";
 
 const drawerWidth = 240;
 
-export function Users_Logged_Layouts(props) {
+export function Clients_Layouts(props) {
   const { children } = props;
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -55,37 +55,55 @@ export function Users_Logged_Layouts(props) {
       <Divider />
       <List>
         <ListItem disablePadding style={{ height: '80px' }}>
-          <ListItemButton component="a" href="/catalogol">
-            <ListItemIcon>
-              <SummarizeIcon />
-            </ListItemIcon>
-            <ListItemText primary="Catalogo de Servicios Ofrecidos" />
-          </ListItemButton>
+          <NavLink 
+          to='/catalogo'
+          style={{
+            textDecoration: 'none', // Quitar subrayado
+            color: 'black', // Color de texto deseado
+          }}>
+            <ListItemButton>
+              <ListItemIcon>
+                <SummarizeIcon />
+              </ListItemIcon>
+              <ListItemText primary="Catalogo de Servicios Ofrecidos" />
+            </ListItemButton>
+          </NavLink>
         </ListItem>
-      </List>
+        
       <Divider />
-
-      <List>
+      <NavLink 
+      to='/mascotas'
+      style={{
+        textDecoration: 'none', // Quitar subrayado
+        color: 'black', // Color de texto deseado
+      }}>
         <ListItem disablePadding style={{ height: '80px' }}>
-          <ListItemButton component="a" href="/mascotas">
+          <ListItemButton>
             <ListItemIcon>
               <InfoIcon />
             </ListItemIcon>
             <ListItemText primary="Mascotas" />
           </ListItemButton>
         </ListItem>
-      </List>
+      </NavLink>
+
       <Divider />
 
-      <List>
+      <NavLink 
+      to='/visualizar'
+      style={{
+        textDecoration: 'none', // Quitar subrayado
+        color: 'black', // Color de texto deseado
+      }}>
         <ListItem disablePadding style={{ height: '80px' }}>
-          <ListItemButton component="a" href="/visualizar">
+          <ListItemButton>
             <ListItemIcon>
               <MenuBookIcon />
             </ListItemIcon>
             <ListItemText primary="Visualizar Citas" />
           </ListItemButton>
         </ListItem>
+      </NavLink>
       </List>
       <Divider />
 
@@ -210,6 +228,6 @@ export function Users_Logged_Layouts(props) {
   );
 }
 
-Users_Logged_Layouts.propTypes = {
+Clients_Layouts.propTypes = {
   window: PropTypes.func,
 };

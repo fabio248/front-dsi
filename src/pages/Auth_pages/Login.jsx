@@ -25,11 +25,12 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Divider } from '@mui/material';
 import { Google } from '@mui/icons-material';
+import { CircularProgress } from '@mui/material';
 
 // Componentes y funciones personalizadas
-import { Alerta } from '../../components/Users_componentes/Alert'
+import { Alerta } from '../../shared/Alert';
 import { ForgotPassword } from '../../components/Admin/Auth/ForgotPassword';
-import { decoderToken } from "../../utils"
+import { decoderToken } from '../../utils';
 import { ENV } from '../../utils/'
 
 // API - Clase para autentificación
@@ -67,43 +68,45 @@ const defaultTheme = createTheme();
 export function Login() {
   const { login } = useAuth();
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
   const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: initialData(),
     validationSchema: LoginFormvalidations(),
     validateOnChange: false, 
-    onSubmit: async(formValue) => {
+    onSubmit: async (formValue) => {
+      try {
+        setError('');
 
-        try {
-            setError('');
+        // Ejecuta funcion asincrona con la peticion de logueo al BackEnd
+        const response = await authLoginController.login(formValue);
 
-            // Ejecuta funcion asincrona con la peticion de logueo al BackEnd
-            const response = await authLoginController.login(formValue);
+        // Almacena los token en LocalStorage
+        authLoginController.setAccessToken(response.accessToken);
+        authLoginController.setRefreshToken(response.accessToken);
+          
+        // Guarda logueo en contexto de la aplicación
+        await login(response.accessToken);
 
-            // Almacena los token en LocalStorage
-            authLoginController.setAccessToken(response.accessToken);
-            authLoginController.setRefreshToken(response.accessToken);
-            
-            // Guarda logueo en contexto de la aplicación
-            login(response.accessToken);
+        // Se obtiene el rol del usuario
+        const { role } = decoderToken(response.accessToken);
 
-            // Se obtiene el rol del usuario
-            const { role } = decoderToken(response.accessToken);
-
-            // Redirige en base al rol del usuario logueado.
-            window.location.href = window.location.href.replace('login', verifyRole(role))
-        } catch (error) {
-            setError("Error al enviar datos de registro");
-        }
+        // Redirige en base al rol del usuario logueado.
+        navigate('/' + verifyRole(role));
+      } catch (error) {
+        setError('Error al enviar datos de registro');
+      }
     }});
 
     // Verificación del rol ingresado
     function verifyRole(role){
       if (role == 'admin') {
-        return 'admin'
+        return 'admin';
+      } else { 
+        return 'client';
       }
-      else { return 'client'}
     }
 
     // AUTENTIFICACIÓN CON GOOGLE
@@ -123,14 +126,15 @@ export function Login() {
         console.log(error);
       }
     }
-    
+
     // RECUPERACIÓN DE LA SESIÓN DE GOOGLE Y ALMACENAMIENTO DE DATOS EN EL BACKEND
     useEffect(() => {
       async function signinGoogleVet() {
         await supabase.auth.getSession().then(
           async (value) => {
             // SI LA SESSION EXISTE 
-            if(value.data?.session){
+            if(value.data?.session){ 
+              setLoading(true);
               const session = value.data.session; // ALMACENA LA INFORMACIÓN DE LA SESIÓN
               const tokenData = decoderToken(session.access_token); // ALMACENA LA INFORMACIÓN DE TOKEN DE ACCESO
               const fullnameSplit = session.user.user_metadata.full_name.trim().split(' ');
@@ -148,7 +152,7 @@ export function Login() {
               const dataGoogle =({
                 firstName: firstName,
                 lastName: lastName,
-                birthday: '',
+                birthday: null,
                 email: session.user.email,
                 phone: session.user.phone,
                 password: tokenData.sub,
@@ -163,18 +167,32 @@ export function Login() {
                 authLoginController.setRefreshToken(response.accessToken);
                 
                 // Guarda logueo en contexto de la aplicación
-                login(response.accessToken);
-
-                navigate('/client');
+                await login(response.accessToken);
+                const { role } = decoderToken(response.accessToken);
+                console.log(loading);
+                console.log(dataGoogle);
+                if (loading) {
+                  const timer = setInterval(() => {
+                    setProgress((prevProgress) => {
+                      if(prevProgress >= 100){
+                        navigate('/' + verifyRole(role))
+                      } 
+                      else {
+                        return prevProgress + 10;
+                      }
+                    });
+                  }, 80);
+                }
+                
               } catch (error) {
                 console.log(error);
               }
             }
           }
-        )
-      }
-      signinGoogleVet();
-    }, [])
+          )
+        }
+        signinGoogleVet();
+    }, [loading])
   return (
     <ThemeProvider theme={defaultTheme}>
       <Grid container component='main' sx={{ height: '100vh' }}>
@@ -185,8 +203,7 @@ export function Login() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage:
-              'url(https://source.unsplash.com/random?pets)',
+            backgroundImage: 'url(https://source.unsplash.com/random?pets)',
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light'
@@ -207,15 +224,16 @@ export function Login() {
             }}
           >
             <Grid container spacing = {4} sx = {{ mt: 0}}>
-                <Grid item xs = {4}>
-                    <Button 
-                    fullWidth
-                    startIcon={<ArrowBackIos />}
-                    href='/'
-                    variant='text'>
-                        REGRESAR
-                    </Button>
-                </Grid>
+              <Grid item xs = {4}>
+                <Button 
+                fullWidth
+                startIcon={<ArrowBackIos />}
+                href='/'
+                variant='text'
+                >
+                    REGRESAR
+                </Button>
+              </Grid>
             </Grid>
             <Avatar sx={{ m: 1, bgcolor: '#795548' }}>
               <PetsIcon />
@@ -259,10 +277,7 @@ export function Login() {
                 }
                 helperText={formik.touched.password && formik.errors.password}
               />
-              <FormControlLabel
-                control={<Checkbox value='remember' color='primary' />}
-                label='Remember me'
-              />
+              
               <Button
                 type='submit'
                 fullWidth
@@ -295,12 +310,64 @@ export function Login() {
               />
               )}
 
+              {/* Mostrar CircularProgress si loading es true */}
+              {loading && (
+                <div
+                  style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: 9999,
+                    background: 'rgba(255, 255, 255, 0.5)',
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <CircularProgress 
+                      size={140} 
+                      variant = 'determinate'
+                      sx={{ color: '#795548' }}
+                      value={progress} />
+                    <div
+                      style={{
+                        position: 'absolute',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: '100%',
+                        height: '100%',
+                      }}
+                    >
+                      <Avatar
+                        sx={{
+                          width: 100,
+                          height: 100,
+                          backgroundColor: '#795548'
+                        }}
+                      >
+                        <PetsIcon sx={{ fontSize: 60 }}/>
+                      </Avatar>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <Grid container>
                 <Grid item xs>
                   
                   {/* FORGOT PASSWORD COMPONENT */}
                   { /* Contiene un cuadro Dialogo para ingresar 
-                    correo de recuperación de contraseña*/     }
+                    correo de recuperación de contraseña*/ }
                   < ForgotPassword />
 
                 </Grid>

@@ -26,10 +26,10 @@ import {
 } from '@mui/material/styles';
 
 // Componentes y funciones personalizadas
-import { Alerta } from '../../components/Users_componentes/Alert'
+import { Alerta } from '../../shared/Alert';
 
 // API - Clase para autentificación
-import { ApiAuth } from '../../api/Auth.api'
+import { ApiAuth } from '../../api/Auth.api';
 
 // API Object
 const authController = new ApiAuth();

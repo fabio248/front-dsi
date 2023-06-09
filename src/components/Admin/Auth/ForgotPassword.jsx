@@ -21,7 +21,7 @@ import Avatar from '@mui/material/Avatar';
 import KeyIcon from '@mui/icons-material/Key';
 
 // Componentes y funciones personalizadas
-import { Alerta } from '../../Users_componentes/Alert'
+import { Alerta } from '../../../shared/Alert'
 
 // API - Clase para autentificación
 import { ApiAuth } from '../../../api/Auth.api'
@@ -65,7 +65,7 @@ export function ForgotPassword() {
 
   return (
     <div>
-      <Link component='div' onClick={handleClickOpen} variant='body2'>
+      <Link component='div' onClick={handleClickOpen} variant='body2' sx = {{ cursor: 'pointer'}}>
         ¿Olvidó su contraseña?
       </Link>
       <Dialog open={open} onClose={handleClose}>

@@ -24,7 +24,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 
 //Modal Update/Register
-import { Modal_users } from '../../../../shared';
+import { Modal_users, Modal_delete } from '../../../../shared';
 import { UserForm } from '../UserForm';
 
 export function UserItem(props) {
@@ -42,11 +42,17 @@ export function UserItem(props) {
   const [titleModal, setTitleModal] = useState('');
 
   const onOpenCloseModal = () => setShowModal((prevState) => !prevState);
+  const onCloseConfirm = () => setShowConfirm((prevState) => !prevState);
+
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [confirmMessage, setConfirmMessage] = useState('');
+  const [isDelete, setIsDelete] = useState(false);
 
   const openUpdateUser = () => {
     setTitleModal(`Actualizar Usuario: ${user.firstName} ${user.lastName}`);
     onOpenCloseModal();
   };
+
   return (
     <>
       <Demo>
@@ -94,7 +100,7 @@ export function UserItem(props) {
               </IconButton>
             </Grid>
             <Grid item>
-              <IconButton color='error' onClick={() => console.log('Hola')}>
+              <IconButton color='error' onClick={''}>
                 <DeleteIcon sx={{ fontSize: 30 }} />
               </IconButton>
             </Grid>
@@ -112,6 +118,13 @@ export function UserItem(props) {
       <Modal_users show={showModal} close={onOpenCloseModal} title={titleModal}>
         <UserForm close={onOpenCloseModal} onReload={onReload} user={user} />
       </Modal_users>
+      <Modal_delete
+        onOpen={showConfirm}
+        onCancel={onCloseConfirm}
+        onConfirm={console.log('confirm delete')}
+        content={confirmMessage}
+        size='mini'
+      ></Modal_delete>
     </>
   );
 }

@@ -8,7 +8,6 @@ import { ProtectedRoute } from '../components/Admin/Auth/ProtectedRoutes';
 
 export function Vet_routes() {
   const { user } = useAuth();
-
   function isAdmin() {
     if (user != null) {
       const { role } = user.data;

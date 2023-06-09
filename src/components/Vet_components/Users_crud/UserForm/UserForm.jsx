@@ -6,20 +6,26 @@ import { initialValues, validationSchemaRegister } from './UserFormValidate';
 
 //Backend petitions
 import { ApiAuth } from '../../../../api/Auth.api';
+import { User } from '../../../../api/User.api';
+import { useAuth } from '../../../../hooks';
 
 //MUI Material
 import Autocomplete from '@mui/material/Autocomplete';
 import { Grid, TextField, Button } from '@mui/material';
 import MaskedInput from 'react-text-mask';
+import InputMask from 'react-input-mask';
 
 //estilos
 import './UserForm.css';
 
-const userControl = new ApiAuth();
+const authControl = new ApiAuth();
+const userControl = new User();
 
 const UserForm = (props) => {
   const { close, onReload, user } = props;
   const [isError, setIsError] = useState(false);
+
+  const { accessToken } = useAuth();
 
   const formik = useFormik({
     initialValues: initialValues(user),
@@ -28,8 +34,9 @@ const UserForm = (props) => {
     onSubmit: async (formValue) => {
       try {
         if (!user) {
-          await userControl.registerUserForVet(formValue);
+          await authControl.registerUserForVet(formValue);
         } else {
+          await userControl.updateUser(accessToken, user.id, formValue);
         }
         onReload();
         close();
@@ -49,6 +56,13 @@ const UserForm = (props) => {
     const maskedValue = value.replace(duiRegex, '$1-$2');
     return maskedValue;
   };
+  const CustomMaskedInput = React.forwardRef((props, ref) => {
+    const { inputRef, ...otherProps } = props;
+
+    return <MaskedInput {...otherProps} ref={inputRef} />;
+  });
+
+  const duiMask = [/\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/];
   return (
     <>
       <div>
@@ -92,6 +106,7 @@ const UserForm = (props) => {
                 label='Correo'
                 variant='outlined'
                 size='small'
+                placeholder='yourAccountGoole@gmail.com'
                 value={formik.values.email}
                 onChange={formik.handleChange}
                 error={formik.touched.email && Boolean(formik.errors.email)}
@@ -111,6 +126,13 @@ const UserForm = (props) => {
                   formik.touched.birthday && Boolean(formik.errors.birthday)
                 }
                 helperText={formik.touched.birthday && formik.errors.birthday}
+                InputProps={{
+                  inputComponent: InputMask,
+                  inputProps: {
+                    mask: '99/99/9999',
+                    placeholder: 'MM/DD/AAAA',
+                  },
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -158,8 +180,27 @@ const UserForm = (props) => {
                 label='Teléfono'
                 variant='outlined'
                 size='small'
+                placeholder='0000-0000'
                 value={formik.values.phone}
-                onChange={formik.handleChange}
+                onChange={(e) => {
+                  let onlyNumbers = e.target.value.replace(/[^0-9]/g, ''); // Filtrar caracteres no numéricos
+                  onlyNumbers = onlyNumbers.slice(0, 8); // Limitar a 8 números
+
+                  let formattedNumber = '';
+                  for (let i = 0; i < onlyNumbers.length; i += 4) {
+                    formattedNumber += onlyNumbers.substr(i, 4);
+                    if (i + 4 < onlyNumbers.length) {
+                      formattedNumber += '-';
+                    }
+                  }
+
+                  formik.handleChange({
+                    target: {
+                      name: 'phone',
+                      value: formattedNumber,
+                    },
+                  });
+                }}
                 error={formik.touched.phone && Boolean(formik.errors.phone)}
                 helperText={formik.touched.phone && formik.errors.phone}
               />
@@ -182,48 +223,43 @@ const UserForm = (props) => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                id='DUI'
-                name='DUI'
+                id='dui'
+                name='dui'
                 label='DUI'
                 variant='outlined'
                 size='small'
-                value={formik.values.DUI}
+                value={formik.values.dui || ''} // Asegurarse de tener un valor inicial definido
                 placeholder='00000000-0'
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                error={formik.touched.DUI && Boolean(formik.errors.DUI)}
-                helperText={formik.touched.DUI && formik.errors.DUI}
+                error={formik.touched.dui && Boolean(formik.errors.dui)}
+                helperText={formik.touched.dui && formik.errors.dui}
                 InputProps={{
                   inputComponent: MaskedInput,
                   inputProps: {
-                    mask: [
-                      /\d/,
-                      /\d/,
-                      /\d/,
-                      /\d/,
-                      /\d/,
-                      /\d/,
-                      /\d/,
-                      /\d/,
-                      '-',
-                      /\d/,
-                    ],
+                    mask: duiMask,
                     guide: false,
-                    placeholderChar: '\u2000', // Espacio en blanco para mostrar el formato del DUI
+                    placeholderChar: '\u2000',
                   },
-                  value: maskDUI(formik.values.DUI), // Aplicar la máscara al valor del DUI
                 }}
               />
             </Grid>
           </Grid>
           <br />
-          <Grid sx = {{ display: 'flex', flexDirection:'row', justifyContent: 'center', margin: '0 auto' }}>
-          <Button type='submit' size = 'medium' sx = {{ mx: 2 }}>
-            {user ? 'Actualizar' : 'Registrar'}
-          </Button>
-          <Button color = 'error' onClick = {close} size = 'medium' sx = {{ mx: 2 }}>
-            Cancelar
-          </Button>
+          <Grid
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              margin: '0 auto',
+            }}
+          >
+            <Button type='submit' size='medium' sx={{ mx: 2 }}>
+              {user ? 'Actualizar' : 'Registrar'}
+            </Button>
+            <Button color='error' onClick={close} size='medium' sx={{ mx: 2 }}>
+              Cancelar
+            </Button>
           </Grid>
         </form>
       </div>

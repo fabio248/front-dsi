@@ -1,20 +1,23 @@
 import * as yup from 'yup';
+import { format } from 'date-fns';
 
 export function initialValues(user) {
+  let newBirthday;
   if (user) {
-    const { birthday } = user;
-    const newBirthday = birthday.split('T');
+    newBirthday = user.birthday.split('T');
+    newBirthday = format(new Date(newBirthday[0]), 'MM/dd/yyyy');
   }
+
   return {
     firstName: user?.firstName || '',
     lastName: user?.lastName || '',
     email: user?.email || '',
-    birthday: user?.birthday || '',
+    birthday: user ? newBirthday : '',
     password: '',
     role: user?.role || '',
     phone: user?.phone || '',
     direction: user?.direction || '',
-    DUI: user?.dui || '',
+    dui: user?.dui || '',
   };
 }
 
@@ -31,6 +34,6 @@ export function validationSchemaRegister(user) {
     role: yup.string().required('campo obligatorio'),
     phone: yup.string().required('campo obligatorio'),
     direction: yup.string().required('campo obligatorio'),
-    DUI: yup.string().required('campo obligatorio'),
+    dui: yup.string().required('campo obligatorio'),
   });
 }

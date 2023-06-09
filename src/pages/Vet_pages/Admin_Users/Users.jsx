@@ -51,7 +51,7 @@ export function Users() {
           </Tabs>
         </Box>
         {/* renderizando a los usuarios */}
-        <ListUsers reload={reload} />
+        <ListUsers reload={reload} onReload={onReload} />
       </Box>
 
       {showModal && (

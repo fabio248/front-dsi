@@ -51,9 +51,12 @@ export class ApiAuth {
           email: data.email,
           password: data.password,
           role: data.role,
+          phone: data.phone,
+          direction: data.direction,
+          dui: data.dui,
         }),
       };
-      console.log(params);
+
       const response = await fetch(url, params);
       const result = await response.json();
 

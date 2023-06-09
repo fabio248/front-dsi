@@ -48,26 +48,40 @@ export class User {
       next(error);
     }
   }
-  async UpdateUser(accessToken) {
+  async updateUser(accessToken, idUser, data) {
     try {
-      // URL de conexion con el backend
-      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.USERS}`;
+      if (!data.password) {
+        delete data.password;
+      }
+
+      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.USERS}/${idUser}`;
       const params = {
         method: 'PATCH', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
         headers: {
           // El tipo de contenido (este puede ser Authorization, Content-Type, conection etc)
           Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
         },
+        body: JSON.stringify({
+          firstName: data.firstName,
+          lastName: data.lastName,
+          birthday: data.birthday,
+          email: data.email,
+          password: data.password,
+          role: data.role,
+          phone: data.phone,
+          direction: data.direction,
+          dui: data.dui,
+        }),
       };
-
+      console.log(params);
       const response = await fetch(url, params);
       const result = await response.json();
 
-      if (response.status !== 200) throw result; // Valida la respuesta del back
-
+      if (response.status !== 200) throw result;
       return result;
     } catch (error) {
-      throw error; // Manejo del error
+      throw error;
     }
   }
 }

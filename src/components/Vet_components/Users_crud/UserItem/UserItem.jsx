@@ -28,7 +28,7 @@ import { Modal_users } from '../../../../shared';
 import { UserForm } from '../UserForm';
 
 export function UserItem(props) {
-  const { user } = props;
+  const { user, onReload } = props;
 
   const birthday = user.birthday.split('T');
   // user.direction = 'Soyapanngo, San Salvador';
@@ -110,7 +110,7 @@ export function UserItem(props) {
         </Divider>
       </Demo>
       <Modal_users show={showModal} close={onOpenCloseModal} title={titleModal}>
-        <UserForm close={onOpenCloseModal} onReload={() => {}} user={user} />
+        <UserForm close={onOpenCloseModal} onReload={onReload} user={user} />
       </Modal_users>
     </>
   );

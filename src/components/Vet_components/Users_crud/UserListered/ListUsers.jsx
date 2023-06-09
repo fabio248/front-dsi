@@ -8,7 +8,7 @@ import { Button, Icon, CircularProgress } from '@mui/material';
 const userController = new User();
 const AuthController = new ApiAuth();
 export function ListUsers(props) {
-  const { reload } = props;
+  const { reload, onReload } = props;
   const [users, setUsers] = useState(false);
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export function ListUsers(props) {
   return (
     <div>
       {map(users, (user) => (
-        <UserItem key={user.id} user={user} />
+        <UserItem key={user.id} user={user} onReload={onReload} />
       ))}
     </div>
   );

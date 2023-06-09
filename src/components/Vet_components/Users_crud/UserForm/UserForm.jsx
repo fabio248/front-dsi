@@ -51,17 +51,6 @@ const UserForm = (props) => {
     { label: 'admin', key: 'admin', value: 'admin' },
   ];
 
-  const maskDUI = (value) => {
-    const duiRegex = /^(\d{8})(\d{1})$/;
-    const maskedValue = value.replace(duiRegex, '$1-$2');
-    return maskedValue;
-  };
-  const CustomMaskedInput = React.forwardRef((props, ref) => {
-    const { inputRef, ...otherProps } = props;
-
-    return <MaskedInput {...otherProps} ref={inputRef} />;
-  });
-
   const duiMask = [/\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/];
   return (
     <>
@@ -117,7 +106,7 @@ const UserForm = (props) => {
               <TextField
                 fullWidth
                 name='birthday'
-                label='Nacimiento'
+                label='Nacimiento Mes/Dia/Año'
                 variant='outlined'
                 size='small'
                 value={formik.values.birthday}
@@ -130,7 +119,6 @@ const UserForm = (props) => {
                   inputComponent: InputMask,
                   inputProps: {
                     mask: '99/99/9999',
-                    placeholder: 'MM/DD/AAAA',
                   },
                 }}
               />
@@ -228,7 +216,7 @@ const UserForm = (props) => {
                 label='DUI'
                 variant='outlined'
                 size='small'
-                value={formik.values.dui || ''} // Asegurarse de tener un valor inicial definido
+                value={formik.values.dui || ''}
                 placeholder='00000000-0'
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
@@ -245,6 +233,7 @@ const UserForm = (props) => {
               />
             </Grid>
           </Grid>
+
           <br />
           <Grid
             sx={{

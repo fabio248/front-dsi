@@ -3,7 +3,7 @@ import { User } from '../../../../api/User.api';
 import { ApiAuth } from '../../../../api/Auth.api';
 import { size, map } from 'lodash';
 import { UserItem } from '../UserItem';
-import { Button, Icon, CircularProgress } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 
 const userController = new User();
 const AuthController = new ApiAuth();
@@ -22,8 +22,8 @@ export function ListUsers(props) {
     })();
   }, [reload]);
 
-  if (!users) return <CircularProgress />;
-  if (size(users) == 0) return 'No hay ningún usuario';
+  if (!users) return <CircularProgress /> + 'No hay ningún usuario';
+  if (size(users) == null) return 'No hay ningún usuario';
   return (
     <div>
       {map(users, (user) => (

@@ -15,6 +15,7 @@ const style = {
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,
+  TextAlign: 'center',
 };
 
 export function Modal_create_pet({ show, close, title, children }) {
@@ -30,7 +31,12 @@ export function Modal_create_pet({ show, close, title, children }) {
       aria-describedby='modal-modal-description'
     >
       <Box sx={style}>
-        <Typography id='modal-modal-title' variant='h6' component='h2'>
+        <Typography
+          id='modal-modal-title'
+          variant='h6'
+          component='h2'
+          style={{ textAlign: 'center' }}
+        >
           {title}
         </Typography>
         <Typography

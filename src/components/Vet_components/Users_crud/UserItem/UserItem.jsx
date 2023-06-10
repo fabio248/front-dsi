@@ -188,7 +188,7 @@ export function UserItem(props) {
         close={onOpenClosePets}
         title={titlePets}
       >
-        <PetsForm />
+        <PetsForm close={onOpenClosePets} />
       </Modal_create_pet>
     </>
   );

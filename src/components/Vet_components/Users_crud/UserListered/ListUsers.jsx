@@ -23,7 +23,14 @@ export function ListUsers(props) {
   }, [reload]);
 
   if (!users) return <CircularProgress />;
-  if (size(users) == null) return 'No hay ningún usuario';
+
+  if (size(users) === 0) {
+    return (
+      <Typography variant='h6' style={{ textAlign: 'center' }}>
+        ¡No Se Encontraron Clientes registrados!
+      </Typography>
+    );
+  }
   return (
     <div
       style={{

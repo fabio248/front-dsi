@@ -106,11 +106,12 @@ const UserForm = (props) => {
               <TextField
                 fullWidth
                 name='birthday'
-                label='Nacimiento Mes/Dia/Año'
+                label='Nacimiento Dia/Mes/Año'
                 variant='outlined'
                 size='small'
                 value={formik.values.birthday}
                 onChange={formik.handleChange}
+                // type='date'
                 error={
                   formik.touched.birthday && Boolean(formik.errors.birthday)
                 }

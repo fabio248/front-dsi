@@ -6,27 +6,38 @@ import { ListeredPets } from '../../../components';
 
 export function Mascotas_pages() {
   return (
-    <div>
-      <Box
-        sx={{ textAlign: 'center', marginTop: '20px', borderBlockColor: 'red' }}
+    <div className='Pets-page'>
+      <Typography
+        className='pets-page_add'
+        variant='h4'
+        component='h1'
+        color='primary'
       >
-        <Typography variant='h4' component='h1' color='primary'>
-          ¡Bienvenido a Clínica Veterinaria MISTUM, la informacion de tu mascota
-          se cargará pronto!
-        </Typography>
-        <div
-          style={{
-            margin: '16px',
-            backgroundColor: '#f0f0f0',
-            padding: '20px',
-            borderRadius: '10px',
-            boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-            overflow: 'hidden',
+        ¡Bienvenido a Clínica Veterinaria MISTUM!
+      </Typography>
+      <div className='box-container'>
+        <Box
+          sx={{
+            textAlign: 'center',
+            marginTop: '20px',
+            borderBlockColor: 'red',
           }}
         >
-          <ListeredPets />
-        </div>
-      </Box>
+          <div
+            className='pets-render'
+            style={{
+              margin: '16px',
+              backgroundColor: '#f0f0f0',
+              padding: '20px',
+              borderRadius: '10px',
+              boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+              overflow: 'hidden',
+            }}
+          >
+            <ListeredPets />
+          </div>
+        </Box>
+      </div>
     </div>
   );
 }

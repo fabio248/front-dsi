@@ -116,13 +116,6 @@ const PetsForm = (props) => {
     height: '100%',
   };
 
-  //format only numbers for weight
-  const handleInputChange = (event) => {
-    const inputValue = event.target.value;
-    const numericValue = inputValue.replace(/\D/g, ''); // Remover todos los caracteres que no sean números
-    onChange(numericValue);
-  };
-
   const gender = [
     { label: 'Macho', key: 'M', value: 'Macho' },
     { label: 'Hembra', key: 'F', value: 'Hembra' },

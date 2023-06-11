@@ -36,24 +36,25 @@ export function Users() {
         {isLoading ? 'Cargando...' : 'Registrar Usuario'}
       </Button>
 
-      <Box sx={{ width: '100%' }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            aria-label='basic tabs example'
-          >
-            <Tab
-              icon={<PeopleOutlineIcon />}
-              label='Usuarios'
-              {...a11yProps(0)}
-            />
-          </Tabs>
+      <div className='box-container'>
+        <Box sx={{ width: '100%' }}>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label='basic tabs example'
+            >
+              <Tab
+                icon={<PeopleOutlineIcon />}
+                label='Usuarios'
+                {...a11yProps(0)}
+              />
+            </Tabs>
+          </Box>
+          {/* renderizando a los usuarios */}
+          <ListUsers reload={reload} onReload={onReload} />
         </Box>
-        {/* renderizando a los usuarios */}
-        <ListUsers reload={reload} onReload={onReload} />
-      </Box>
-
+      </div>
       {showModal && (
         <Modal_users
           show={showModal}

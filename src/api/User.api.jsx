@@ -84,4 +84,22 @@ export class User {
       throw error;
     }
   }
+  async deleteUser(accessToken, idUser) {
+    try {
+      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.USERS}/${idUser}`;
+      const params = {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${accessToken}` },
+      };
+
+      const response = await fetch(url, params);
+      const result = await response.json();
+
+      if (response.status !== 200) throw result;
+
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

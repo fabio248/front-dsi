@@ -1,12 +1,11 @@
-import React from "react";
+import React from 'react';
 
 export function Auth_pages(props) {
   const { children } = props;
 
-
   return (
     <>
-      <h1>Hola this is children</h1>
+      <h1>Bienvenido a la pagina administradora</h1>
 
       <h2>homsidnmoaqnsdin</h2>
       {children}

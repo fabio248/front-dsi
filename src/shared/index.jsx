@@ -1,3 +1,5 @@
-export * from './Modal';
-export * from './Modal_Users';
+export * from './Modal_register_petAndClient';
+export * from './Modal_Register_Users';
 export * from './Alert';
+export * from './modal_delete';
+export * from './Modal_create_pet';

@@ -23,9 +23,25 @@ export function ListUsers(props) {
   }, [reload]);
 
   if (!users) return <CircularProgress />;
-  if (size(users) == null) return 'No hay ningún usuario';
+
+  if (size(users) === 0) {
+    return (
+      <Typography variant='h6' style={{ textAlign: 'center' }}>
+        ¡No Se Encontraron Clientes registrados!
+      </Typography>
+    );
+  }
   return (
-    <div>
+    <div
+      style={{
+        margin: '16px',
+        backgroundColor: '#f0f0f0',
+        padding: '20px',
+        borderRadius: '10px',
+        boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+        overflow: 'hidden',
+      }}
+    >
       {map(users, (user) => (
         <UserItem key={user.id} user={user} onReload={onReload} />
       ))}

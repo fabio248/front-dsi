@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 
 //esquemas de validaciones y manipulacion de datos
 import { useFormik } from 'formik';
@@ -8,21 +8,39 @@ import { useFormik } from 'formik';
 
 //MUI Material
 import Autocomplete from '@mui/material/Autocomplete';
-import { Grid, TextField, Button, Divider } from '@mui/material';
-
-//styles and components for scrollbar
-
-//mascaras para los inputs
+import {
+  Grid,
+  TextField,
+  Button,
+  Divider,
+  Box,
+  Typography,
+} from '@mui/material';
+import { useDropzone } from 'react-dropzone';
 
 //estilos
 import './PetsFrom.css';
+
+const acceptedFileTypes = [
+  'application/pdf',
+  'application/msword',
+  'image/png',
+  'image/jpeg',
+];
 
 const PetsForm = (props) => {
   const { close, user } = props;
 
   const [date, setDate] = useState('');
   const [error, setError] = useState(false);
+  const [uploadedFile, setUploadedFile] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isError, setIsError] = useState(false);
 
+  //renderizar las especies
+  const responseData = '';
+
+  //manipulacion y validacion de los campos
   const formik = useFormik({
     // initialValues: initialValues(user),
     // validationSchema: validationSchemaRegister(user),
@@ -40,11 +58,62 @@ const PetsForm = (props) => {
     },
   });
 
-  //format only numbers for weight
-  const handleInputChange = (event) => {
-    const inputValue = event.target.value;
-    const numericValue = inputValue.replace(/\D/g, ''); // Remover todos los caracteres que no sean números
-    onChange(numericValue);
+  const onDrop = useCallback((acceptedFiles) => {
+    const file = acceptedFiles[0];
+    if (file && isFileValid(file)) {
+      setUploadedFile(file);
+      setErrorMessage('');
+      setIsError(false);
+    } else {
+      setUploadedFile(null);
+      setErrorMessage(
+        'Formato de archivo no válido. Se aceptan archivos PDF, Word y imágenes (PNG, JPG, JPEG).'
+      );
+      setIsError(true);
+    }
+  }, []);
+
+  const isFileValid = (file) => {
+    const acceptedFormats = [
+      'application/pdf',
+      'application/msword',
+      'image/png',
+      'image/jpeg',
+    ];
+    return acceptedFormats.includes(file.type);
+  };
+
+  // Eliminar el archivo cargado estableciendo el estado en null en el dropzone
+  const handleDelete = () => {
+    setUploadedFile(null);
+    setErrorMessage('');
+    setIsError(false);
+  };
+
+  //restriccion de los elementos obtenido en el dropzone
+  const { getRootProps, getInputProps, isDragActive, isDragReject } =
+    useDropzone({
+      onDrop,
+      accept: [
+        'application/pdf',
+        'application/msword',
+        'image/png',
+        'image/jpeg',
+      ],
+      multiple: false,
+    });
+
+  const dropzoneStyle = {
+    borderWidth: 2,
+    borderRadius: 2,
+    borderColor: isError ? 'red' : isDragReject ? 'red' : '#888',
+    borderStyle: 'dashed',
+    p: 2,
+    textAlign: 'center',
+    backgroundColor: 'background.paper',
+    cursor: 'pointer',
+    width: '205%',
+    height: '100%',
   };
 
   const gender = [
@@ -433,7 +502,7 @@ const PetsForm = (props) => {
                 label='Balantaleo'
                 variant='outlined'
                 size='small'
-                sx={{ width: '205%' }}
+                sx={{ width: '204.5%' }}
                 // value={formik.values.birthday}
                 onChange={formik.handleChange}
                 inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }} // Añadir atributos para dispositivos móviles y navegadores modernos
@@ -443,6 +512,36 @@ const PetsForm = (props) => {
                 // }
                 // helperText={formik.touched.birthday && formik.errors.birthday}
               />
+            </Grid>
+            <Grid container spacing={3} sx={{ maxWidth: '100%', margin: 0 }}>
+              <Grid item xs={12} sm={6}>
+                <Box {...getRootProps()} sx={dropzoneStyle}>
+                  <input {...getInputProps()} />
+                  {isDragActive ? (
+                    <Typography variant='body1' color='text.secondary'>
+                      Suelta los archivos aquí...
+                    </Typography>
+                  ) : (
+                    <Typography variant='body1' color='text.secondary'>
+                      {uploadedFile
+                        ? 'Archivo cargado: ' + uploadedFile.name
+                        : 'Arrastra y suelta archivos aquí, o haz clic para seleccionar archivos'}
+                    </Typography>
+                  )}
+                  {uploadedFile && (
+                    <Box sx={{ mt: 2 }}>
+                      <Button variant='contained' onClick={handleDelete}>
+                        Eliminar
+                      </Button>
+                    </Box>
+                  )}
+                  {errorMessage && (
+                    <Typography variant='body1' color='error' sx={{ mt: 2 }}>
+                      {errorMessage}
+                    </Typography>
+                  )}
+                </Box>
+              </Grid>
             </Grid>
           </Grid>
           <Grid

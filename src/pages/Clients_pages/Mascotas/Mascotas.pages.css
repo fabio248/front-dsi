@@ -1,4 +1,4 @@
-.users-page {
+.Pets-page {
   display: flex;
   flex-direction: column;
   height: 85vh;
@@ -6,13 +6,13 @@
   justify-content: flex-end;
 }
 
-.user-page_add {
+.pets-page_add {
   background-color: #f0f0f0;
   padding: 10px;
   width: 210px;
   height: 50px;
   text-align: right;
-  /* right: 0; */
+  right: 0;
 }
 
 .box-container {

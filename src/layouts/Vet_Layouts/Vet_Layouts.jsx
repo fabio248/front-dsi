@@ -50,7 +50,7 @@ export function Vet_Layouts(props) {
             <ListItemIcon>
               <PeopleAltIcon />
             </ListItemIcon>
-            <ListItemText primary='Usuarios' />
+            <ListItemText primary='Clientes' />
           </ListItemButton>
         </ListItem>
         <Divider />

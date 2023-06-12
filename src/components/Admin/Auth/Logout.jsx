@@ -13,8 +13,8 @@ export function Logout() {
 
   const { logout } = useAuth();
   const navigate = useNavigate();
-  const onLogout = () => {
-    logout();
+  async function onLogout(){
+    await logout();
     singOut();
     navigate('/');
   };
@@ -27,11 +27,11 @@ export function Logout() {
 
   return (
     <Button
-      style={{ marginTop: '10px', position: 'fixed', right: 0, top: 0 }}
+      sx={{ mx: 2, display: 'flex'}}
       variant='contained'
       onClick={onLogout}
       size='large'
-      className='my_button'
+      color = 'error'
     >
       Cerrar sesion
     </Button>

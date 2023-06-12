@@ -41,6 +41,7 @@ export function UserItem(props) {
 
   //verificacion de error en la ejecución
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false)
 
   const Demo = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -89,8 +90,11 @@ export function UserItem(props) {
       setError('');
       const accessToken = await authController.getAccessToken();
       await userController.deleteUser(accessToken, user.id);
-      onReload();
+      setSuccess(true);
       onCloseConfirm();
+      setTimeout(() => {
+        onReload();
+      }, "3000");
     } catch (error) {
       console.error(error);
     }
@@ -152,12 +156,20 @@ export function UserItem(props) {
               <IconButton color='error' onClick={openDeleteUser}>
                 <DeleteIcon sx={{ fontSize: 30 }} />
               </IconButton>
+              {success && (
+                <Alerta
+                  type={'info'}
+                  title={'¡Usuario Eliminado!'}
+                  message={'Se ha elimnado correctamente usuario'}
+                  strong={user.firstName + " " + user.lastName}
+                />
+              )}
               {error && (
                 <Alerta
-                  type={'Exito'}
-                  title={'¡Usuario Eliminado!'}
-                  message={'Ha ocurrido un problema al eliminar el usuario'}
-                  strong={'Verificación completada'}
+                  type={'error'}
+                  title={'¡Ha ocurrido un problema!'}
+                  message={'No se ha podido eliminar el usuario'}
+                  strong={user.firstName + " " + user.lastName}
                 />
               )}
             </Grid>

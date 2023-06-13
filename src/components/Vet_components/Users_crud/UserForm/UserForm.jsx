@@ -14,6 +14,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { Grid, TextField, Button } from '@mui/material';
 import MaskedInput from 'react-text-mask';
 import InputMask from 'react-input-mask';
+import { Alerta } from '../../../../shared';
 
 //estilos
 import './UserForm.css';
@@ -24,6 +25,7 @@ const userControl = new User();
 const UserForm = (props) => {
   const { close, onReload, user } = props;
   const [isError, setIsError] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const { accessToken } = useAuth();
 
@@ -38,9 +40,14 @@ const UserForm = (props) => {
         } else {
           await userControl.updateUser(accessToken, user.id, formValue);
         }
-        onReload();
-        close();
+        setSuccess(true);
+        setTimeout(() => {
+          close();
+          onReload();
+        }, 3000);
       } catch (error) {
+        setIsError(true)
+        onReload();
         console.error(error);
       }
     },
@@ -251,6 +258,22 @@ const UserForm = (props) => {
               Cancelar
             </Button>
           </Grid>
+            {success && (
+                <Alerta
+                  type={'success'}
+                  title={user ? 'Usuario Actuallizado' : 'Usuario Regsitrado'}
+                  message={user ? 'Se ha actualizado correctamente el usuario' : 'Se ha registrado correctamente'}
+                  strong={user ? `${user.firstName} ${user.lastName}` : 'Verifica el registro'}
+                />
+              )}
+              {isError && (
+                <Alerta
+                  type={'error'}
+                  title={'¡Ha ocurrido un problema!'}
+                  message={user ? 'No se ha podido actualizar el usuario' : 'No se ha podido completar el registro'}
+                  strong={user ? `${user.firstName} ${user.lastName}` : 'Verifica la información ingresada'}
+                />
+              )}
         </form>
       </div>
     </>

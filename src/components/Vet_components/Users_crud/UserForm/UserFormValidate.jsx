@@ -5,7 +5,7 @@ export function initialValues(user) {
   let newBirthday;
   if (user) {
     newBirthday = user.birthday.split('T');
-    newBirthday = format(new Date(newBirthday[0]), 'MM/dd/yyyy');
+    newBirthday = format(new Date(newBirthday[0]), 'dd/MM/yyyy');
   }
 
   return {

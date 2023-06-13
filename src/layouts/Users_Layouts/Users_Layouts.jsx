@@ -47,7 +47,7 @@ export function Users_Layouts(props) {
 
   const drawer = ( 
     <div>
-              <div className="image-container">
+      <div className="image-container">
         <img
           src="../../../public/galeria/logo.jpg"
           alt="logo"

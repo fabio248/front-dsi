@@ -43,6 +43,13 @@ export function Clients_Layouts(props) {
 
   const drawer = (
     <div>
+      <div className="image-container">
+        <img
+          src="../../../public/galeria/logo.jpg"
+          alt="logo"
+          className="imagen-appbar"
+        />
+      </div>
       <Toolbar />
       <Divider />
       <List>

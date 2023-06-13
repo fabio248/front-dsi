@@ -39,6 +39,7 @@ Button{
 }
 
 .imagen-appbar {
+  margin-top: 45px;
   height: auto;
   width: auto;
   max-height: 100%;

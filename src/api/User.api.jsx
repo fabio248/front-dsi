@@ -1,6 +1,7 @@
 // Para mantener un orden de datos se importa una carpeta de constantes
 import { ENV } from '../utils';
 import { decoderToken } from '../utils';
+import { format } from 'date-fns';
 
 export class User {
   async getUser(accessToken) {
@@ -65,7 +66,7 @@ export class User {
         body: JSON.stringify({
           firstName: data.firstName,
           lastName: data.lastName,
-          birthday: data.birthday,
+          birthday: format(data.birthday, 'dd/MM/yyyy'),
           email: data.email,
           password: data.password,
           role: data.role,

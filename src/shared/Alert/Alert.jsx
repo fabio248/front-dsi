@@ -24,7 +24,7 @@ export function Alerta ({ type = 'warning', message = 'This is an alert', title 
   };
 
   return (
-    <Stack spacing={2} sx={{ width: '100%' }}>
+    <Stack spacing={2} sx={{ width: '100%', textAlign: 'left' }}>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity={type} sx={{ width: '100%' }}>
             <AlertTitle>{title}</AlertTitle>

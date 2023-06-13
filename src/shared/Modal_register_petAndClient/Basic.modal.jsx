@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import { Box, styled } from '@mui/system';
 import Modal from '@mui/base/Modal';
@@ -10,6 +10,13 @@ import { Grid, TextField, Button } from '@mui/material';
 //pantallas a renderizar
 import Cliente_Register from '../../pages/Vet_pages/User and pets/Cliente.Register';
 import Mascotas_register from '../../pages/Vet_pages/User and pets/mascotas.register';
+import { UserFormTextFields, UserForm } from '../../components/Vet_components'
+import { PetsForm } from '../../components/Vet_components'
+import { Alerta } from '../'
+
+//Validaciones
+import { useFormik } from 'formik';
+import  { initialValues, validationSchemaRegister } from '../../components/Vet_components/Users_crud'
 
 const steps = [
   'Registro de informacion del cliente',
@@ -22,13 +29,16 @@ export function Basic_modal(props) {
   const handleClose = () => setOpen(false);
   const [data, setData] = React.useState('');
   const { title } = props;
+  const [clientError, setClientError] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [clientData, setClientData] = useState({});
 
   const [activeStep, setActiveStep] = React.useState(0);
 
-  const handleNext = () => {
+  function handleNext(){
+    console.log("JERCUTA SIGUIENTE");
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
-
   const handleBack = () => {
     console.log('hola');
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -45,6 +55,23 @@ export function Basic_modal(props) {
         break;
     }
   }
+
+  const formikUser = useFormik({
+    initialValues: initialValues(),
+    validationSchema: validationSchemaRegister(),
+    validateOnChange: false,
+    onSubmit: async (clientFormValue) => {
+      try {
+        setClientData(clientFormValue);
+        console.log(clientFormValue);
+        handleNext();
+      } catch (error) {
+        setClientError(true)
+        console.error(error);
+      }
+    },
+  });
+
 
   return (
     <div>
@@ -64,9 +91,9 @@ export function Basic_modal(props) {
             </h2>
             <span
               id='spring-modal-description'
-              style={{ marginTop: '25px', textAlign: 'center' }}
+              style={{ marginTop: '0px', textAlign: 'center' }}
             >
-              <Container sx={{ mt: 5 }}>
+              <Container sx={{ mt: 0 }}>
                 <Stepper activeStep={activeStep}>
                   {steps.map((label, index) => {
                     const stepProps = {};
@@ -104,17 +131,28 @@ export function Basic_modal(props) {
                 ) : (
                   <React.Fragment>
                     {mostrarPaginas(handleNext)}
-                    <Grid>
+                    <Grid component = 'form' onSubmit = {formikUser.handleSubmit} >
                       <Box
-                        sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          pt: 4,
+                          maxHeight: 450,
+                          overflow: 'auto',
+                          '-ms-overflow-style': 'none', /* IE and Edge */
+                          scrollbarWidth: 'none', /* Firefox */
+                          '&::-webkit-scrollbar': {
+                            display: 'none', /* Chrome, Safari, and Opera */
+                          },
+                        }}
                       >
                         {activeStep == 0 ? (
                           <>
-                            <TextField label='Nombre' />
+                            <UserFormTextFields formik = {formikUser} />
                           </>
                         ) : (
                           <>
-                            <TextField label='Mascota' />
+                            <PetsForm />
                           </>
                         )}
                       </Box>
@@ -138,7 +176,6 @@ export function Basic_modal(props) {
                             backgroundColor: 'gray',
                             color: 'skyblue',
                           }}
-                          onClick={handleNext}
                           variant='contained'
                           type='submit'
                           sx={{ mr: 1 }}
@@ -156,6 +193,14 @@ export function Basic_modal(props) {
           </Box>
         </Fade>
       </StyledModal>
+      {!formikUser.isValid && (
+        <Alerta
+          type={'warning'}
+          title={'¡Completa correctamente los campos!'}
+          message={'Para avanzar al siguiente paso se requieren datos válidos'}
+          strong={'Verifica la información ingresada'}
+        />
+      )}
     </div>
   );
 }
@@ -170,7 +215,7 @@ Backdrop.propTypes = {
 
 const StyledModal = styled(Modal)`
   position: fixed;
-  z-index: 2500;
+  z-index: 1200;
   right: 0;
   bottom: 0;
   top: 0;
@@ -242,13 +287,14 @@ const grey = {
 };
 
 const style = (theme) => ({
-  position: 'relative',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
+  display: 'flex',
+  flexDirection: 'column',
+  wrap: true,
+  alignItems: 'center',
+  justifycontent:'center',
   minWidth: 400,
   maxWidth: 1000,
-  height: 'auto',
+  maxHeight: 800,
   borderRadius: '12px',
   padding: '16px 32px 24px 32px',
   backgroundColor: theme.palette.mode === 'dark' ? '#0A1929' : 'white',

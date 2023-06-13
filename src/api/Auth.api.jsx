@@ -1,5 +1,6 @@
 // Para mantener un orden de datos se importa una carpeta de constantes
 import { ENV } from '../utils';
+import { format } from 'date-fns';
 
 export class ApiAuth {
   //REGISTRO
@@ -47,7 +48,7 @@ export class ApiAuth {
           // Parametros a enviar
           firstName: data.firstName,
           lastName: data.lastName,
-          birthday: data.birthday,
+          birthday: format(data.birthday, 'dd/MM/yyyy'),
           email: data.email,
           password: data.password,
           role: data.role,

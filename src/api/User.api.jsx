@@ -74,7 +74,6 @@ export class User {
           dui: data.dui,
         }),
       };
-      console.log(params);
       const response = await fetch(url, params);
       const result = await response.json();
 

@@ -30,7 +30,10 @@ export function UserAndPetsListered({ idUser, dataUser }) {
 
   if (size(userAnPet) === 0) {
     return (
-      <Typography variant='h5' style={{ textAlign: 'center' }}>
+      <Typography
+        variant='h5'
+        style={{ textAlign: 'center', marginTop: '65px' }}
+      >
         ¡No se encontraron Clientes con mascotas registrados! :(
       </Typography>
     );

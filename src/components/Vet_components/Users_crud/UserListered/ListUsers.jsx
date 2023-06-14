@@ -7,6 +7,7 @@ import { CircularProgress } from '@mui/material';
 
 const userController = new User();
 const AuthController = new ApiAuth();
+
 export function ListUsers(props) {
   const { reload, onReload } = props;
   const [users, setUsers] = useState(false);

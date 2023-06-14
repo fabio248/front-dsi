@@ -15,8 +15,6 @@ import PetsIcon from '@mui/icons-material/Pets';
 export function PetsItem(props) {
   const { pet, dataUser } = props;
 
-  console.log(pet);
-
   const Demo = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
   }));

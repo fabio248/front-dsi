@@ -61,6 +61,7 @@ export function Vet_Layouts(props) {
           <ListItemButton
             component='a'
             href='https://calendar.google.com/calendar/u/0/r'
+            target='_blank'
           >
             <ListItemIcon>
               <CalendarMonthIcon />
@@ -107,7 +108,7 @@ export function Vet_Layouts(props) {
                 >
                   <MenuIcon />
                 </IconButton>
-                <Typography variant="h6" noWrap component="div">
+                <Typography variant='h6' noWrap component='div'>
                   <div
                     style={{
                       position: 'absolute',
@@ -117,7 +118,7 @@ export function Vet_Layouts(props) {
                   >
                     <Logout />
                   </div>
-                  </Typography>
+                </Typography>
               </Toolbar>
             </AppBar>
             <Box

@@ -19,7 +19,7 @@ export function UserAndPetItem({ pet, dataUser }) {
 
   const newDate = pet.birthday.split('T');
   const newBirthday = format(new Date(newDate[0]), 'dd/MM/yyyy');
-
+  console.log(dataUser);
   return (
     <div className='container'>
       <ListItem sx={{ display: 'flex', flexWrap: 'wrap' }}>
@@ -46,8 +46,13 @@ export function UserAndPetItem({ pet, dataUser }) {
               {pet.isHaveTatto === true ? 'Si posee' : 'No posee'}
             </span>
             <br />
-            <b>Número Telefónico: </b>
-            <span style={{ color: 'gray' }}>{dataUser.phone}</span>
+            <b>Posee Todas sus vacunas?: </b>
+            <span style={{ color: 'gray' }}>
+              {' '}
+              {pet.medicalHistory.isHaveAllVaccine == true
+                ? 'No posee'
+                : 'Si posee'}
+            </span>
             <br />
             <b>Nacimiento de la mascota U adquisición: </b>
             <span style={{ color: 'gray' }}>{newBirthday}</span>

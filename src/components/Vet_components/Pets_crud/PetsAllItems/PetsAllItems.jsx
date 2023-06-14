@@ -7,20 +7,19 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 // import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { Divider, Avatar } from '@mui/material';
-
-import { format } from 'date-fns';
-
 import PetsIcon from '@mui/icons-material/Pets';
 
-export function PetsItem(props) {
-  const { pet, dataUser } = props;
+//formatos para fechas
+import { format } from 'date-fns';
 
+export function PetsAllItems({ pet, dataUser }) {
   const Demo = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
   }));
 
   const newDate = pet.birthday.split('T');
   const newBirthday = format(new Date(newDate[0]), 'dd/MM/yyyy');
+
   return (
     <div>
       {' '}
@@ -32,11 +31,6 @@ export function PetsItem(props) {
             </Avatar>
           </ListItemAvatar>
           <ListItemText>
-            <>
-              <h2 style={{ color: 'Background' }}>
-                Datos Generales de la mascota
-              </h2>
-            </>
             <p
               className='estilos-pets'
               style={{ justifyContent: 'space-around' }}
@@ -44,20 +38,39 @@ export function PetsItem(props) {
               <b>Nombre de la mascota: </b>
               {pet.name}
               <br />
+              <b>Raza: </b>
+              {pet.raza}
+              <br />
               <b>Genero: </b>
               {pet.gender}
               <br />
-              <b>Nacimiento de la mascota: </b>
+              <b>¿Tatuajes o marcas?: </b>
+              {pet.isHaveTatto == true ? 'No posee' : 'Si posee'}
+              <br />
+
+              <b>Posee Todas sus vacunas?: </b>
+              {pet.medicalHistory.isHaveAllVaccine == true
+                ? 'No posee'
+                : 'Si posee'}
+              <br />
+              <b>Nacimiento de la mascota U adquisición: </b>
               {newBirthday}
 
               <br />
-              {/* <b>{user.direction ? 'Direccion: ' : ''}</b> */}
-
               <b>Color del pelaje: </b>
               {pet.color}
               <br />
-              <b>¿Tatuajes o marcas?: </b>
-              {pet.isHaveTattoo == true ? 'No posee' : 'Si posee'}
+              <b>¿Pedigrí?: </b>
+              {pet.pedigree == true ? 'No posee' : 'Si posee'}
+              <br />
+              <p style={{ textAlign: 'center' }}>
+                <Divider>
+                  <b>Historial Médico</b>
+                </Divider>
+              </p>
+              <br />
+              <b>Cantidad Alimenticia: </b>
+              {pet.medicalHistory.food.quantity}
               {/* <b>{user.dui ? 'DUI: ' : ''}</b> */}
               {/* {user.dui ? user.dui : ''} */}
               <br />

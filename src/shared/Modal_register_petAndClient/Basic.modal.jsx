@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import { Box, styled } from '@mui/system';
 import Modal from '@mui/base/Modal';
@@ -10,16 +10,13 @@ import { Grid, TextField, Button } from '@mui/material';
 //pantallas a renderizar
 import Cliente_Register from '../../pages/Vet_pages/User and pets/Cliente.Register';
 import Mascotas_register from '../../pages/Vet_pages/User and pets/mascotas.register';
-import { UserFormTextFields, UserForm } from '../../components/Vet_components';
-import { PetsForm } from '../../components/Vet_components';
-import { Alerta } from '../';
+import { UserFormTextFields, PetFormTextFields } from '../../components/Vet_components'
+import { Alerta } from '../'
 
 //Validaciones
 import { useFormik } from 'formik';
-import {
-  initialValues,
-  validationSchemaRegister,
-} from '../../components/Vet_components/Users_crud';
+import  { initialValues, validationSchemaRegister } from '../../components/Vet_components/Users_crud'
+import { initialPetValues, validationSchemaPetRegister } from '../../components/Vet_components/Pets_crud'
 
 const steps = [
   'Registro de informacion del cliente',
@@ -35,13 +32,14 @@ export function Basic_modal(props) {
   const [clientError, setClientError] = useState(false);
   const [success, setSuccess] = useState(false);
   const [clientData, setClientData] = useState({});
+  const [petData, setPetData] = useState({});
 
   const [activeStep, setActiveStep] = React.useState(0);
 
-  function handleNext() {
-    console.log('JERCUTA SIGUIENTE');
+  function handleNext(){
+    console.log("JERCUTA SIGUIENTE");
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  }
+  };
   const handleBack = () => {
     console.log('hola');
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -66,14 +64,30 @@ export function Basic_modal(props) {
     onSubmit: async (clientFormValue) => {
       try {
         setClientData(clientFormValue);
-        console.log(clientFormValue);
+        console.log(clientData);
         handleNext();
       } catch (error) {
-        setClientError(true);
+        setClientError(true)
         console.error(error);
       }
     },
   });
+
+  const formikPet = useFormik({
+    initialValues: initialPetValues(),
+    validationSchema: validationSchemaPetRegister(),
+    validateOnChange: false,
+    onSubmit: async (petFormValue) => {
+      try {
+        setPetData(petFormValue);
+        console.log(petData);
+        close();
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  });
+
 
   return (
     <div>
@@ -133,29 +147,33 @@ export function Basic_modal(props) {
                 ) : (
                   <React.Fragment>
                     {mostrarPaginas(handleNext)}
-                    <Grid component='form' onSubmit={formikUser.handleSubmit}>
+                    <Grid 
+                    component = 'form' 
+                    onSubmit = { 
+                      activeStep == 0 
+                      ? formikUser.handleSubmit 
+                      : activeStep == 1 
+                        ? formikPet.handleSubmit 
+                        : null 
+                    } >
                       <Box
                         sx={{
                           display: 'flex',
-                          flexDirection: 'row',
+                          flexDirection: 'column',
                           pt: 4,
                           maxHeight: 450,
                           overflow: 'auto',
-                          '-ms-overflow-style': 'none' /* IE and Edge */,
-                          scrollbarWidth: 'none' /* Firefox */,
+                          msOverflowStyle: 'none', /* IE and Edge */
+                          scrollbarWidth: 'none', /* Firefox */
                           '&::-webkit-scrollbar': {
-                            display: 'none' /* Chrome, Safari, and Opera */,
+                            display: 'none', /* Chrome, Safari, and Opera */
                           },
                         }}
                       >
                         {activeStep == 0 ? (
-                          <>
-                            <UserFormTextFields formik={formikUser} />
-                          </>
+                          <UserFormTextFields formik = {formikUser} />
                         ) : (
-                          <>
-                            <PetsForm />
-                          </>
+                          <PetFormTextFields formik = {formikPet} />
                         )}
                       </Box>
                       <Box
@@ -293,7 +311,7 @@ const style = (theme) => ({
   flexDirection: 'column',
   wrap: true,
   alignItems: 'center',
-  justifycontent: 'center',
+  justifycontent:'center',
   minWidth: 400,
   maxWidth: 1000,
   maxHeight: 800,

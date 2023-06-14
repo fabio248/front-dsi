@@ -95,7 +95,7 @@ export function validationSchemaPetRegister(pet) {
     enfermedad: yup.string().required('Los detalles de la enfermedad o falta de ella son requeridos'),
     observacion: yup.string().required('Las observaciones son obligatorias'),
     habitaculo: yup.string().required('El habitáculo es obligatorio'),
-    weight: yup.number('El peso debe ser un número').required('El peso de la mascota es obligatorio'),
+    weight: yup.number().required('El peso de la mascota es obligatorio'),
     palpitaciones: yup.string().required('Las palpitaciones obligatorio'),
   });
 }

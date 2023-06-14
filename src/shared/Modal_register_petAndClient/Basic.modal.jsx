@@ -81,12 +81,17 @@ export function Basic_modal(props) {
       try {
         setPetData(petFormValue);
         console.log(petData);
-        close();
+        handleNext()
       } catch (error) {
         console.error(error);
       }
     },
   });
+
+  function showData(){
+    console.log(clientData);
+    console.log(petData);
+  };
 
 
   return (
@@ -141,7 +146,7 @@ export function Basic_modal(props) {
                         Regresar
                       </Button>
                       <Box sx={{ flex: '1 1 auto' }} />
-                      <Button href='/admin'>Enviar Registro</Button>
+                      <Button onClick={showData}>Enviar Registro</Button>
                     </Box>
                   </React.Fragment>
                 ) : (

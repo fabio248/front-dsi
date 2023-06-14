@@ -478,9 +478,7 @@ export function PetFormTextFields({formik}){
             size='small'
             value={formik.values.weight}
             onChange={formik.handleChange}
-            inputProps={{
-              inputMode: 'numeric',
-            }}
+            type='number'
             error={formik.touched.weight && Boolean(formik.errors.weight)}
             helperText={formik.touched.weight && formik.errors.weight}
           />

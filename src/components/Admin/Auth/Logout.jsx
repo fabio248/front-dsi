@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 // Google Authentication
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
@@ -13,8 +14,8 @@ export function Logout() {
 
   const { logout } = useAuth();
   const navigate = useNavigate();
-  const onLogout = () => {
-    logout();
+  async function onLogout(){
+    await logout();
     singOut();
     navigate('/');
   };
@@ -27,11 +28,10 @@ export function Logout() {
 
   return (
     <Button
-      style={{ marginTop: '10px', position: 'fixed', right: 0, top: 0 }}
+      startIcon={<LogoutIcon />}
       variant='contained'
       onClick={onLogout}
-      size='large'
-      className='my_button'
+      color = 'error'
     >
       Cerrar sesion
     </Button>

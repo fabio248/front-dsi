@@ -20,6 +20,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import PetsIcon from '@mui/icons-material/Pets';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import { Logout } from '../../components/Admin/Auth/Logout';
+import { Grid } from '@mui/material';
 
 const drawerWidth = 240;
 
@@ -69,6 +70,7 @@ export function Vet_Layouts(props) {
           <ListItemButton
             component='a'
             href='https://calendar.google.com/calendar/u/0/r'
+            target='_blank'
           >
             <ListItemIcon>
               <CalendarMonthIcon />
@@ -116,7 +118,15 @@ export function Vet_Layouts(props) {
                   <MenuIcon />
                 </IconButton>
                 <Typography variant='h6' noWrap component='div'>
-                  <Logout />
+                  <div
+                    style={{
+                      position: 'absolute',
+                      right: '10px',
+                      bottom: '10px',
+                    }}
+                  >
+                    <Logout />
+                  </div>
                 </Typography>
               </Toolbar>
             </AppBar>

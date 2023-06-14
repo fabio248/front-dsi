@@ -50,7 +50,6 @@ export function Clients_Layouts(props) {
           className="imagen-appbar"
         />
       </div>
-      
       <Toolbar />
       <Divider />
       <List>

@@ -23,9 +23,13 @@ import {
   Modal_delete,
   Alerta,
   Modal_create_pet,
+  Modal_verInfoClientAndPet,
 } from '../../../../shared';
+
+//objetos children que se renderizan dentro del modal
 import { UserForm } from '../UserForm';
 import { PetsForm } from '../../Pets_crud';
+import { UserAndPetsListered } from '../UserAndPetsListered';
 
 //import petitions of back
 import { User } from '../../../../api/User.api';
@@ -41,6 +45,7 @@ export function UserItem(props) {
 
   //verificacion de error en la ejecución
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
 
   const Demo = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -53,7 +58,13 @@ export function UserItem(props) {
   //useState que controla el estado del (abrir o cerrar) modal Delete
   const [showConfirm, setShowConfirm] = useState(false);
   const [confirmMessage, setConfirmMessage] = useState('');
+
+  //seteo del titulo del modal de eliminar
   const [titleDelete, setTitleDelete] = useState('');
+
+  //seteo del titulo del modal de visualizar
+  const [showVisualizar, setShowVisualizar] = useState(false);
+  const [titleSeeInfoClientAndPet, setTitleSeeInfoClientAndPet] = useState('');
 
   //useState que controla el estado del (abrir o cerrar) modal Create Pets
   const [showPets, setShowPets] = useState(false);
@@ -63,6 +74,8 @@ export function UserItem(props) {
   const onOpenCloseModal = () => setShowModal((prevState) => !prevState);
   const onCloseConfirm = () => setShowConfirm((prevState) => !prevState);
   const onOpenClosePets = () => setShowPets((prevState) => !prevState);
+  const onOpenInfoClientAndPets = () =>
+    setShowVisualizar((prevState) => !prevState);
 
   //funcion que ejecuta el boton correspondiente (Update pencilIcon)
   const openUpdateUser = () => {
@@ -83,14 +96,25 @@ export function UserItem(props) {
     onCloseConfirm();
   };
 
+  //ejecuta la funcion de visualizacion de informacion de cliente y su mascota (VisibilityIcon)
+  const openInfoClientAndPets = () => {
+    setTitleSeeInfoClientAndPet(
+      `Visualizando Datos del cliente con sus mascotas `
+    );
+    onOpenInfoClientAndPets();
+  };
+
   //ejecuta la peticion de eliminacion de usuario
   const onDeleteUser = async () => {
     try {
       setError('');
       const accessToken = await authController.getAccessToken();
       await userController.deleteUser(accessToken, user.id);
-      onReload();
+      setSuccess(true);
       onCloseConfirm();
+      setTimeout(() => {
+        onReload();
+      }, '3000');
     } catch (error) {
       console.error(error);
     }
@@ -99,7 +123,7 @@ export function UserItem(props) {
   let newBirthday;
   if (user) {
     newBirthday = user.birthday.split('T');
-    newBirthday = format(new Date(newBirthday[0]), 'MM/dd/yyyy');
+    newBirthday = format(new Date(newBirthday[0]), 'dd/MM/yyyy');
   }
 
   return (
@@ -139,7 +163,7 @@ export function UserItem(props) {
             sx={{ display: 'flex', flexDirection: 'row', margin: '0 auto' }}
           >
             <Grid item>
-              <IconButton color='info' onClick={() => console.log('Hola')}>
+              <IconButton color='info' onClick={openInfoClientAndPets}>
                 <VisibilityIcon sx={{ fontSize: 30 }} />
               </IconButton>
             </Grid>
@@ -152,12 +176,20 @@ export function UserItem(props) {
               <IconButton color='error' onClick={openDeleteUser}>
                 <DeleteIcon sx={{ fontSize: 30 }} />
               </IconButton>
+              {success && (
+                <Alerta
+                  type={'info'}
+                  title={'¡Usuario Eliminado!'}
+                  message={'Se ha elimnado correctamente usuario'}
+                  strong={user.firstName + ' ' + user.lastName}
+                />
+              )}
               {error && (
                 <Alerta
-                  type={'Exito'}
-                  title={'¡Usuario Eliminado!'}
-                  message={'Ha ocurrido un problema al eliminar el usuario'}
-                  strong={'Verificación completada'}
+                  type={'error'}
+                  title={'¡Ha ocurrido un problema!'}
+                  message={'No se ha podido eliminar el usuario'}
+                  strong={user.firstName + ' ' + user.lastName}
                 />
               )}
             </Grid>
@@ -190,6 +222,18 @@ export function UserItem(props) {
       >
         <PetsForm close={onOpenClosePets} />
       </Modal_create_pet>
+      <Modal_verInfoClientAndPet
+        show={showVisualizar}
+        close={onOpenInfoClientAndPets}
+        title={titleSeeInfoClientAndPet}
+        dataUser={user}
+      >
+        <UserAndPetsListered
+          close={onOpenInfoClientAndPets}
+          idUser={user.id}
+          dataUser={user}
+        />
+      </Modal_verInfoClientAndPet>
     </>
   );
 }

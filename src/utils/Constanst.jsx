@@ -21,4 +21,7 @@ export const ENV = {
     ACCESS: 'access',
     REFRESH: 'refresh',
   },
+  PROVIDER_TOKEN: {
+    PROVIDER: 'sb-uaxoyjmbhrugldbyjywi-auth-token provider_token',
+  },
 };

@@ -12,14 +12,10 @@ import { format } from 'date-fns';
 
 import PetsIcon from '@mui/icons-material/Pets';
 
-export function UserAndPetItem({ pet, dataUser }) {
-  const Demo = styled('div')(({ theme }) => ({
-    backgroundColor: theme.palette.background.paper,
-  }));
-
+export function UserAndPetItem({ pet }) {
   const newDate = pet.birthday.split('T');
   const newBirthday = format(new Date(newDate[0]), 'dd/MM/yyyy');
-  console.log(dataUser);
+
   return (
     <div className='container'>
       <ListItem sx={{ display: 'flex', flexWrap: 'wrap' }}>
@@ -59,11 +55,18 @@ export function UserAndPetItem({ pet, dataUser }) {
             <br />
             <b>Color del pelaje: </b>
             <span style={{ color: 'gray' }}>{pet.color}</span>
-            <p style={{ textAlign: 'center' }}>
-              <Divider>
-                <b>Historial Médico</b>
-              </Divider>
-            </p>
+            <div
+              style={{
+                borderBottom: '3px solid grey',
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <span>Historial Médico</span>
+            </div>
+            <br />
             <>
               <b>Cantidad alimenticia: </b>
               <span style={{ color: 'gray' }}>
@@ -106,11 +109,18 @@ export function UserAndPetItem({ pet, dataUser }) {
               <br />
               <b>Habitátilo de la mascota: </b>
               <span style={{ color: 'gray' }}>{pet.medicalHistory.room}</span>
-              <p style={{ textAlign: 'center' }}>
-                <Divider>
-                  <b>Examen Físico</b>
-                </Divider>
-              </p>
+              <div
+                style={{
+                  borderBottom: '3px solid grey',
+                  borderRadius: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <span>Examen Físico</span>
+              </div>
+              <br />
               <b>Peso de la mascota: </b>
               <span style={{ color: 'gray' }}>
                 {pet.medicalHistory.physicalExam.weight} Kg

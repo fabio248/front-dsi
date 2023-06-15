@@ -131,6 +131,10 @@ export class ApiAuth {
   getAccessToken() {
     return localStorage.getItem(ENV.JWT.ACCESS);
   }
+
+  getProviderToken() {
+    return localStorage.getItem(ENV.PROVIDER_TOKEN.PROVIDER);
+  }
   // GUARDA REFRESHTOKEN EN LOCALSTORAGE
   setRefreshToken(token) {
     localStorage.setItem(ENV.JWT.REFRESH, token);

@@ -125,7 +125,6 @@ export function UserItem(props) {
     newBirthday = user.birthday.split('T');
     newBirthday = format(new Date(newBirthday[0]), 'dd/MM/yyyy');
   }
-
   return (
     <>
       <Demo>

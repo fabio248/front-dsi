@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 //import petitions of back
 import { Pets } from '../../../../api/Pets.api';
 import { ApiAuth } from '../../../../api/Auth.api';
+import { User } from '../../../../api/User.api';
 
 //clases de renderizado
 import { PetsAllItems } from '../PetsAllItems';
@@ -14,17 +15,21 @@ import { size, map } from 'lodash';
 //clase Pets
 const petsController = new Pets();
 const apiAuthController = new ApiAuth();
+const userController = new User();
 
 export function ListeredAllPets({ reload, onReload }) {
   const [pets, setPets] = useState(false);
+  const [users, setUsers] = useState(false);
 
   useEffect(() => {
     (async () => {
       try {
         const accessToken = await apiAuthController.getAccessToken();
 
-        const response = await petsController.getAllPets(accessToken);
-        setPets(response.data);
+        const responsePets = await petsController.getAllPets(accessToken);
+        const responseUser = await userController.getAllUsers(accessToken);
+        setUsers(responseUser.data);
+        setPets(responsePets.data);
       } catch (error) {}
     })();
   }, [reload]);

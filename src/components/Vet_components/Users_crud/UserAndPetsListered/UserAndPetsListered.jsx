@@ -22,6 +22,7 @@ export function UserAndPetsListered({ idUser, dataUser }) {
       const dataAccess = apiAuthController.getAccessToken();
 
       const response = await petsController.getPetsForUsers(dataAccess, idUser);
+
       setUserAndPet(response.data.pet);
     })();
   }, []);

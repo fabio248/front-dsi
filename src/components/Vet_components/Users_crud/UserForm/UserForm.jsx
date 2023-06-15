@@ -25,7 +25,7 @@ import './UserForm.css';
 const authControl = new ApiAuth();
 const userControl = new User();
 
-export  function UserFormTextFields({formik, isError}){
+export  function UserFormTextFields({formik}){
   const roles = [
     { label: 'client', key: 'user', value: 'client' },
     { label: 'admin', key: 'admin', value: 'admin' },
@@ -83,29 +83,29 @@ export  function UserFormTextFields({formik, isError}){
         />
       </Grid>
       <Grid item xs={12} sm={6}>
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <DatePicker
-          label="Fecha de Nacimiento"
-          name="birthday"
-          value={formik.values.birthday}
-          onChange={handleDateChange}
-          onBlur={formik.handleBlur}
-          slotProps={{ textField: { size: 'small', fullWidth: 'true' } }}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              error={formik.touched.birthday && Boolean(formik.errors.birthday)}
-            />
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <DatePicker
+            label="Fecha de Nacimiento"
+            name="birthday"
+            value={formik.values.birthday}
+            onChange={handleDateChange}
+            onBlur={formik.handleBlur}
+            slotProps={{ textField: { size: 'small', fullWidth: 'true' } }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                error={formik.touched.birthday && Boolean(formik.errors.birthday)}
+              />
+            )}
+            disableFuture // Deshabilitar fechas posteriores al día de hoy
+            showTodayButton // Mostrar botón para seleccionar la fecha actual
+            clearable // Permitir borrar la fecha seleccionada
+            format = 'dd/MM/yyyy'
+          />
+          {formik.touched.birthday && formik.errors.birthday && (
+            <FormHelperText error>{formik.errors.birthday}</FormHelperText>
           )}
-          disableFuture // Deshabilitar fechas posteriores al día de hoy
-          showTodayButton // Mostrar botón para seleccionar la fecha actual
-          clearable // Permitir borrar la fecha seleccionada
-          format = 'dd/MM/yyyy'
-        />
-        {formik.touched.birthday && formik.errors.birthday && (
-          <FormHelperText error>{formik.errors.birthday}</FormHelperText>
-        )}
-      </LocalizationProvider>
+        </LocalizationProvider>
       </Grid>
       <Grid item xs={12} sm={6}>
         <TextField
@@ -141,7 +141,6 @@ export  function UserFormTextFields({formik, isError}){
             error={formik.touched.role && formik.errors.role}
             helperText={formik.touched.role && formik.errors.role} />
           )}
-          
         />
       </Grid>
       <Grid item xs={12} sm={6}>

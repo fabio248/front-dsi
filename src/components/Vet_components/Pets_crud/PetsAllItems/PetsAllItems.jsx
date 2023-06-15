@@ -1,24 +1,51 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 //mui material
 import { styled } from '@mui/material/styles';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
-// import ListItemIcon from '@mui/material/ListItemIcon';
+import { Grid, IconButton } from '@mui/material';
 import ListItemText from '@mui/material/ListItemText';
 import { Divider, Avatar } from '@mui/material';
 import PetsIcon from '@mui/icons-material/Pets';
 
+//Iconos de Mui material
+import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+
+//Modales compartidos
+import { Modal_visualizarClient } from '../../../../shared';
+
+//renderizado de los elementos
+import { UserAndPetsListered } from '../../Users_crud';
+
 //formatos para fechas
 import { format } from 'date-fns';
 
-export function PetsAllItems({ pet, dataUser }) {
+export function PetsAllItems({ pet }) {
   const Demo = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
   }));
 
   const newDate = pet.birthday.split('T');
   const newBirthday = format(new Date(newDate[0]), 'dd/MM/yyyy');
+
+  //seteo del titulo del modal de visualizar
+  const [showVisualizar, setShowVisualizar] = useState(false);
+  const [titleSeeInfoClientAndPet, setTitleSeeInfoClientAndPet] = useState('');
+
+  //funciones que cambia el estado
+  const onOpenInfoClientAndPets = () =>
+    setShowVisualizar((prevState) => !prevState);
+
+  //ejecuta la funcion de visualizacion de informacion de cliente y su mascota (VisibilityIcon)
+  const openInfoClientAndPets = () => {
+    setTitleSeeInfoClientAndPet(
+      `Visualizando Datos del cliente con sus mascotas `
+    );
+    onOpenInfoClientAndPets();
+  };
 
   return (
     <div>
@@ -31,10 +58,11 @@ export function PetsAllItems({ pet, dataUser }) {
             </Avatar>
           </ListItemAvatar>
           <ListItemText>
-            <p
+            <b
               className='estilos-pets'
               style={{ justifyContent: 'space-around' }}
             >
+              <br />
               <b>Nombre de la mascota: </b>
               {pet.name}
               <br />
@@ -45,9 +73,8 @@ export function PetsAllItems({ pet, dataUser }) {
               {pet.gender}
               <br />
               <b>¿Tatuajes o marcas?: </b>
-              {pet.isHaveTatto == true ? 'No posee' : 'Si posee'}
+              {pet.isHaveTatto == true ? 'Si posee' : 'No posee'}
               <br />
-
               <b>Posee Todas sus vacunas?: </b>
               {pet.medicalHistory.isHaveAllVaccine == true
                 ? 'No posee'
@@ -55,37 +82,50 @@ export function PetsAllItems({ pet, dataUser }) {
               <br />
               <b>Nacimiento de la mascota U adquisición: </b>
               {newBirthday}
-
               <br />
               <b>Color del pelaje: </b>
               {pet.color}
               <br />
               <b>¿Pedigrí?: </b>
-              {pet.pedigree == true ? 'No posee' : 'Si posee'}
+              {pet.pedigree == false ? 'No posee' : 'Si posee'}
               <br />
-              <p style={{ textAlign: 'center' }}>
-                <Divider>
-                  <b>Historial Médico</b>
-                </Divider>
-              </p>
-              <br />
-              <b>Cantidad Alimenticia: </b>
-              {pet.medicalHistory.food.quantity}
-              {/* <b>{user.dui ? 'DUI: ' : ''}</b> */}
-              {/* {user.dui ? user.dui : ''} */}
-              <br />
-              {/* <b>{user.birthday ? 'Fecha de nacimiento: ' : ''}</b> */}
-              {/* {user.birthday ? newBirthday : ''} */}
-              <br />
-              {/* <b>{user.phone ? 'Teléfono: ' : ''}</b> */}
-              {/* {user.phone ? user.phone : ''} */}
-            </p>
+            </b>
           </ListItemText>
+          <ListItemAvatar
+            sx={{ display: 'flex', flexDirection: 'row', margin: '0 auto' }}
+          >
+            <Grid item>
+              <IconButton color='info' onClick={openInfoClientAndPets}>
+                <VisibilityIcon sx={{ fontSize: 30 }} />
+              </IconButton>
+            </Grid>
+            <Grid item>
+              <IconButton color='warning' onClick={() => console.log('')}>
+                <ModeEditIcon sx={{ fontSize: 30 }} />
+              </IconButton>
+            </Grid>
+            <Grid item>
+              <IconButton color='error' onClick={() => console.log('')}>
+                <DeleteIcon sx={{ fontSize: 30 }} />
+              </IconButton>
+            </Grid>
+          </ListItemAvatar>
         </ListItem>
         <Divider>
-          <PetsIcon color='disabled' />
+          <PetsIcon color='action' style={{ width: '60px', height: '40px' }} />
         </Divider>
       </Demo>
+      <Modal_visualizarClient
+        show={showVisualizar}
+        close={onOpenInfoClientAndPets}
+        title={titleSeeInfoClientAndPet}
+        dataUser={pet.user}
+      >
+        <UserAndPetsListered
+          close={onOpenInfoClientAndPets}
+          idUser={pet.user.id}
+        />
+      </Modal_visualizarClient>
     </div>
   );
 }

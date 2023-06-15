@@ -58,14 +58,6 @@ export function PetsItem(props) {
               <br />
               <b>¿Tatuajes o marcas?: </b>
               {pet.isHaveTattoo == true ? 'No posee' : 'Si posee'}
-              {/* <b>{user.dui ? 'DUI: ' : ''}</b> */}
-              {/* {user.dui ? user.dui : ''} */}
-              <br />
-              {/* <b>{user.birthday ? 'Fecha de nacimiento: ' : ''}</b> */}
-              {/* {user.birthday ? newBirthday : ''} */}
-              <br />
-              {/* <b>{user.phone ? 'Teléfono: ' : ''}</b> */}
-              {/* {user.phone ? user.phone : ''} */}
             </p>
           </ListItemText>
         </ListItem>

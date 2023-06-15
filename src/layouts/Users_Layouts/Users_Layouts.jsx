@@ -6,22 +6,17 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import MailIcon from "@mui/icons-material/Mail";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import StarBorder from '@mui/icons-material/StarBorder';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import InfoIcon from '@mui/icons-material/Info';
-import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
-import FingerprintIcon from '@mui/icons-material/Fingerprint';
 import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual';
 import { Button } from "@mui/material";
 import { FaFacebook } from 'react-icons/fa';
@@ -49,7 +44,7 @@ export function Users_Layouts(props) {
     <div>
       <div className="image-container">
         <img
-          src="../../../public/galeria/logo.jpg"
+          src="../../../public/galeria/logo.png"
           alt="logo"
           className="imagen-appbar"
         />

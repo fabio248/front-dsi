@@ -19,6 +19,7 @@ import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import PetsIcon from '@mui/icons-material/Pets';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+import EventIcon from '@mui/icons-material/Event';
 import { Logout } from '../../components/Admin/Auth/Logout';
 import { Grid } from '@mui/material';
 
@@ -38,12 +39,12 @@ export function Vet_Layouts(props) {
 
       <div className="image-container">
         <img
-          src="../../../public/galeria/logo.jpg"
+          src="../../../public/galeria/logo.png"
           alt="logo"
           className="imagen-appbar"
         />
       </div>
-      
+
       <Toolbar />
       <List>
         <ListItem disablePadding>
@@ -58,7 +59,7 @@ export function Vet_Layouts(props) {
         <ListItem disablePadding>
           <ListItemButton component='a' href='/admin/calendar'>
             <ListItemIcon>
-              <PetsIcon />
+              <EventIcon />
             </ListItemIcon>
             <ListItemText primary='Programación de citas' />
           </ListItemButton>

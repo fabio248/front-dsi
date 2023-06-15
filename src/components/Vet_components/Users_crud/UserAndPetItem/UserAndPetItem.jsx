@@ -55,6 +55,9 @@ export function UserAndPetItem({ pet }) {
             <br />
             <b>Color del pelaje: </b>
             <span style={{ color: 'gray' }}>{pet.color}</span>
+            <br />
+            <b>Color del pelaje: </b>
+            <span style={{ color: 'gray' }}>{pet.color}</span>
             <div
               style={{
                 borderBottom: '3px solid grey',
@@ -107,7 +110,7 @@ export function UserAndPetItem({ pet }) {
                 {pet.medicalHistory.observation}
               </span>
               <br />
-              <b>Habitátilo de la mascota: </b>
+              <b>Habitáculo de la mascota: </b>
               <span style={{ color: 'gray' }}>{pet.medicalHistory.room}</span>
               <div
                 style={{

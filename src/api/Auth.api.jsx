@@ -85,7 +85,7 @@ export class ApiAuth {
           password: data.password,
         }),
       };
-
+      console.log(config, configApiBackend, configJwt);
       const response = await fetch(url, params);
       const result = await response.json();
 

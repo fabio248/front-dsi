@@ -46,7 +46,6 @@ export function PetsAllItems({ pet }) {
     );
     onOpenInfoClientAndPets();
   };
-
   return (
     <div>
       {' '}

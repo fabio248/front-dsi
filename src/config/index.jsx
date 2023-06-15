@@ -8,7 +8,7 @@ const configApiBackend = {
   login: import.meta.env.VITE_LOGIN,
   googleAuth: import.meta.env.VITE_GOOGLEAUTH,
   forgotPassword: import.meta.env.VITE_FORGOTPASSWORD,
-  changePassword: import.meta.env.VITE_CHANGE_PASSWORD,
+  changePassword: import.meta.env.VITE_CHANGEPASSWORD,
   users: import.meta.env.VITE_USERS,
   refreshAccessToken: import.meta.env.VITE_REFRESH_ACCESS_TOKEN,
   pets: import.meta.env.VITE_PETS,

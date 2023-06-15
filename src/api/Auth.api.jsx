@@ -1,12 +1,12 @@
 // Para mantener un orden de datos se importa una carpeta de constantes
-import { ENV } from '../utils';
+import { config, configJwt, configApiBackend } from '../config';
 import { format } from 'date-fns';
 
 export class ApiAuth {
   //REGISTRO
   async registerUser(data) {
     try {
-      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.USERS}`;
+      const url = `${config.baseApi}/${configApiBackend.users}`;
       const params = {
         method: 'POST', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
         headers: {
@@ -36,7 +36,7 @@ export class ApiAuth {
   // REGISTRO HECHO POR ADMINISTRADOR
   async registerUserForVet(data) {
     try {
-      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.USERS}`;
+      const url = `${config.baseApi}/${configApiBackend.users}`;
       const params = {
         method: 'POST', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
         headers: {
@@ -71,7 +71,7 @@ export class ApiAuth {
   //LOGIN
   async login(data) {
     try {
-      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.LOGIN}`;
+      const url = `${config.baseApi}/${configApiBackend.login}`;
       const params = {
         method: 'POST', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
         headers: {
@@ -85,7 +85,7 @@ export class ApiAuth {
           password: data.password,
         }),
       };
-
+      console.log(config, configApiBackend, configJwt);
       const response = await fetch(url, params);
       const result = await response.json();
 
@@ -99,7 +99,7 @@ export class ApiAuth {
 
   async refreshAccessToken(refreshToken) {
     try {
-      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.REFRESH_ACCESS_TOKEN}`;
+      const url = `${config.baseApi}/${configApiBackend.refreshAccessToken}`;
 
       const params = {
         method: 'POST', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
@@ -125,35 +125,36 @@ export class ApiAuth {
 
   // GUARDA ACCESSTOKEN EN LOCALSTORAGE
   setAccessToken(token) {
-    localStorage.setItem(ENV.JWT.ACCESS, token);
+    localStorage.setItem(configJwt.access, token);
   }
   // RECUPERACIÓN DE ACCESSTOKEN EN LOCALSTORAGE
   getAccessToken() {
-    return localStorage.getItem(ENV.JWT.ACCESS);
+    return localStorage.getItem(configJwt.access);
   }
 
-  getProviderToken() {
-    return localStorage.getItem(ENV.PROVIDER_TOKEN.PROVIDER);
-  }
+  // getProviderToken() {
+  //   return localStorage.getItem(ENV.PROVIDER_TOKEN.PROVIDER);
+  // }
+
   // GUARDA REFRESHTOKEN EN LOCALSTORAGE
   setRefreshToken(token) {
-    localStorage.setItem(ENV.JWT.REFRESH, token);
+    localStorage.setItem(configJwt.refresh, token);
   }
   // RECUPERACIÓN DE REFRESHTOKEN EN LOCALSTORAGE
   getRefreshToken() {
-    return localStorage.getItem(ENV.JWT.REFRESH);
+    return localStorage.getItem(configJwt.refresh);
   }
 
   // ELIMINAR TOKENS DE LOCALSTORAGE
   removeTokens() {
-    localStorage.removeItem(ENV.JWT.ACCESS);
-    localStorage.removeItem(ENV.JWT.REFRESH);
+    localStorage.removeItem(configJwt.access);
+    localStorage.removeItem(configJwt.refresh);
   }
 
   //FORGOT PASSWORD
   async forgotPassword(data) {
     try {
-      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.FORGOPASSWORD}`; // RUTA
+      const url = `${config.baseApi}/${configApiBackend.forgotPassword}`; // RUTA
       const params = {
         method: 'POST', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
         headers: {
@@ -180,7 +181,7 @@ export class ApiAuth {
   //CHANGE PASSWORD
   async changePassword(data, changePasswordToken) {
     try {
-      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.CHANGEPASSWORD}`;
+      const url = `${config.baseApi}/${configApiBackend.changePassword}`;
       const params = {
         method: 'POST', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
         headers: {
@@ -208,7 +209,7 @@ export class ApiAuth {
   //AUTENTIFICACIÓN CON GOOGLE
   async googleAuth(data) {
     try {
-      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.GOOGLEAUTH}`;
+      const url = `${config.baseApi}/${configApiBackend.googleAuth}`;
       const params = {
         method: 'POST', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
         headers: {

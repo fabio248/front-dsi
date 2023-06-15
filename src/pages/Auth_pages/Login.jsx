@@ -31,7 +31,7 @@ import { CircularProgress } from '@mui/material';
 import { Alerta } from '../../shared/Alert';
 import { ForgotPassword } from '../../components/Admin/Auth/ForgotPassword';
 import { decoderToken } from '../../utils';
-import { ENV } from '../../utils/';
+import { config } from '../../config';
 
 // API - Clase para autentificación
 import { ApiAuth } from '../../api/Auth.api';
@@ -118,7 +118,7 @@ export function Login() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: ENV.BASE_SUPABASE,
+        redirectTo: config.baseSupabases,
         scopes: 'https://www.googleapis.com/auth/calendar',
       },
     });

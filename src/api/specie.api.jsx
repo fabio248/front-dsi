@@ -1,5 +1,4 @@
-import { ENV } from '../utils';
-
+import { config, configApiBackend } from '../config';
 export class Species {
   async getAllspecies() {
     try {

@@ -1,6 +1,6 @@
 // Para mantener un orden de datos se importa una carpeta de constantes
-import { ENV } from '../utils';
 import { decoderToken } from '../utils';
+import { config, configApiBackend } from '../config';
 import { format } from 'date-fns';
 
 export class User {
@@ -10,7 +10,7 @@ export class User {
       const USER_ID = decoderToken(accessToken).identify;
 
       // URL de conexion con el backend
-      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.USERS}/${USER_ID}`;
+      const url = `${config.baseApi}/${configApiBackend.users}/${USER_ID}`;
       const params = {
         method: 'GET', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
         headers: {
@@ -32,7 +32,7 @@ export class User {
 
   async getAllUsers(accessToken) {
     try {
-      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.USERS}`;
+      const url = `${config.baseApi}/${configApiBackend.users}`;
       const params = {
         method: 'GET', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
         headers: {
@@ -55,7 +55,7 @@ export class User {
         delete data.password;
       }
 
-      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.USERS}/${idUser}`;
+      const url = `${config.baseApi}/${configApiBackend.users}/${idUser}`;
       const params = {
         method: 'PATCH', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
         headers: {
@@ -86,7 +86,7 @@ export class User {
   }
   async deleteUser(accessToken, idUser) {
     try {
-      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.USERS}/${idUser}`;
+      const url = `${config.baseApi}/${configApiBackend.users}/${idUser}`;
       const params = {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${accessToken}` },

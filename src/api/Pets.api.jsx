@@ -1,9 +1,9 @@
-import { ENV } from '../utils';
+import { config, configApiBackend } from '../config';
 
 export class Pets {
   async getPetsForUsers(accessToken, userId) {
     try {
-      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.USERS}/${userId}`;
+      const url = `${config.baseApi}/${configApiBackend.users}/${userId}`;
       const params = {
         method: 'GET',
         headers: {
@@ -22,14 +22,13 @@ export class Pets {
   }
   async getAllPets(accessToken) {
     try {
-      const url = `${ENV.BASE_API}/${ENV.API_ROUTES.PETS}`;
+      const url = `${config.baseApi}/${configApiBackend.pets}`;
       const params = {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       };
-
       const response = await fetch(url, params);
       const result = await response.json();
 

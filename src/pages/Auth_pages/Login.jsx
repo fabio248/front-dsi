@@ -170,8 +170,7 @@ export function Login() {
             // Guarda logueo en contexto de la aplicación
             await login(response.accessToken);
             const { role } = decoderToken(response.accessToken);
-            // console.log(loading);
-            // console.log(dataGoogle);
+
             if (loading) {
               const timer = setInterval(() => {
                 setProgress((prevProgress) => {

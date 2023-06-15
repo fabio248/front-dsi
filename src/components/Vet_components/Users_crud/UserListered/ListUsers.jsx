@@ -4,6 +4,7 @@ import { ApiAuth } from '../../../../api/Auth.api';
 import { size, map } from 'lodash';
 import { UserItem } from '../UserItem';
 import { CircularProgress } from '@mui/material';
+import { PetsAllItems } from '../../Pets_crud';
 
 const userController = new User();
 const AuthController = new ApiAuth();
@@ -18,7 +19,7 @@ export function ListUsers(props) {
         const accessToken = AuthController.getAccessToken();
 
         const response = await userController.getAllUsers(accessToken);
-        console.log(response.data);
+
         setUsers(response.data);
       } catch (error) {}
     })();

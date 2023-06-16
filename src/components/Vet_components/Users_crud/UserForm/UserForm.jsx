@@ -90,7 +90,7 @@ export  function UserFormTextFields({formik}){
             value={formik.values.birthday}
             onChange={handleDateChange}
             onBlur={formik.handleBlur}
-            slotProps={{ textField: { size: 'small', fullWidth: 'true' } }}
+            slotProps={{ textField: { size: 'small', fullWidth: true} }}
             renderInput={(params) => (
               <TextField
                 {...params}

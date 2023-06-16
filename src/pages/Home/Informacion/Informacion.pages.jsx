@@ -160,7 +160,7 @@ export function Informacion_pages() {
 
           <Box mt={7}>
             <a
-              href="https://wa.me/50361366565"
+              href = "/login"
               target="_blank"
               rel="noopener noreferrer"
               style={{ textDecoration: 'underline', color: 'purple' }}

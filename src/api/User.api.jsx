@@ -4,6 +4,7 @@ import { config, configApiBackend } from '../config';
 import { format } from 'date-fns';
 
 export class User {
+  // OBTENER USUARIO POR ID
   async getUser(accessToken) {
     try {
       // Se decodifica el token para obtener su información
@@ -29,7 +30,7 @@ export class User {
       throw error; // Manejo del error
     }
   }
-
+  //OBTENER TODOS LOS USUARIOS REGISTRADOS EN LA BASE
   async getAllUsers(accessToken) {
     try {
       const url = `${config.baseApi}/${configApiBackend.users}`;
@@ -49,6 +50,7 @@ export class User {
       next(error);
     }
   }
+  // ACTUALIZAR UN USUARIO
   async updateUser(accessToken, idUser, data) {
     try {
       if (!data.password) {
@@ -84,6 +86,7 @@ export class User {
       throw error;
     }
   }
+  // ELIMINAR UN USUARIO
   async deleteUser(accessToken, idUser) {
     try {
       const url = `${config.baseApi}/${configApiBackend.users}/${idUser}`;
@@ -100,6 +103,72 @@ export class User {
       return result;
     } catch (error) {
       throw error;
+    }
+  }
+
+  //REGISTRAR UN USUARIO Y SU MASCOTA
+  async registerUserAndPet(accessToken, clientData, petData) {
+    try {
+      const url = `${config.baseApi}/${configApiBackend.users}/${configApiBackend.pets}`;
+      const params = {
+        method: 'POST', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
+        headers: {
+          // El tipo de contenido (este puede ser Authorization, Content-Type, conection etc)
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        // Este puede variar si es texto plano del body es un stringfy o tambien puede ser formData
+        body: JSON.stringify({
+          // Parametros a enviar
+          firstName: clientData.firstName,
+          lastName: clientData.lastName,
+          birthday: format(clientData.birthday, 'dd/MM/yyyy'),
+          email: clientData.email,
+          password: clientData.password,
+          role: clientData.role,
+          phone: clientData.phone,
+          direction: clientData.direction,
+          dui: clientData.dui,
+          pet:{
+            name: petData.name,
+            specie: petData.specie.id,
+            raza: petData.raza,
+            color: petData.color,
+            isHaveTatto: petData.isHaveTattoo,
+            birthday: format(petData.birthday, 'dd/MM/yyyy'),
+            gender: petData.gender,
+            pedigree: petData.pedigree,
+            medicalHistory:{
+              isHaveAllVaccine: petData.vacuna,
+              isReproduced: petData.reproduccion,
+              descendants: petData.descendencia,
+              room: petData.habitaculo,
+              diasesEvaluation: petData.enfermedad,
+              observation: petData.observacion,
+              food:{
+                  quantity: petData.quantityFood,
+                  type: petData.typeFood,
+              },
+              physicalExam:{
+                  weight: petData.weight,
+                  palpitations: petData.palpitaciones
+              },
+              otherPet:{
+                  isLiveOtherPets: petData.convivencia,
+                  whichPets: petData.whichPets,
+              }
+            }
+          }
+        }),
+      };
+
+      const response = await fetch(url, params);
+      const result = await response.json();
+
+      if (response.status != 201) throw result; // Valida la respuesta del back
+      return result;
+    } catch (error) {
+      throw error; // Manejo del error
     }
   }
 }

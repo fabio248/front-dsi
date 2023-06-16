@@ -15,8 +15,15 @@ import { Alerta } from '../'
 
 //Validaciones
 import { useFormik } from 'formik';
-import  { initialValues, validationSchemaRegister } from '../../components/Vet_components/Users_crud'
-import { initialPetValues, validationSchemaPetRegister } from '../../components/Vet_components/Pets_crud'
+import  { initialValues, validationSchemaRegister } from '../../components/Vet_components/Users_crud';
+import { initialPetValues, validationSchemaPetRegister } from '../../components/Vet_components/Pets_crud';
+
+//API
+import { User } from '../../api/User.api';
+import { ApiAuth } from '../../api/Auth.api';
+
+const userController = new User();
+const authController = new ApiAuth();
 
 const steps = [
   'Registro de informacion del cliente',
@@ -24,12 +31,11 @@ const steps = [
 ];
 
 export function Basic_modal(props) {
-  const [open, setOpen] = React.useState(false);
+  const { title } = props;
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [data, setData] = React.useState('');
-  const { title } = props;
-  const [clientError, setClientError] = useState(false);
+  const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [clientData, setClientData] = useState({});
   const [petData, setPetData] = useState({});
@@ -37,12 +43,11 @@ export function Basic_modal(props) {
   const [activeStep, setActiveStep] = React.useState(0);
 
   function handleNext(){
-    console.log("JERCUTA SIGUIENTE");
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
   const handleBack = () => {
-    console.log('hola');
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    setError('');
   };
 
   //Funcion cambia las pantalla dependiendo del paso del proceso
@@ -64,7 +69,7 @@ export function Basic_modal(props) {
     onSubmit: async (clientFormValue) => {
       try {
         setClientData(clientFormValue);
-        console.log(clientData);
+        setSuccess(false);
         handleNext();
       } catch (error) {
         setClientError(true)
@@ -80,17 +85,33 @@ export function Basic_modal(props) {
     onSubmit: async (petFormValue) => {
       try {
         setPetData(petFormValue);
-        console.log(petData);
-        handleNext()
+        setSuccess(false);
+        handleNext();
       } catch (error) {
         console.error(error);
       }
     },
   });
 
-  function showData(){
-    console.log(clientData);
-    console.log(petData);
+  const sendData = async () => {
+    try {
+      setError('');
+      const accessToken = authController.getAccessToken();
+      await userController.registerUserAndPet(accessToken, clientData, petData);
+      setSuccess(true);
+      handleClose();
+      /*setTimeout(() => {
+        close();
+        onReload();
+      }, 3000);*/
+    } catch (err) {
+      setError(err.message);
+      //onReload();
+      console.error(err);
+    }
+    //console.log(clientData);
+    //console.log(petData);
+    //setSuccess(true);
   };
 
 
@@ -133,7 +154,7 @@ export function Basic_modal(props) {
                       style={{ textAlign: 'center' }}
                       sx={{ mt: 2, mb: 1 }}
                     >
-                      Solicitud lista para enviar!!
+                      ¡Solicitud lista para enviar!
                     </Typography>
                     <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                       <Button
@@ -146,7 +167,7 @@ export function Basic_modal(props) {
                         Regresar
                       </Button>
                       <Box sx={{ flex: '1 1 auto' }} />
-                      <Button onClick={showData}>Enviar Registro</Button>
+                      <Button onClick={sendData}>Enviar Registro</Button>
                     </Box>
                   </React.Fragment>
                 ) : (
@@ -224,6 +245,30 @@ export function Basic_modal(props) {
           title={'¡Completa correctamente los campos!'}
           message={'Para avanzar al siguiente paso se requieren datos válidos'}
           strong={'Verifica la información ingresada'}
+        />
+      )}
+      {!formikPet.isValid && (
+        <Alerta
+          type={'warning'}
+          title={'¡Completa correctamente los campos!'}
+          message={'Para avanzar al siguiente paso se requieren datos válidos'}
+          strong={'Verifica la información ingresada'}
+        />
+      )}
+      {success && (
+        <Alerta
+          type={'success'}
+          title={'¡Registro exitoso!'}
+          message={'Se ha completado el registro del usuario y la mascota exitosamente'}
+          strong={'Verifica los registros'}
+        />
+      )}
+      {error && (
+        <Alerta
+          type={'error'}
+          title={'¡Ha ocurrido un problema!'}
+          message={error == 'Email already taken'? 'El correo electrónico brindado ya se encuentra registrado' : `Error: ${error}`}
+          strong={error == 'Email already taken' ? 'Ingresa un correo diferente' :'Verifica los datos ingresados'}
         />
       )}
     </div>

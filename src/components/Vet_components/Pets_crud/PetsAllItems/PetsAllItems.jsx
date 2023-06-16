@@ -27,9 +27,11 @@ export function PetsAllItems({ pet }) {
   const Demo = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
   }));
-
-  const newDate = pet.birthday.split('T');
-  const newBirthday = format(new Date(newDate[0]), 'dd/MM/yyyy');
+  
+  let newBirthday;
+  newBirthday = pet.birthday.split('T')[0];
+  const [year, month, day ] = newBirthday.split('-');
+  newBirthday = `${day}/${month}/${year}`;
 
   //seteo del titulo del modal de visualizar
   const [showVisualizar, setShowVisualizar] = useState(false);
@@ -57,7 +59,7 @@ export function PetsAllItems({ pet }) {
             </Avatar>
           </ListItemAvatar>
           <ListItemText>
-            <b
+            <div
               className='estilos-pets'
               style={{ justifyContent: 'space-around' }}
             >
@@ -65,10 +67,13 @@ export function PetsAllItems({ pet }) {
               <b>Nombre de la mascota: </b>
               {pet.name}
               <br />
+              <b>Especie: </b>
+              {pet.specie.name}
+              <br />
               <b>Raza: </b>
               {pet.raza}
               <br />
-              <b>Genero: </b>
+              <b>Género: </b>
               {pet.gender}
               <br />
               <b>¿Tatuajes o marcas?: </b>
@@ -88,7 +93,7 @@ export function PetsAllItems({ pet }) {
               <b>¿Pedigrí?: </b>
               {pet.pedigree == false ? 'No posee' : 'Si posee'}
               <br />
-            </b>
+            </div>
           </ListItemText>
           <ListItemAvatar
             sx={{ display: 'flex', flexDirection: 'row', margin: '0 auto' }}

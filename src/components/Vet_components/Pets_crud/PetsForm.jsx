@@ -20,7 +20,7 @@ import {
   Typography,
   Checkbox,
   FormControlLabel,
-  CircularProgress
+  CircularProgress,
 } from '@mui/material';
 import { RemoveCircle } from '@mui/icons-material';
 import { useDropzone } from 'react-dropzone';
@@ -28,15 +28,21 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
+//
+
+// Validations and initialValues
+import {
+  initialPetValues,
+  validationSchemaPetRegister,
+} from './PetsFromValidate';
+
 //estilos
 import './PetsFrom.css';
-
 
 const specieController = new Species();
 const authController = new ApiAuth();
 
-export function PetFormTextFields({formik}){
-
+export function PetFormTextFields({ formik }) {
   const [uploadedFile, setUploadedFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [isError, setIsError] = useState(false);
@@ -47,35 +53,33 @@ export function PetFormTextFields({formik}){
   // Rescatando todas las especies
   useEffect(() => {
     let active = true;
-    
+
     if (!loading) {
       return undefined;
     }
-    
+
     (async () => {
-      
       const accessToken = authController.getAccessToken();
-      const response = await specieController.getAllspecies(accessToken); 
-      
+      const response = await specieController.getAllspecies(accessToken);
+
       setTimeout(() => {
         if (active) {
           setSpecies([...response.data]);
         }
       }, 600);
-
     })();
-    
+
     return () => {
       active = false;
     };
   }, [loading]);
-  
+
   useEffect(() => {
     if (!open) {
       setSpecies([]);
     }
   }, [open]);
-  
+
   const onDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
     if (file && isFileValid(file)) {
@@ -132,7 +136,7 @@ export function PetFormTextFields({formik}){
     cursor: 'pointer',
     fullWidth: true,
     height: '100%',
-    ml:0
+    ml: 0,
   };
 
   const gender = [
@@ -143,7 +147,6 @@ export function PetFormTextFields({formik}){
   const handleDateChange = (date) => {
     formik.setFieldValue('birthday', date);
   };
-
 
   return (
     <>
@@ -158,9 +161,7 @@ export function PetFormTextFields({formik}){
             sx={{ width: '100%' }}
             onChange={formik.handleChange}
             value={formik.values.name}
-            error={
-              formik.touched.name && Boolean(formik.errors.name)
-            }
+            error={formik.touched.name && Boolean(formik.errors.name)}
             helperText={formik.touched.name && formik.errors.name}
           />
         </Grid>
@@ -169,32 +170,38 @@ export function PetFormTextFields({formik}){
             id='specie'
             name='specie'
             size='small'
-            open = {open}
-            onOpen={()=>{
+            open={open}
+            onOpen={() => {
               setOpen(true);
             }}
             onClose={() => {
               setOpen(false);
             }}
-            isOptionEqualToValue={(specie, value) => {specie.id === value.id}}
+            isOptionEqualToValue={(specie, value) => {
+              specie.id === value.id;
+            }}
             getOptionLabel={(specie) => specie.name}
             options={species}
             onChange={(e, value) => formik.setFieldValue('specie', value)}
             value={formik.values.specie}
             renderInput={(params) => (
-              <TextField {...params} 
-              label='Seleccione una especie'
-              InputProps={{
-                ...params.InputProps,
-                endAdornment: (
-                  <>
-                    {loading ? <CircularProgress color='inherit' size={20} /> : null}
-                    {params.InputProps.endAdornment}
-                  </>
-                ),
-              }}
-              error={formik.touched.specie && formik.errors.specie}
-              helperText={formik.touched.specie && formik.errors.specie}/>
+              <TextField
+                {...params}
+                label='Seleccione una especie'
+                InputProps={{
+                  ...params.InputProps,
+                  endAdornment: (
+                    <>
+                      {loading ? (
+                        <CircularProgress color='inherit' size={20} />
+                      ) : null}
+                      {params.InputProps.endAdornment}
+                    </>
+                  ),
+                }}
+                error={formik.touched.specie && formik.errors.specie}
+                helperText={formik.touched.specie && formik.errors.specie}
+              />
             )}
           />
         </Grid>
@@ -207,9 +214,7 @@ export function PetFormTextFields({formik}){
             size='small'
             value={formik.values.raza}
             onChange={formik.handleChange}
-            error={
-             formik.touched.raza && Boolean(formik.errors.raza)
-            }
+            error={formik.touched.raza && Boolean(formik.errors.raza)}
             helperText={formik.touched.raza && formik.errors.raza}
             sx={{ width: '100%' }}
           />
@@ -264,19 +269,21 @@ export function PetFormTextFields({formik}){
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  error={formik.touched.birthday && Boolean(formik.errors.birthday)}
+                  error={
+                    formik.touched.birthday && Boolean(formik.errors.birthday)
+                  }
                 />
               )}
               disableFuture // Deshabilitar fechas posteriores al día de hoy
               showTodayButton // Mostrar botón para seleccionar la fecha actual
               clearable // Permitir borrar la fecha seleccionada
-              format = 'dd/MM/yyyy'
+              format='dd/MM/yyyy'
             />
             {formik.touched.birthday && formik.errors.birthday && (
               <FormHelperText error>{formik.errors.birthday}</FormHelperText>
             )}
           </LocalizationProvider>
-            </Grid>
+        </Grid>
         <Grid item xs={12} sm={6}>
           <Autocomplete
             disablePortal
@@ -289,10 +296,12 @@ export function PetFormTextFields({formik}){
             }
             value={formik.values.gender}
             renderInput={(params) => (
-              <TextField {...params} 
-              label='Seleccione el género'
-              error={formik.touched.gender && formik.errors.gender}
-              helperText={formik.touched.gender && formik.errors.gender}/>
+              <TextField
+                {...params}
+                label='Seleccione el género'
+                error={formik.touched.gender && formik.errors.gender}
+                helperText={formik.touched.gender && formik.errors.gender}
+              />
             )}
           />
         </Grid>
@@ -341,8 +350,12 @@ export function PetFormTextFields({formik}){
             size='small'
             value={formik.values.quantityFood}
             onChange={formik.handleChange}
-            error={formik.touched.quantityFood && Boolean(formik.errors.quantityFood)}
-            helperText={formik.touched.quantityFood && formik.errors.quantityFood}
+            error={
+              formik.touched.quantityFood && Boolean(formik.errors.quantityFood)
+            }
+            helperText={
+              formik.touched.quantityFood && formik.errors.quantityFood
+            }
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -369,8 +382,12 @@ export function PetFormTextFields({formik}){
             size='small'
             value={formik.values.descendencia}
             onChange={formik.handleChange}
-            error={formik.touched.descendencia && Boolean(formik.errors.descendencia)}
-            helperText={formik.touched.descendencia && formik.errors.descendencia}
+            error={
+              formik.touched.descendencia && Boolean(formik.errors.descendencia)
+            }
+            helperText={
+              formik.touched.descendencia && formik.errors.descendencia
+            }
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -398,7 +415,7 @@ export function PetFormTextFields({formik}){
           </Box>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Box sx={{ border: '1px solid #ccc', borderRadius: '5px'}}>
+          <Box sx={{ border: '1px solid #ccc', borderRadius: '5px' }}>
             <FormControlLabel
               control={
                 <Checkbox
@@ -422,7 +439,7 @@ export function PetFormTextFields({formik}){
           </Box>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Box sx={{ border: '1px solid #ccc', borderRadius: '5px'}}>
+          <Box sx={{ border: '1px solid #ccc', borderRadius: '5px' }}>
             <FormControlLabel
               control={
                 <Checkbox
@@ -470,7 +487,9 @@ export function PetFormTextFields({formik}){
             rows={4}
             value={formik.values.enfermedad}
             onChange={formik.handleChange}
-            error={formik.touched.enfermedad && Boolean(formik.errors.enfermedad)}
+            error={
+              formik.touched.enfermedad && Boolean(formik.errors.enfermedad)
+            }
             helperText={formik.touched.enfermedad && formik.errors.enfermedad}
           />
         </Grid>
@@ -485,7 +504,9 @@ export function PetFormTextFields({formik}){
             rows={4}
             value={formik.values.observacion}
             onChange={formik.handleChange}
-            error={formik.touched.observacion && Boolean(formik.errors.observacion)}
+            error={
+              formik.touched.observacion && Boolean(formik.errors.observacion)
+            }
             helperText={formik.touched.observacion && formik.errors.observacion}
           />
         </Grid>
@@ -500,7 +521,9 @@ export function PetFormTextFields({formik}){
             rows={2}
             value={formik.values.habitaculo}
             onChange={formik.handleChange}
-            error={formik.touched.habitaculo && Boolean(formik.errors.habitaculo)}
+            error={
+              formik.touched.habitaculo && Boolean(formik.errors.habitaculo)
+            }
             helperText={formik.touched.habitaculo && formik.errors.habitaculo}
           />
         </Grid>
@@ -514,7 +537,7 @@ export function PetFormTextFields({formik}){
         {'Examen Físico '}
       </Divider>
       <br />
-      <Grid container spacing={2} sx={{ maxWidth: '100%', margin: '0'  }}>
+      <Grid container spacing={2} sx={{ maxWidth: '100%', margin: '0' }}>
         <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
@@ -539,8 +562,13 @@ export function PetFormTextFields({formik}){
             size='small'
             value={formik.values.palpitaciones}
             onChange={formik.handleChange}
-            error={formik.touched.palpitaciones && Boolean(formik.errors.palpitaciones)}
-            helperText={formik.touched.palpitaciones && formik.errors.palpitaciones}
+            error={
+              formik.touched.palpitaciones &&
+              Boolean(formik.errors.palpitaciones)
+            }
+            helperText={
+              formik.touched.palpitaciones && formik.errors.palpitaciones
+            }
           />
         </Grid>
         <Grid container spacing={3} sx={{ fullWidth: true, margin: 0 }}>
@@ -560,7 +588,13 @@ export function PetFormTextFields({formik}){
               )}
               {uploadedFile && (
                 <Box sx={{ mt: 2 }}>
-                  <Button variant='contained' onClick={handleDelete} size='small' color='error' startIcon={<RemoveCircle />}>
+                  <Button
+                    variant='contained'
+                    onClick={handleDelete}
+                    size='small'
+                    color='error'
+                    startIcon={<RemoveCircle />}
+                  >
                     Eliminar
                   </Button>
                 </Box>
@@ -586,8 +620,8 @@ const PetsForm = (props) => {
 
   //manipulacion y validacion de los campos
   const formik = useFormik({
-    initialValues: initialValues(pet),
-    validationSchema: validationSchemaRegister(pet),
+    initialValues: initialPetValues(pet),
+    validationSchema: validationSchemaPetRegister(pet),
     validateOnChange: false,
     onSubmit: async (formValue) => {
       try {
@@ -601,14 +635,12 @@ const PetsForm = (props) => {
       }
     },
   });
-
   return (
     <>
       <div className='hide-scrollbar'>
         <form onSubmit={formik.handleSubmit}>
-
           {/*Campos de llenado del fomrulario*/}
-          <PetFormTextFields formik = {formik} />
+          <PetFormTextFields formik={formik} />
 
           <Grid
             sx={{

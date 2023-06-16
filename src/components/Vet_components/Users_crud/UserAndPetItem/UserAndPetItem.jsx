@@ -13,8 +13,11 @@ import { format } from 'date-fns';
 import PetsIcon from '@mui/icons-material/Pets';
 
 export function UserAndPetItem({ pet }) {
-  const newDate = pet.birthday.split('T');
-  const newBirthday = format(new Date(newDate[0]), 'dd/MM/yyyy');
+  
+  let newBirthday;
+  newBirthday = pet.birthday.split('T')[0];
+  const [year, month, day ] = newBirthday.split('-');
+  newBirthday = `${day}/${month}/${year}`;
 
   return (
     <div className='container'>
@@ -30,6 +33,9 @@ export function UserAndPetItem({ pet }) {
           >
             <b>Nombre de la mascota: </b>
             <span style={{ color: 'gray' }}>{pet.name}</span>
+            <br />
+            <b>Especie: </b>
+            <span style={{ color: 'gray' }}>{pet.specie}</span>
             <br />
             <b>Raza: </b>
             <span style={{ color: 'gray' }}>{pet.raza}</span>

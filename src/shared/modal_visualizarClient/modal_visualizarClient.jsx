@@ -31,8 +31,10 @@ export function Modal_visualizarClient({
   children,
   dataUser,
 }) {
-  const newDateUser = dataUser.birthday.split('T');
-  const newBirthdayUser = format(new Date(newDateUser[0]), 'dd/MM/yyyy');
+  let newBirthdayUser;
+  newBirthdayUser = dataUser.birthday.split('T')[0];
+  const [year, month, day ] = newBirthdayUser.split('-');
+  newBirthdayUser = `${day}/${month}/${year}`;
 
   const handleModalClose = () => {
     close();

@@ -2,15 +2,15 @@ import * as yup from 'yup';
 import { format, isValid } from 'date-fns';
 
 export function initialValues(event) {
-  let newStartdate;
+  let newStartDate;
   if (event) {
-    newStartdate = event.startdate.split('T');
-    newStartdate = format(new Date(newStartdate[0]), 'dd-MM-yyyy HH:mm');
+    newStartDate = event.startdate.split('T');
+    newStartDate = format(new Date(newStartDate[0]), 'dd/MM/yyyy HH:mm');
   }
   return {
-    startdate: event ? newStartdate : '',
+    startDate: event ? newStartDate : '',
     endDate: event ? newEndDate : '',
-    nameEvent: event?.nameEvent || '',
+    name: event?.name || '',
     descripcion: event?.descripcion || '',
     firstName: event?.firstName || '',
     lastName: event?.lastName || '',
@@ -20,7 +20,7 @@ export function initialValues(event) {
 
 export function validationSchemaRegister(event) {
   return yup.object({
-    startdate: yup
+    startDate: yup
       .date()
       .min(new Date(), 'La fecha no puede ser anterior al día de hoy')
       .transform((value, originalValue) => {
@@ -32,7 +32,7 @@ export function validationSchemaRegister(event) {
       })
       .required('La fecha es requerida')
       .typeError('Ingrese una fecha válida'),
-    nameEvent: yup.string().required('campo obligatorio'),
+    name: yup.string().required('campo obligatorio'),
     descripcion: yup.string().required('campo obligatorio'),
     firstName: yup.string().required('campo obligatorio'),
     lastName: yup.string().required('campo obligatorio'),

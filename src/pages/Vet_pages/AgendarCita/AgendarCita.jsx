@@ -41,37 +41,38 @@ const AgendarCita = (props) => {
         onReload();
         close();
       } catch (error) {
-        console.error(error);
       }
     },
   });
 
   const handleDateChange = (date) => {
-    formik.setFieldValue('startdate', date);
+    formik.setFieldValue('startDate', date);
   };
 
   async function createCalendarEvent() {
-    const { nameEvent, descripcion, startdate, firstName, lastName, email } = formik.values;
+    const { name, descripcion, startDate, firstName, lastName, email } = formik.values;
 
     // Calcular el fin de la cita (enddate)
-    const startDateObj = new Date(startdate);
+    const startDateObj = new Date(startDate);
     const endDate = new Date(startDateObj.getTime() + 45 * 60000); // Agregar 45 minutos en milisegundos
 
     const event = {
-      summary: nameEvent,
+      summary: name,
       sendNotifications: true,
       description: descripcion,
       location:
         'https://www.google.com/maps/place/Cl%C3%ADnica+Veterinaria+Mistun/@13.5110156,-88.8710632,17z/data=!3m1!4b1!4m6!3m5!1s0x8f7cadbe1e0ae625:0xf916477fc1f3c161!8m2!3d13.5110156!4d-88.8684883!16s%2Fg%2F11j09_yr57?entry=ttu',
       start: {
-        dateTime: startdate,
+        dateTime: startDate,
         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       },
       end: {
         dateTime: endDate,
         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       },
-      attendees: [{ email: 'veterinariamistum2013@gmail.com' }, { email: email }],
+      //attendees: [{ email: 'veterinariamistum2013@gmail.com' }, { email: email }],
+      
+      attendees: [{ email: 'claudiamariaa12@gmail.com' }, { email: email }],
       reminders: {
         /* useDefault: false,
         overrides: [
@@ -87,7 +88,7 @@ const AgendarCita = (props) => {
         method: 'POST',
         headers: {
           // Authorization: 'Bearer ' + session.provider_token,
-          Authorization: 'Bearer ' + 'ya29.a0AWY7Ckl5QG09y-61A06QGh76FmV7PMROJD7znkbPUL54nHWltE574PGJ50Gqk5OAzABimyLxr2Uv-KeJSfOSrAFRWeinp8g-2hH8SrbVp1yE98nn0JEdTTlwRqoyWO4MZIl5kd5ttCfzrXzAws9W8YYCbEPbrAaCgYKAQYSARASFQG1tDrpdL20dVBYUocjs9Yufx-bCg0165',
+          Authorization: 'Bearer ' + 'ya29.a0AWY7CklCqGAROhXlJYKXygMQx53XffuXJkU9D7paEmUQX31GdKXP0N3t2RMy07LqXqW4b_V9EuoPu1MemisyHPnmaq6yxzJQmdGeBlktydEry-Ny1bCUChGna76Ap_Xign0LRDsvVs1O-li4YmbMSfrksNYi4gaCgYKAecSARASFQG1tDrpV89vsPi16bOelt4tosUWIQ0165',
         },
         body: JSON.stringify(event),
       });
@@ -112,39 +113,39 @@ const AgendarCita = (props) => {
 
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DateTimePicker
-              label='Fecha Dia-Mes-Año hh:mm'
-              name='startdate'
-              value={formik.values.startdate}
+              label='Fecha Dia/Mes/Año HH:mm'
+              name='startDate'
+              value={formik.values.startDate}
               onChange={handleDateChange}
               onBlur={formik.handleBlur}
               slotProps={{ textField: { size: 'small', fullWidth: 'true' } }}
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  error={formik.touched.startdate && Boolean(formik.errors.startdate)}
+                  error={formik.touched.startDate && Boolean(formik.errors.startDate)}
                 />
               )}
               disablePast // Deshabilitar fechas anteriores al día de hoy
               showTodayButton // Mostrar botón para seleccionar la fecha actual
               clearable // Permitir borrar la fecha seleccionada
-              format='dd-MM-yyyy HH:mm'
+              format='dd/MM/yyyy HH:mm'
             />
-            {formik.touched.startdate && formik.errors.startdate && (
-              <FormHelperText error>{formik.errors.startdate}</FormHelperText>
+            {formik.touched.startDate && formik.errors.startDate && (
+              <FormHelperText error>{formik.errors.startDate}</FormHelperText>
             )}
           </LocalizationProvider>
 
           <TextField
             style={{ marginBottom: '20px', marginTop: '20px' }}
             fullWidth
-            name='nameEvent'
+            name='name'
             label='Nombre del Evento'
             variant='outlined'
             size='small'
             onChange={formik.handleChange}
-            value={formik.values.nameEvent}
-            error={formik.touched.nameEvent && Boolean(formik.errors.nameEvent)}
-            helperText={formik.touched.nameEvent && formik.errors.nameEvent}
+            value={formik.values.name}
+            error={formik.touched.name && Boolean(formik.errors.name)}
+            helperText={formik.touched.name && formik.errors.name}
           />
 
           <TextField

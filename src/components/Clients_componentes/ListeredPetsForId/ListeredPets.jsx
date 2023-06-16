@@ -5,14 +5,14 @@ import { CircularProgress, Typography } from '@mui/material';
 import { size, map } from 'lodash';
 
 // decodificador de tokens
-import { decoderToken } from '../../../../utils';
+import { decoderToken } from '../../../utils';
 
 // elementos renderizados
 import { PetsItem } from '../PetsItem';
 
 // peticiones al Back
-import { Pets } from '../../../../api/Pets.api';
-import { ApiAuth } from '../../../../api/Auth.api';
+import { Pets } from '../../../api/Pets.api';
+import { ApiAuth } from '../../../api/Auth.api';
 
 // estilos
 import './ListeredPets.css';

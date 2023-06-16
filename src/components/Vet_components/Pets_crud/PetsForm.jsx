@@ -1,10 +1,12 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 
 //esquemas de validaciones y manipulacion de datos
 import { useFormik } from 'formik';
 // import { initialValues, validationSchemaRegister } from './UserFormValidate';
 
 //Backend petitions
+import { Species } from '../../../api/specie.api';
+import { ApiAuth } from '../../../api/Auth.api';
 
 //MUI Material
 import Autocomplete from '@mui/material/Autocomplete';
@@ -16,6 +18,9 @@ import {
   Divider,
   Box,
   Typography,
+  Checkbox,
+  FormControlLabel,
+  CircularProgress
 } from '@mui/material';
 import { RemoveCircle } from '@mui/icons-material';
 import { useDropzone } from 'react-dropzone';
@@ -23,16 +28,54 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
-
 //estilos
 import './PetsFrom.css';
+
+
+const specieController = new Species();
+const authController = new ApiAuth();
 
 export function PetFormTextFields({formik}){
 
   const [uploadedFile, setUploadedFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [isError, setIsError] = useState(false);
+  const [species, setSpecies] = useState([]);
+  const [open, setOpen] = useState(false);
+  const loading = open && species.length === 0;
 
+  // Rescatando todas las especies
+  useEffect(() => {
+    let active = true;
+    
+    if (!loading) {
+      return undefined;
+    }
+    
+    (async () => {
+      
+      const accessToken = authController.getAccessToken();
+      const response = await specieController.getAllspecies(accessToken); 
+      
+      setTimeout(() => {
+        if (active) {
+          setSpecies([...response.data]);
+        }
+      }, 600);
+
+    })();
+    
+    return () => {
+      active = false;
+    };
+  }, [loading]);
+  
+  useEffect(() => {
+    if (!open) {
+      setSpecies([]);
+    }
+  }, [open]);
+  
   const onDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
     if (file && isFileValid(file)) {
@@ -92,44 +135,9 @@ export function PetFormTextFields({formik}){
     ml:0
   };
 
-  const tatuaje = [
-    { label: 'Sí', key: 'yes', value: true },
-    { label: 'No', key: 'not', value: false },
-  ];
-
   const gender = [
-    { label: 'Macho', key: 'M', value: 'masculino' },
-    { label: 'Hembra', key: 'F', value: 'femenino' },
-  ];
-
-  const pedigree = [
-    { label: 'Sí', key: 'yes', value: true },
-    { label: 'No', key: 'not', value: false },
-  ];
-
-  const convivencia = [
-    { label: 'Sí', key: 'yes', value: true },
-    { label: 'No', key: 'not', value: false },
-  ];
-
-  const vacune = [
-    { label: 'Sí', key: 'yes', value: true },
-    { label: 'No', key: 'not', value: false },
-  ];
-
-  const reproduccion = [
-    { label: 'Sí', key: 'yes', value: true },
-    { label: 'No', key: 'not', value: false },
-  ];
-
-  const specie = [
-    { label: 'Canino', key: 'can', value: 1 },
-    { label: 'Felino', key: 'feli', value: 2 },
-    { label: 'Cetoácido', key: 'cet', value: 3 },
-    { label: 'Roedor', key: 'ro', value: 4 },
-    { label: 'Saurio', key: 'sau', value: 5 },
-    { label: 'Quelo', key: 'que', value: 6 },
-    { label: 'Ofilio', key: 'ofi', value: 7 },
+    { label: 'masculino', key: 'M', value: 'masculino' },
+    { label: 'femenino', key: 'F', value: 'femenino' },
   ];
 
   const handleDateChange = (date) => {
@@ -158,18 +166,33 @@ export function PetFormTextFields({formik}){
         </Grid>
         <Grid item xs={12} sm={6}>
           <Autocomplete
-            disablePortal
             id='specie'
             name='specie'
             size='small'
-            options={specie}
-            onChange={(_, data) =>
-              formik.setFieldValue('specie', data?.value || '')
-            }
+            open = {open}
+            onOpen={()=>{
+              setOpen(true);
+            }}
+            onClose={() => {
+              setOpen(false);
+            }}
+            isOptionEqualToValue={(specie, value) => {specie.id === value.id}}
+            getOptionLabel={(specie) => specie.name}
+            options={species}
+            onChange={(e, value) => formik.setFieldValue('specie', value)}
             value={formik.values.specie}
             renderInput={(params) => (
               <TextField {...params} 
               label='Seleccione una especie'
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: (
+                  <>
+                    {loading ? <CircularProgress color='inherit' size={20} /> : null}
+                    {params.InputProps.endAdornment}
+                  </>
+                ),
+              }}
               error={formik.touched.specie && formik.errors.specie}
               helperText={formik.touched.specie && formik.errors.specie}/>
             )}
@@ -205,25 +228,29 @@ export function PetFormTextFields({formik}){
             sx={{ width: '100%' }}
           />
         </Grid>
-
         <Grid item xs={12} sm={6}>
-          <Autocomplete
-            disablePortal
-            id='specie'
-            name='isHaveTattoo'
-            size='small'
-            options={tatuaje}
-            onChange={(_, data) =>
-              formik.setFieldValue('isHaveTattoo', data?.value || '')
-            }
-            value={formik.values.isHaveTattoo}
-            renderInput={(params) => (
-              <TextField {...params} 
+          <Box sx={{ border: '1px solid #ccc', borderRadius: '5px' }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  id='isHaveTattoo'
+                  name='isHaveTattoo'
+                  size='small'
+                  checked={formik.values.isHaveTattoo}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+              }
               label='¿Posee tatuajes?'
-              error={formik.touched.isHaveTattoo && formik.errors.isHaveTattoo}
-              helperText={formik.touched.isHaveTattoo && formik.errors.isHaveTattoo}/>
-            )}
-          />
+              labelPlacement='start'
+              sx={{
+                width: '92%',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            />
+          </Box>
         </Grid>
         <Grid item xs={12} sm={6}>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -270,23 +297,28 @@ export function PetFormTextFields({formik}){
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Autocomplete
-            disablePortal
-            id='pedigree'
-            name='pedigree'
-            size='small'
-            options={pedigree}
-            onChange={(_, data) =>
-              formik.setFieldValue('pedigree', data?.value || '')
-            }
-            value={formik.values.pedigree}
-            renderInput={(params) => (
-              <TextField {...params}
+          <Box sx={{ border: '1px solid #ccc', borderRadius: '5px' }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  id='pedigree'
+                  name='pedigree'
+                  size='small'
+                  checked={formik.values.pedigree}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+              }
               label='¿Posee pedigree?'
-              error={formik.touched.pedigree && formik.errors.pedigree}
-              helperText={formik.touched.pedigree && formik.errors.pedigree}/>
-            )}
-          />
+              labelPlacement='start'
+              sx={{
+                width: '92%',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            />
+          </Box>
         </Grid>
       </Grid>
       <br />
@@ -304,7 +336,7 @@ export function PetFormTextFields({formik}){
             fullWidth
             id='quantityFood'
             name='quantityFood'
-            label="Cantidad de alimento"
+            label='Cantidad de alimento'
             variant='outlined'
             size='small'
             value={formik.values.quantityFood}
@@ -342,61 +374,76 @@ export function PetFormTextFields({formik}){
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Autocomplete
-            disablePortal
-            id='reproduccion'
-            name='reproduccion'
-            size='small'
-            options={reproduccion}
-            onChange={(_, data) =>
-              formik.setFieldValue('reproduccion', data?.value || '')
-            }
-            value={formik.values.reproduccion}
-            renderInput={(params) => (
-              <TextField {...params} 
-              label='Reproducción'
-              error={formik.touched.reproduccion && formik.errors.reproduccion}
-              helperText={formik.touched.reproduccion && formik.errors.reproduccion}/>
-            )}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Autocomplete
-            disablePortal
-            id='vacuna'
-            name='vacuna'
-            size='small'
-            options={vacune}
-            onChange={(_, data) =>
-              formik.setFieldValue('vacuna', data?.value || '')
-            }
-            value={formik.values.vacuna}
-            renderInput={(params) => (
-              <TextField {...params} 
-              label='¿Posee todas sus vacunas?'
-              error={formik.touched.vacuna && formik.errors.vacuna}
-              helperText={formik.touched.vacuna && formik.errors.vacuna}/>
-            )}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Autocomplete
-              disablePortal
-              id='convivencia'
-              name='conivencia'
-              size='small'
-              options={convivencia}
-              onChange={(_, data) =>
-                formik.setFieldValue('convivencia', data?.value || '')
+          <Box sx={{ border: '1px solid #ccc', borderRadius: '5px' }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  id='reproduccion'
+                  name='reproduccion'
+                  size='small'
+                  checked={formik.values.reproduccion}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
               }
-              value={formik.values.convivencia}
-              renderInput={(params) => (
-                <TextField {...params} 
-                label='¿Vive con otras mascotas?'
-                error={formik.touched.convivencia && formik.errors.convivencia}
-                helperText={formik.touched.convivencia && formik.errors.convivencia}/>
-              )}
+              label='Reproducción:'
+              labelPlacement='start'
+              sx={{
+                width: '92%',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
             />
+          </Box>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Box sx={{ border: '1px solid #ccc', borderRadius: '5px'}}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  id='vacuna'
+                  name='vacuna'
+                  size='small'
+                  checked={formik.values.vacuna}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+              }
+              label='¿Posee todas sus vacunas?'
+              labelPlacement='start'
+              sx={{
+                width: '92%',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            />
+          </Box>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Box sx={{ border: '1px solid #ccc', borderRadius: '5px'}}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  id='convivencia'
+                  name='convivencia'
+                  size='small'
+                  checked={formik.values.convivencia}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+              }
+              label='¿Vive con otras mascotas?'
+              labelPlacement='start'
+              sx={{
+                width: '92%',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            />
+          </Box>
         </Grid>
         <Grid item xs={12} sm={12}>
           <TextField
@@ -539,16 +586,16 @@ const PetsForm = (props) => {
 
   //manipulacion y validacion de los campos
   const formik = useFormik({
-    // initialValues: initialValues(user),
-    // validationSchema: validationSchemaRegister(user),
+    initialValues: initialValues(pet),
+    validationSchema: validationSchemaRegister(pet),
     validateOnChange: false,
     onSubmit: async (formValue) => {
       try {
-        if (!user) {
+        if (!pet) {
         } else {
         }
-        onReload();
-        close();
+        //onReload();
+        //close();
       } catch (error) {
         console.error(error);
       }

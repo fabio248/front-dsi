@@ -35,7 +35,7 @@ export function UserAndPetItem({ pet }) {
             <span style={{ color: 'gray' }}>{pet.name}</span>
             <br />
             <b>Especie: </b>
-            <span style={{ color: 'gray' }}>{pet.specie}</span>
+            <span style={{ color: 'gray' }}>{pet.specie.name}</span>
             <br />
             <b>Raza: </b>
             <span style={{ color: 'gray' }}>{pet.raza}</span>

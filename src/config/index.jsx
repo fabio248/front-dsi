@@ -12,7 +12,8 @@ const configApiBackend = {
   users: import.meta.env.VITE_USERS,
   refreshAccessToken: import.meta.env.VITE_REFRESH_ACCESS_TOKEN,
   pets: import.meta.env.VITE_PETS,
-  species : import.meta.env.VITE_SPECIES,
+  species: import.meta.env.VITE_SPECIES,
+  appointment: import.meta.env.VITE_APPOINTMENTS,
 };
 
 const configJwt = {

@@ -19,8 +19,12 @@ export function PetsItem(props) {
     backgroundColor: theme.palette.background.paper,
   }));
 
-  const newDate = pet.birthday.split('T');
-  const newBirthday = format(new Date(newDate[0]), 'dd/MM/yyyy');
+  let newBirthday;
+  newBirthday = pet.birthday.split('T')[0];
+  const [year, month, day] = newBirthday.split('-');
+  newBirthday = `${day}/${month}/${year}`;
+
+  console.log(pet);
   return (
     <div>
       {' '}
@@ -57,7 +61,16 @@ export function PetsItem(props) {
               {pet.color}
               <br />
               <b>¿Tatuajes o marcas?: </b>
-              {pet.isHaveTattoo == true ? 'No posee' : 'Si posee'}
+              {pet.isHaveTatto == false ? 'No posee' : 'Si posee'}
+              <br />
+              <b>Raza de la mascota: </b>
+              {pet.raza}
+              <br />
+              <b>¿Posee Pedigrí?: </b>
+              {pet.pedigree == false ? 'No Posee' : 'Si posee'}
+              <br />
+              <b>Especie de la mascota: </b>
+              {pet.specie.name}
             </p>
           </ListItemText>
         </ListItem>

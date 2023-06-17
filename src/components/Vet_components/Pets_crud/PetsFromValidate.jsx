@@ -13,7 +13,7 @@ export function initialPetValues(pet) {
 
   return {
     name: pet?.name || '',
-    specie: pet?.species || null,
+    specie: pet?.specie || null,
     raza: pet?.raza || '',
     color: pet?.color || '',
     isHaveTattoo: pet?.isHaveTatto || false,
@@ -67,7 +67,7 @@ export function validationSchemaPetRegister(pet) {
       .typeError('Ingrese una fecha válida'),
     gender: yup
       .string()
-      .oneOf(['macho', 'hembra'])
+      .oneOf(['macho', 'hembra'], 'El campo de género solo acepta macho o hembra')
       .required('El campo de género solo acepta macho o hembra'),
     pedigree: yup
       .boolean()

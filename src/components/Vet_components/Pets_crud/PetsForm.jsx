@@ -143,8 +143,8 @@ export function PetFormTextFields({ formik }) {
   };
 
   const gender = [
-    { label: 'masculino', key: 'M', value: 'masculino' },
-    { label: 'femenino', key: 'F', value: 'femenino' },
+    { label: 'macho', key: 'M', value: 'macho' },
+    { label: 'hembra', key: 'F', value: 'hembra' },
   ];
 
   const handleDateChange = (date) => {

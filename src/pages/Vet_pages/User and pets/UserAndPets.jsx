@@ -11,7 +11,6 @@ import PetsIcon from '@mui/icons-material/Pets';
 import { ListeredAllPets } from '../../../components/Vet_components';
 
 export function UserAndPets() {
-  // const { reload, onReload } = props;
   const [reload, setReload] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [value, setValue] = useState(0);

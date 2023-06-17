@@ -1,5 +1,6 @@
 import { config, configApiBackend } from '../config';
 
+import { format } from 'date-fns';
 export class Pets {
   async getPetsForUsers(accessToken, userId) {
     try {
@@ -43,29 +44,42 @@ export class Pets {
     try {
       const url = `${config.baseApi}/${configApiBackend.pets}/${idPets}`;
       const params = {
+        method: 'PATCH',
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          // pet: {
           name: pet.name,
-          gender: pet.gender,
+          specie: 1,
           raza: pet.raza,
           color: pet.color,
           isHaveTatto: pet.isHaveTatto,
+          birthday: format(pet.birthday, 'dd/MM/yyyy'),
+          gender: pet.gender,
           pedigree: pet.pedigree,
-          birthday: pet.birthday,
           medicalHistory: {
-            isHaveAllVaccine: pet.medicalHistory.isHaveAllVaccine,
-            isReproduced: pet.medicalHistory.isReproduced,
-            descendants: pet.medicalHistory.descendants,
-            room: pet.medicalHistory.room,
-            diasesEvaluation: pet.medicalHistory.diasesEvaluation,
-            observation: pet.medicalHistory.observation,
+            isHaveAllVaccine: pet.vacuna,
+            isReproduced: pet.reproduccion,
+            descendants: pet.descendencia,
+            room: pet.habitaculo,
+            diasesEvaluation: pet.enfermedad,
+            observation: pet.observacion,
             food: {
-              quantity: pet.medicalHistory.food.quantity,
+              quantity: pet.quantityFood,
+              type: pet.typeFood,
+            },
+            physicalExam: {
+              weight: pet.weight,
+              palpitations: pet.palpitaciones,
+            },
+            otherPet: {
+              isLiveOtherPets: pet.convivencia,
+              whichPets: pet.whichPets,
             },
           },
+          // },
         }),
       };
 

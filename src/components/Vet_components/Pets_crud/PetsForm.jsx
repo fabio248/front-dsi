@@ -616,10 +616,7 @@ export function PetFormTextFields({ formik }) {
 }
 
 const PetsForm = (props) => {
-  const { close, pet } = props;
-
-  const [date, setDate] = useState('');
-  const [error, setError] = useState(false);
+  const { close, pet, onReload } = props;
 
   const { accessToken } = useAuth();
 
@@ -636,8 +633,8 @@ const PetsForm = (props) => {
           //aqui ira la peticion donde se actualizaran los datos
           await petsController.updatePets(accessToken, pet.id, formValue);
         }
-        //onReload();
-        //close();
+        onReload();
+        close();
       } catch (error) {
         console.error(error);
       }

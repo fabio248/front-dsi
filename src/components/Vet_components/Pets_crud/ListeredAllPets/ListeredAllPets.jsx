@@ -32,7 +32,7 @@ export function ListeredAllPets({ reload, onReload }) {
         setPets(responsePets.data);
       } catch (error) {}
     })();
-  }, [reload]);
+  }, [onReload, reload]);
 
   if (!pets) return <CircularProgress />;
 

@@ -23,9 +23,8 @@ import { UserAndPetsListered } from '../../Users_crud';
 import { PetsForm } from '../../Pets_crud';
 
 //formatos para fechas
-import { format } from 'date-fns';
 
-export function PetsAllItems({ pet }) {
+export function PetsAllItems({ pet, onReload }) {
   const Demo = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
   }));
@@ -42,13 +41,13 @@ export function PetsAllItems({ pet }) {
 
   //render elementos of update pet
   const [showUpdatePets, setShowUpdatePets] = useState(false);
-  const [reload, setReload] = useState(false);
+  // const [reload, setReload] = useState(false);
 
   //funciones que cambia el estado
   const onOpenInfoClientAndPets = () =>
     setShowVisualizar((prevState) => !prevState);
   const onOpenClosePets = () => setShowUpdatePets((prevState) => !prevState);
-  const onReload = () => setReload((prevState) => !prevState);
+  // const  onReload = () => setReload((prevState) => !prevState);
 
   //ejecuta la funcion de visualizacion de informacion de cliente y su mascota (VisibilityIcon)
   const openInfoClientAndPets = () => {
@@ -62,7 +61,6 @@ export function PetsAllItems({ pet }) {
     setTitleUpdatePet(`Actualizando Datos de la Mascota: ${pet.name}`);
     onOpenClosePets();
   };
-
   return (
     <div>
       {' '}
@@ -143,6 +141,7 @@ export function PetsAllItems({ pet }) {
         <UserAndPetsListered
           close={onOpenInfoClientAndPets}
           idUser={pet.user.id}
+          onReload={onReload}
         />
       </Modal_visualizarClient>
       <Modal_create_pet

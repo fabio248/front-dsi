@@ -160,7 +160,7 @@ export function Login() {
             password: tokenData.sub,
             role: 'client',
           };
-          console.log(dataGoogle);
+
           try {
             // Ejecuta funcion asincrona con la peticion de logueo al BackEnd
             const response = await authLoginController.googleAuth(dataGoogle);

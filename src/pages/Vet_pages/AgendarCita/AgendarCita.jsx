@@ -49,7 +49,7 @@ const AgendarCita = (props) => {
 
           console.log(format(formValue.startDate, 'dd/MM/yyyy HH:mm'));
           await appointmentcontroller.registerAppointment(accessToken, formValue);
-          //await createCalendarEvent();
+          await createCalendarEvent();
         }
         else {
           //UPDATE

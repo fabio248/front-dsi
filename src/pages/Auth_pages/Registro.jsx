@@ -12,15 +12,13 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import dayjs from 'dayjs';
-import { format } from 'date-fns';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
+import { FormHelperText } from '@mui/material';
 import PersonAddAltSharpIcon from '@mui/icons-material/PersonAddAltSharp';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
@@ -44,7 +42,7 @@ function Copyright(props) {
       {...props}
     >
       {'Copyright © '}
-      <Link color='inherit' href='https://mui.com/'>
+      <Link color='inherit' href='#'>
         DSI Project
       </Link>{' '}
       {new Date().getFullYear()}
@@ -59,26 +57,34 @@ const authController = new ApiAuth();
 export function Registro() {
     
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
 
   
   const formik = useFormik({
     initialValues: initialData(),
     validationSchema: RegisterFormvalidations(),
     validateOnChange: false, 
-    onSubmit: async(formValue) => {
-
-        try {
-          setError('Created user successfully');
-
-          // Ejecuta funcion asincrona con la peticion de registro al BackEnd
-          await authController.registerUser(formValue);
+    onSubmit: async(formValue) => {      
+      try {
+        setError('');
+        
+        // Ejecuta funcion asincrona con la peticion de registro al BackEnd
+        await authController.registerUser(formValue);
+        setSuccess(true);
+        formik.resetForm();
+        setTimeout(() => {
+          setSuccess(false);
+        }, 6000);
         } catch (error) {
             setError(error.message);
+            setTimeout(() => {
+              setError('');
+            }, 6000);
         }
   }});
+  
   const handleDateChange = (date) => {
-  const formattedDate = date.$d ? format(date.$d, 'dd/MM/yyyy') : '';
-  formik.setFieldValue('fechaNacimiento', formattedDate);
+    formik.setFieldValue('birthday', date);
   };
 
   return (
@@ -133,7 +139,7 @@ export function Registro() {
                   onChange={formik.handleChange}
                 />
               </Grid>
-              <Grid item xs={12}>
+              {/*<Grid item xs={12}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']}>
                 <DatePicker
@@ -153,6 +159,33 @@ export function Registro() {
                   onBlur={formik.handleBlur('fechaNacimiento')}
                 />
                 </DemoContainer>
+                </LocalizationProvider>
+                </Grid>*/}
+              <Grid item xs={12} sm={12}>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker
+                    label='Fecha de Nacimiento'
+                    name='birthday'
+                    value={formik.values.birthday}
+                    onChange={handleDateChange}
+                    onBlur={formik.handleBlur}
+                    slotProps={{ textField: { fullWidth: true } }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        error={
+                          formik.touched.birthday && Boolean(formik.errors.birthday)
+                        }
+                      />
+                    )}
+                    disableFuture // Deshabilitar fechas posteriores al día de hoy
+                    showTodayButton // Mostrar botón para seleccionar la fecha actual
+                    clearable // Permitir borrar la fecha seleccionada
+                    format='dd/MM/yyyy'
+                  />
+                  {formik.touched.birthday && formik.errors.birthday && (
+                    <FormHelperText error>{formik.errors.birthday}</FormHelperText>
+                  )}
                 </LocalizationProvider>
               </Grid>
               <Grid item xs={12}>
@@ -208,7 +241,7 @@ export function Registro() {
             >
               Registrarme
             </Button>
-            {error == 'Created user successfully' && (
+            {success && (
               <Alerta
                 type = {'success'}
                 title = {'¡Registro exitoso!'}
@@ -216,11 +249,11 @@ export function Registro() {
                 strong = {'Puede iniciar sesión ahora.'}
               />
             )}
-            {(!formik.isValid || (error == 'Email already taken')) && (
+            {error && (
               <Alerta
                 type = {'error'}
                 title = {'¡Ha ocurrido un problema!'}
-                message = {'No ha podido completar su registro'}
+                message = {error == 'Email already taken' ? 'El correo eletrónico ya se encuentra registrado' : 'No ha podido completar su registro'}
                 strong = {'Verifica tu información.'}
               />
             )}

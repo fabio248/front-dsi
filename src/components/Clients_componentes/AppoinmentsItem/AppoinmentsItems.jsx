@@ -19,29 +19,29 @@ export function AppoinmentsItems({ event }) {
     backgroundColor: theme.palette.background.paper,
   }));
 
-  let startDat;
-  startDat = event.startDate.split('T')[0];
-  const [year, month, day] = startDat.split('-');
-  startDat = `${day}/${month}/${year}`;
+  // let startDat;
+  // startDat = event.startDate.split('T')[0];
+  // const [year, month, day] = startDat.split('-');
+  // startDat = `${day}/${month}/${year}`;
 
-  let endDat;
-  endDat = event.endDate.split('T')[0];
-  const [year1, month1, day1] = endDat.split('-');
-  endDat = `${day1}/${month1}/${year1}`;
+  // let endDat;
+  // endDat = event.endDate.split('T')[0];
+  // const [year1, month1, day1] = endDat.split('-');
+  // endDat = `${day1}/${month1}/${year1}`;
 
-  let startHour;
-  startHour = event.startDate.split('T')[1];
-  let [hour, minutes] = startHour.split(':');
-  let formattedHour = (hour % 12 || 12).toString();
-  let formattedTime = `${formattedHour}:${minutes} ${hour < 12 ? 'AM' : 'PM'}`;
+  // let startHour;
+  // startHour = event.startDate.split('T')[1];
+  // let [hour, minutes] = startHour.split(':');
+  // let formattedHour = (hour % 12 || 12).toString();
+  // let formattedTime = `${formattedHour}:${minutes} ${hour < 12 ? 'AM' : 'PM'}`;
 
-  let endHour;
-  endHour = event.endDate.split('T')[1];
-  let [hour1, minutes1] = endHour.split(':');
-  let formattedEndHour = (hour1 % 12 || 12).toString();
-  let formattedEndTime = `${formattedEndHour}:${minutes1} ${
-    hour1 < 12 ? 'AM' : 'PM'
-  }`;
+  // let endHour;
+  // endHour = event.endDate.split('T')[1];
+  // let [hour1, minutes1] = endHour.split(':');
+  // let formattedEndHour = (hour1 % 12 || 12).toString();
+  // let formattedEndTime = `${formattedEndHour}:${minutes1} ${
+  //   hour1 < 12 ? 'AM' : 'PM'
+  // }`;
 
   return (
     <div>
@@ -89,10 +89,10 @@ export function AppoinmentsItems({ event }) {
               {event.description}
               <br />
               <b>Fecha y hora en la que dio inicio su cita: </b>
-              {startDat} a las {formattedTime}
+              {event.startDate}
               <br />
               <b>Fecha y hora en la que finalizó su cita: </b>
-              {endDat} a las {formattedEndTime}
+              {event.endDate}
             </p>
           </ListItemText>
         </ListItem>

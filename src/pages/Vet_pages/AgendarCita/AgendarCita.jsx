@@ -14,15 +14,19 @@ import { Grid, TextField, Button, Divider } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { FormHelperText } from '@mui/material';
+
+// Componentes y funciones personalizadas
+import { Alerta } from '../../../shared/Alert'
 
 // Estilos
 import './AgendarCita.css';
 
-const eventControl = new ApiCitas();
+const appointmentcontroller = new ApiCitas();
 
 const AgendarCita = (props) => {
-  const { close, onReload, event } = props;
-  const [isError, setIsError] = useState(false);
+  const {close, onReload, event} = props;
+  const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
   const { accessToken } = useAuth();
@@ -31,26 +35,29 @@ const AgendarCita = (props) => {
     initialValues: initialValues(event),
     validationSchema: validationSchemaRegister(event),
     validateOnChange: false,
+
     onSubmit: async (formValue) => {
       try {
         if (!event) {
-          await authControl.registerEventForVet(formValue);
-        } else {
-          await eventControl.updateEvent(accessToken, event.id, formValue);
-        }
-        onReload();
-        close();
+          await appointmentcontroller.registerAppointment(formValue);  
+        } 
+        setSuccess(true);
+
       } catch (error) {
+        setError(true)
       }
     },
-  });
+  }
+  );
+
+  
 
   const handleDateChange = (date) => {
     formik.setFieldValue('startDate', date);
   };
 
   async function createCalendarEvent() {
-    const { name, descripcion, startDate, firstName, lastName, email } = formik.values;
+    const { name, descripcion, startDate, firstName, lastName, emailClient } = formik.values;
 
     // Calcular el fin de la cita (enddate)
     const startDateObj = new Date(startDate);
@@ -58,7 +65,10 @@ const AgendarCita = (props) => {
 
     const event = {
       summary: name,
-      sendNotifications: true,
+      //sendNotifications: true,
+      sendNotifications:{
+        useDefault: true,
+      },
       description: descripcion,
       location:
         'https://www.google.com/maps/place/Cl%C3%ADnica+Veterinaria+Mistun/@13.5110156,-88.8710632,17z/data=!3m1!4b1!4m6!3m5!1s0x8f7cadbe1e0ae625:0xf916477fc1f3c161!8m2!3d13.5110156!4d-88.8684883!16s%2Fg%2F11j09_yr57?entry=ttu',
@@ -70,16 +80,14 @@ const AgendarCita = (props) => {
         dateTime: endDate,
         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       },
-      //attendees: [{ email: 'veterinariamistum2013@gmail.com' }, { email: email }],
-      
-      attendees: [{ email: 'claudiamariaa12@gmail.com' }, { email: email }],
+      attendees: [{ email: 'veterinariamistum2013@gmail.com' }, { email: emailClient }],
       reminders: {
-        /* useDefault: false,
+        useDefault: false,
         overrides: [
           { method: 'email', minutes: 120 },
           { method: 'popup', minutes: 30 },
-        ],*/
-        useDefault: true,
+        ],
+      
       },
     };
 
@@ -88,20 +96,13 @@ const AgendarCita = (props) => {
         method: 'POST',
         headers: {
           // Authorization: 'Bearer ' + session.provider_token,
-          Authorization: 'Bearer ' + 'ya29.a0AWY7CklCqGAROhXlJYKXygMQx53XffuXJkU9D7paEmUQX31GdKXP0N3t2RMy07LqXqW4b_V9EuoPu1MemisyHPnmaq6yxzJQmdGeBlktydEry-Ny1bCUChGna76Ap_Xign0LRDsvVs1O-li4YmbMSfrksNYi4gaCgYKAecSARASFQG1tDrpV89vsPi16bOelt4tosUWIQ0165',
+          Authorization: 'Bearer ' + 'ya29.a0AWY7Ckm3qH9QP5ZOz_iTvW0C-3fmTnN5JdyibiQX5ZRXHtHEq1C8gya_uOicvL_ioN2LpassThXMIT7tE0JHS57MnUxpgl9cgww6mj_N4U7m9DLKax_eGQNtllXM1sIsuhOoNtLDtW06XzmLPBimm46rW4oexgaCgYKAckSARASFQG1tDrpLMSTkQgPCVBoSc2HT1Ez3w0165',
         },
         body: JSON.stringify(event),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data);
-        alert('¡Evento creado exitosamente!');
-      } else {
-        throw new Error('Error al crear el evento en Google Calendar');
-      }
     } catch (error) {
-      alert('Error al crear el evento');
+      setError(true)
     }
   }
 
@@ -193,15 +194,15 @@ const AgendarCita = (props) => {
             <Grid item xs>
               <TextField
                 fullWidth
-                name='email'
+                name='emailClient'
                 label='Correo'
                 variant='outlined'
                 size='small'
                 placeholder='ClientAccountGoogle@gmail.com'
-                value={formik.values.email}
+                value={formik.values.emailClient}
                 onChange={formik.handleChange}
-                error={formik.touched.email && Boolean(formik.errors.email)}
-                helperText={formik.touched.email && formik.errors.email}
+                error={formik.touched.emailClient && Boolean(formik.errors.emailClient)}
+                helperText={formik.touched.emailClient && formik.errors.emailClient}
               />
             </Grid>
           </Grid>
@@ -223,7 +224,22 @@ const AgendarCita = (props) => {
             >
               Crear Evento en Google Calendar
             </Button>
+
           </Grid>
+          {success && (
+                <Alerta
+                type={'success'}
+                title={event ? 'Cita Registrada' : 'Cita Registrada'}
+                message={event ? 'Se ha registrado correctamente el evento en Google Calendar' : 'Se ha registrado correctamente el evento en Google Calendar'}
+                />
+            )}
+            {error && (
+              <Alerta
+                type={'error'}
+                title={'¡Ha ocurrido un problema!'}
+                message={event ? 'Error al crear el evento en Google Calendar' : 'Error al crear el evento en Google Calendar'}
+              />
+            )}
         </form>
       </div>
     </>
@@ -231,3 +247,5 @@ const AgendarCita = (props) => {
 };
 
 export { AgendarCita };
+
+

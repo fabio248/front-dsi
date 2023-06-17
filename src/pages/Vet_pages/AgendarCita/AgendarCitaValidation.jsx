@@ -14,7 +14,7 @@ export function initialValues(event) {
     descripcion: event?.descripcion || '',
     firstName: event?.firstName || '',
     lastName: event?.lastName || '',
-    email: event?.email || '',
+    emailClient: event?.emailClient || '',
   };
 }
 
@@ -36,7 +36,7 @@ export function validationSchemaRegister(event) {
     descripcion: yup.string().required('campo obligatorio'),
     firstName: yup.string().required('campo obligatorio'),
     lastName: yup.string().required('campo obligatorio'),
-    email: yup
+    emailClient: yup
       .string()
       .email('El email no es válido')
       .required('campo obligatorio'),

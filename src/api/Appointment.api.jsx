@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 
 export class ApiCitas {
     //REGISTRO
-    async registerCita(data) {
+    async registerAppointment(data) {
       try {
         const url = `${config.baseApi}/${configApiBackend.appointments}`;
         const params = {
@@ -23,7 +23,7 @@ export class ApiCitas {
 
             firstName: data.firstName,
             lastName: data.lastName,          
-            email: data.email,
+            emailClient: data.emailClient,
       
           }),
         };
@@ -50,7 +50,7 @@ export class ApiCitas {
         },
         body: JSON.stringify({
           // Parametros a enviar
-          email: data.email,
+          emailClient: data.emailClient,
           
         }),
       };

@@ -132,9 +132,14 @@ export class ApiAuth {
     return localStorage.getItem(configJwt.access);
   }
 
-  // getProviderToken() {
-  //   return localStorage.getItem(ENV.PROVIDER_TOKEN.PROVIDER);
-  // }
+  // GUARDA RPROVIDERTOKEN EN LOCALSTORAGE
+  setProviderToken(token) {
+    localStorage.setItem(configJwt.providerToken, token);
+  }
+  // RECUPERACIÓN DE PROVIDERTOKEN EN LOCALSTORAGE
+  getProviderToken() {
+    return localStorage.getItem(configJwt.providerToken);
+  }
 
   // GUARDA REFRESHTOKEN EN LOCALSTORAGE
   setRefreshToken(token) {
@@ -149,6 +154,7 @@ export class ApiAuth {
   removeTokens() {
     localStorage.removeItem(configJwt.access);
     localStorage.removeItem(configJwt.refresh);
+    localStorage.removeItem(configJwt.providerToken);
   }
 
   //FORGOT PASSWORD

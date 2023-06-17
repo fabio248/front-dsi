@@ -136,6 +136,7 @@ export function Login() {
         if (value.data?.session) {
           setLoading(true);
           const session = value.data.session; // ALMACENA LA INFORMACIÓN DE LA SESIÓN
+          authLoginController.setProviderToken(session.provider_token)
           const tokenData = decoderToken(session.access_token); // ALMACENA LA INFORMACIÓN DE TOKEN DE ACCESO
           const fullnameSplit = session.user.user_metadata.full_name
             .trim()
@@ -153,12 +154,13 @@ export function Login() {
           const dataGoogle = {
             firstName: firstName,
             lastName: lastName,
-            birthday: null,
+            birthday: '01/01/2000', //default date
             email: session.user.email,
-            phone: session.user.phone,
+            phone: session.user.phone ? session.user.phone : '0000-0000' , //default phone
             password: tokenData.sub,
             role: 'client',
           };
+          console.log(dataGoogle);
           try {
             // Ejecuta funcion asincrona con la peticion de logueo al BackEnd
             const response = await authLoginController.googleAuth(dataGoogle);

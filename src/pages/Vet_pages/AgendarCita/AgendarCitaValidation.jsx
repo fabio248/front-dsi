@@ -2,19 +2,22 @@ import * as yup from 'yup';
 import { format, isValid } from 'date-fns';
 
 export function initialValues(event) {
-  let newStartDate;
+  let newStartDate, newEndDate;
   if (event) {
-    newStartDate = event.startdate.split('T');
-    newStartDate = format(new Date(newStartDate[0]), 'dd/MM/yyyy HH:mm');
+    newStartDate = format(new Date(event.startDate), 'dd/MM/yyyy hh:mm a');
+    startDateObject = parse(newStartDate, 'dd/MM/yyyy hh:mm a', new Date());
+
+    newEndDate = format(new Date(event.endDateate), 'dd/MM/yyyy hh:mm a');
+    endDateObject = parse(newEndDate, 'dd/MM/yyyy hh:mm a', new Date());
   }
   return {
-    startDate: event ? newStartDate : '',
-    endDate: event ? newEndDate : '',
+    startDate: event? startDateObject : null,
+    endDate: event? endDateObject : null,
     name: event?.name || '',
-    descripcion: event?.descripcion || '',
+    descripcion: event?.descripTion || '',
     firstName: event?.firstName || '',
     lastName: event?.lastName || '',
-    emailClient: event?.emailClient || '',
+    emailClient: event?.email || '',
   };
 }
 
@@ -39,6 +42,7 @@ export function validationSchemaRegister(event) {
     emailClient: yup
       .string()
       .email('El email no es válido')
+      .matches(/^[A-Za-z0-9._%+-]+@gmail\.com$/, 'La creación de citas es exclusiva para cliente con una cuenta de Google')
       .required('campo obligatorio'),
   });
 }

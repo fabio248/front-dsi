@@ -6,30 +6,36 @@ import { initialValues, validationSchemaRegister } from './AgendarCitaValidation
 
 // Backend petitions
 import { ApiCitas } from '../../../api/Appointment.api';
-import { useAuth } from '../../../hooks';
+import { ApiAuth } from '../../../api/Auth.api';
 
 // MUI Material
-import { Grid, TextField, Button, Divider } from '@mui/material';
+import { Grid, TextField, Button, Divider, Box } from '@mui/material';
 
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { FormHelperText } from '@mui/material';
+import { format } from 'date-fns'
 
 // Componentes y funciones personalizadas
 import { Alerta } from '../../../shared/Alert'
 
 // Estilos
 import './AgendarCita.css';
+import { set } from 'lodash';
 
 const appointmentcontroller = new ApiCitas();
+const authController = new ApiAuth();
+
+//Error personalizado
+const googleErrorMessage = 'Inicia sesión con Google para poder crear evento en Google Calendar';
 
 const AgendarCita = (props) => {
   const {close, onReload, event} = props;
+  const [eventError, setEventError] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-
-  const { accessToken } = useAuth();
 
   const formik = useFormik({
     initialValues: initialValues(event),
@@ -37,14 +43,29 @@ const AgendarCita = (props) => {
     validateOnChange: false,
 
     onSubmit: async (formValue) => {
+      const accessToken = authController.getAccessToken();
       try {
         if (!event) {
-          await appointmentcontroller.registerAppointment(formValue);  
-        } 
-        setSuccess(true);
 
-      } catch (error) {
-        setError(true)
+          console.log(format(formValue.startDate, 'dd/MM/yyyy HH:mm'));
+          await appointmentcontroller.registerAppointment(accessToken, formValue);
+          //await createCalendarEvent();
+        }
+        else {
+          //UPDATE
+        }
+        setSuccess(true);
+        formik.resetForm();
+        setTimeout(() => {
+          setSuccess(false);
+        }, 6000);
+
+      } catch (err) {
+        err.message == googleErrorMessage ? setEventError(err.message) : setError(err.message);
+        setTimeout(() => {
+          setError('');
+          setEventError('');
+        }, 6000);
       }
     },
   }
@@ -54,15 +75,13 @@ const AgendarCita = (props) => {
 
   const handleDateChange = (date) => {
     formik.setFieldValue('startDate', date);
+    const endDate = new Date(date.getTime() + 45 * 60000); // Agregar 45 minutos en milisegundos
+    formik.setFieldValue('endDate', endDate);
   };
 
   async function createCalendarEvent() {
-    const { name, descripcion, startDate, firstName, lastName, emailClient } = formik.values;
-
-    // Calcular el fin de la cita (enddate)
-    const startDateObj = new Date(startDate);
-    const endDate = new Date(startDateObj.getTime() + 45 * 60000); // Agregar 45 minutos en milisegundos
-
+    const { name, descripcion, startDate, endDate, firstName, lastName, emailClient } = formik.values;
+    
     const event = {
       summary: name,
       //sendNotifications: true,
@@ -96,30 +115,30 @@ const AgendarCita = (props) => {
         method: 'POST',
         headers: {
           // Authorization: 'Bearer ' + session.provider_token,
-          Authorization: 'Bearer ' + 'ya29.a0AWY7Ckm3qH9QP5ZOz_iTvW0C-3fmTnN5JdyibiQX5ZRXHtHEq1C8gya_uOicvL_ioN2LpassThXMIT7tE0JHS57MnUxpgl9cgww6mj_N4U7m9DLKax_eGQNtllXM1sIsuhOoNtLDtW06XzmLPBimm46rW4oexgaCgYKAckSARASFQG1tDrpLMSTkQgPCVBoSc2HT1Ez3w0165',
+          Authorization: 'Bearer ' + authController.getProviderToken(),
         },
-        body: JSON.stringify(event),
+        body: JSON.stringify(),
       });
-
+      if (response.status !== 200)throw new Error('');
     } catch (error) {
-      setError(true)
+      throw new Error('Inicia sesión con Google para poder crear evento en Google Calendar');
     }
   }
 
   return (
     <>
-      <div>
+      <Box sx = {{ px: 4}}>
         <form onSubmit={formik.handleSubmit}>
           <h3>Agendar Cita</h3>
 
           <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DateTimePicker
+            <MobileDateTimePicker
               label='Fecha Dia/Mes/Año HH:mm'
               name='startDate'
               value={formik.values.startDate}
               onChange={handleDateChange}
               onBlur={formik.handleBlur}
-              slotProps={{ textField: { size: 'small', fullWidth: 'true' } }}
+              slotProps={{ textField: { size: 'small', fullWidth: true } }}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -129,7 +148,7 @@ const AgendarCita = (props) => {
               disablePast // Deshabilitar fechas anteriores al día de hoy
               showTodayButton // Mostrar botón para seleccionar la fecha actual
               clearable // Permitir borrar la fecha seleccionada
-              format='dd/MM/yyyy HH:mm'
+              format='dd/MM/yyyy hh:mm a'
             />
             {formik.touched.startDate && formik.errors.startDate && (
               <FormHelperText error>{formik.errors.startDate}</FormHelperText>
@@ -155,6 +174,8 @@ const AgendarCita = (props) => {
             name='descripcion'
             label='Descripción'
             variant='outlined'
+            multiline
+            rows={3}
             size='small'
             value={formik.values.descripcion}
             onChange={formik.handleChange}
@@ -220,28 +241,44 @@ const AgendarCita = (props) => {
               className='btn-citas'
               variant='contained'
               type='submit'
-              onClick={createCalendarEvent}
+              //onClick={createCalendarEvent}
             >
               Crear Evento en Google Calendar
             </Button>
 
           </Grid>
           {success && (
-                <Alerta
-                type={'success'}
-                title={event ? 'Cita Registrada' : 'Cita Registrada'}
-                message={event ? 'Se ha registrado correctamente el evento en Google Calendar' : 'Se ha registrado correctamente el evento en Google Calendar'}
-                />
+            <Alerta
+            type={'success'}
+            title={'Cita Registrada'}
+            message={'Se ha registrado correctamente la cita y el evento en Google Calendar'}
+            strong={`Verifica la cita`}
+            />
             )}
-            {error && (
-              <Alerta
-                type={'error'}
-                title={'¡Ha ocurrido un problema!'}
-                message={event ? 'Error al crear el evento en Google Calendar' : 'Error al crear el evento en Google Calendar'}
-              />
-            )}
+          {error && (
+            <Alerta
+            type={'error'}
+            title={'¡Ha ocurrido un problema!'}
+            message={
+              error == 'User not found' 
+              ? 'No se encuentra registrado el correo de'
+              : error }
+            strong={
+              error == 'User not found' 
+              ? `${formik.values.firstName} ${formik.values.lastName}`
+              : 'Verifica tu información'}
+          />
+          )}
+          {eventError && (
+            <Alerta
+            type={'warning'}
+            title={'Evento de Google Calendar no creado!'}
+            message={'Se ha registrado su cita pero no se ha podido agendar evento'}
+            strong={ eventError }
+          />
+          )}
         </form>
-      </div>
+      </Box>
     </>
   );
 };

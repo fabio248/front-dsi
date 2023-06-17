@@ -9,7 +9,7 @@ import { User } from '../../../../api/User.api';
 import { PetsAllItems } from '../PetsAllItems';
 
 //mui material
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, Typography } from '@mui/material';
 import { size, map } from 'lodash';
 
 //clase Pets

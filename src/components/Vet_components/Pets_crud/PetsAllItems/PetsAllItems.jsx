@@ -15,14 +15,20 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 
 //Modales compartidos
-import { Modal_visualizarClient } from '../../../../shared';
-import { Modal_create_pet } from '../../../../shared';
+import { Modal_visualizarClient, Alerta } from '../../../../shared';
+import { Modal_create_pet, Modal_delete } from '../../../../shared';
 
 //renderizado de los elementos
 import { UserAndPetsListered } from '../../Users_crud';
 import { PetsForm } from '../../Pets_crud';
 
-//formatos para fechas
+//import petitions of back
+import { Pets } from '../../../../api/Pets.api';
+import { ApiAuth } from '../../../../api/Auth.api';
+
+//controladores api
+const petController = new Pets();
+const authController = new ApiAuth();
 
 export function PetsAllItems({ pet, onReload }) {
   const Demo = styled('div')(({ theme }) => ({
@@ -34,6 +40,18 @@ export function PetsAllItems({ pet, onReload }) {
   const [year, month, day] = newBirthday.split('-');
   newBirthday = `${day}/${month}/${year}`;
 
+
+  //verificacion de error en la ejecución
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+
+  //useState que controla el estado del (abrir o cerrar) modal Delete
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [confirmMessage, setConfirmMessage] = useState('');
+
+  //seteo del titulo del modal de eliminar
+  const [titleDelete, setTitleDelete] = useState('');
+
   //seteo del titulo del modal de visualizar
   const [showVisualizar, setShowVisualizar] = useState(false);
   const [titleSeeInfoClientAndPet, setTitleSeeInfoClientAndPet] = useState('');
@@ -44,10 +62,34 @@ export function PetsAllItems({ pet, onReload }) {
   // const [reload, setReload] = useState(false);
 
   //funciones que cambia el estado
+  const onCloseConfirm = () => setShowConfirm((prevState) => !prevState);
   const onOpenInfoClientAndPets = () =>
     setShowVisualizar((prevState) => !prevState);
   const onOpenClosePets = () => setShowUpdatePets((prevState) => !prevState);
   // const  onReload = () => setReload((prevState) => !prevState);
+
+  //funcion que ejecuta el boton correspondiente (Delete TrashIcon)
+  const openDeletePet = () => {
+    setTitleDelete(` Eliminar macota: ${pet.name}   `);
+    setConfirmMessage(`¿Está seguro de que desea eliminar mascota?`);
+    onCloseConfirm();
+  };
+
+  //ejecuta la peticion de eliminacion de mascota
+  const onDeletePet = async () => {
+    try {
+      setError('');
+      const accessToken = await authController.getAccessToken();
+      await petController.deletePet(accessToken, pet.id);
+      setSuccess(true);
+      onCloseConfirm();
+      setTimeout(() => {
+        onReload();
+      }, '3000');
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   //ejecuta la funcion de visualizacion de informacion de cliente y su mascota (VisibilityIcon)
   const openInfoClientAndPets = () => {
@@ -122,9 +164,25 @@ export function PetsAllItems({ pet, onReload }) {
               </IconButton>
             </Grid>
             <Grid item>
-              <IconButton color='error' onClick={() => console.log('')}>
+              <IconButton color='error' onClick={openDeletePet}>
                 <DeleteIcon sx={{ fontSize: 30 }} />
               </IconButton>
+              {success && (
+                <Alerta
+                  type={'info'}
+                  title={'¡Mascota Eliminada!'}
+                  message={'Se ha elimnado correctamente la mascota'}
+                  strong={pet.name}
+                />
+              )}
+              {error && (
+                <Alerta
+                  type={'error'}
+                  title={'¡Ha ocurrido un problema!'}
+                  message={'No se ha podido eliminar la mascota'}
+                  strong={pet.name}
+                />
+              )}
             </Grid>
           </ListItemAvatar>
         </ListItem>
@@ -144,6 +202,14 @@ export function PetsAllItems({ pet, onReload }) {
           onReload={onReload}
         />
       </Modal_visualizarClient>
+      <Modal_delete
+        onOpen={showConfirm}
+        onCancel={onCloseConfirm}
+        onConfirm={onDeletePet}
+        content={confirmMessage}
+        title={titleDelete}
+        size='mini'
+      ></Modal_delete>
       <Modal_create_pet
         show={showUpdatePets}
         close={onOpenClosePets}

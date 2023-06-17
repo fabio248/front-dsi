@@ -21,6 +21,8 @@ export class Pets {
       throw error;
     }
   }
+
+  //ENCONTRAR TODAS LAS MASCOTAS
   async getAllPets(accessToken) {
     try {
       const url = `${config.baseApi}/${configApiBackend.pets}`;
@@ -40,6 +42,7 @@ export class Pets {
     }
   }
 
+  // ACTUALIZAR MASCOTA
   async updatePets(accessToken, idPets, pet) {
     try {
       const url = `${config.baseApi}/${configApiBackend.pets}/${idPets}`;
@@ -87,6 +90,26 @@ export class Pets {
       const result = await response.json();
 
       if (response.status !== 200) throw result;
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // ELIMINAR MASCOTA
+  async deletePet(accessToken, idPet) {
+    try {
+      const url = `${config.baseApi}/${configApiBackend.pets}/${idPet}`;
+      const params = {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${accessToken}` },
+      };
+
+      const response = await fetch(url, params);
+      const result = await response.json();
+
+      if (response.status !== 200) throw result;
+
       return result;
     } catch (error) {
       throw error;

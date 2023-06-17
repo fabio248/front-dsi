@@ -18,7 +18,7 @@ export class ApiAuth {
           // Parametros a enviar
           firstName: data.firstName,
           lastName: data.lastName,
-          birthday: data.fechaNacimiento,
+          birthday: format(data.birthday, 'dd/MM/yyyy'),
           email: data.email,
           password: data.password,
         }),
@@ -26,7 +26,7 @@ export class ApiAuth {
       const response = await fetch(url, params);
       const result = await response.json();
 
-      if (response.status !== 200) throw result; // Valida la respuesta del back
+      if (response.status !== 201) throw result; // Valida la respuesta del back
       return result;
     } catch (error) {
       throw error; // Manejo del error

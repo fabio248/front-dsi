@@ -152,8 +152,8 @@ export function Login() {
           }
           // RECUPERACIÓN DE DATOS DE INTERÉS PARA LA APLICACIÓN
           const dataGoogle = {
-            firstName: firstName,
-            lastName: lastName,
+            firstName: firstName ? firstName : 'Name',
+            lastName: lastName ? lastName : 'LastName',
             birthday: '01/01/2000', //default date
             email: session.user.email,
             phone: session.user.phone ? session.user.phone : '0000-0000' , //default phone

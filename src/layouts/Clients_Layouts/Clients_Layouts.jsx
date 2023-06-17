@@ -45,7 +45,7 @@ export function Clients_Layouts(props) {
     <div>
       <div className="image-container">
         <img
-          src="../../../public/galeria/logo.jpg"
+          src="../../../public/galeria/logo.png"
           alt="logo"
           className="imagen-appbar"
         />

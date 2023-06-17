@@ -16,9 +16,11 @@ import ModeEditIcon from '@mui/icons-material/ModeEdit';
 
 //Modales compartidos
 import { Modal_visualizarClient } from '../../../../shared';
+import { Modal_create_pet } from '../../../../shared';
 
 //renderizado de los elementos
 import { UserAndPetsListered } from '../../Users_crud';
+import { PetsForm } from '../../Pets_crud';
 
 //formatos para fechas
 import { format } from 'date-fns';
@@ -27,19 +29,26 @@ export function PetsAllItems({ pet }) {
   const Demo = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
   }));
-  
+
   let newBirthday;
   newBirthday = pet.birthday.split('T')[0];
-  const [year, month, day ] = newBirthday.split('-');
+  const [year, month, day] = newBirthday.split('-');
   newBirthday = `${day}/${month}/${year}`;
 
   //seteo del titulo del modal de visualizar
   const [showVisualizar, setShowVisualizar] = useState(false);
   const [titleSeeInfoClientAndPet, setTitleSeeInfoClientAndPet] = useState('');
+  const [titleUpdatePet, setTitleUpdatePet] = useState('');
+
+  //render elementos of update pet
+  const [showUpdatePets, setShowUpdatePets] = useState(false);
+  const [reload, setReload] = useState(false);
 
   //funciones que cambia el estado
   const onOpenInfoClientAndPets = () =>
     setShowVisualizar((prevState) => !prevState);
+  const onOpenClosePets = () => setShowUpdatePets((prevState) => !prevState);
+  const onReload = () => setReload((prevState) => !prevState);
 
   //ejecuta la funcion de visualizacion de informacion de cliente y su mascota (VisibilityIcon)
   const openInfoClientAndPets = () => {
@@ -48,6 +57,12 @@ export function PetsAllItems({ pet }) {
     );
     onOpenInfoClientAndPets();
   };
+
+  const openUpdatePets = () => {
+    setTitleUpdatePet(`Actualizando Datos de la Mascota: ${pet.name}`);
+    onOpenClosePets();
+  };
+
   return (
     <div>
       {' '}
@@ -104,7 +119,7 @@ export function PetsAllItems({ pet }) {
               </IconButton>
             </Grid>
             <Grid item>
-              <IconButton color='warning' onClick={() => console.log('')}>
+              <IconButton color='warning' onClick={openUpdatePets}>
                 <ModeEditIcon sx={{ fontSize: 30 }} />
               </IconButton>
             </Grid>
@@ -130,6 +145,13 @@ export function PetsAllItems({ pet }) {
           idUser={pet.user.id}
         />
       </Modal_visualizarClient>
+      <Modal_create_pet
+        show={showUpdatePets}
+        close={onOpenClosePets}
+        title={titleUpdatePet}
+      >
+        <PetsForm close={onOpenClosePets} onReload={onReload} pet={pet} />
+      </Modal_create_pet>
     </div>
   );
 }

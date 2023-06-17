@@ -123,7 +123,7 @@ export function UserItem(props) {
   let newBirthday;
   if (user) {
     newBirthday = user.birthday.split('T')[0];
-    const [year, month, day ] = newBirthday.split('-');
+    const [year, month, day] = newBirthday.split('-');
     newBirthday = `${day}/${month}/${year}`;
   }
   return (

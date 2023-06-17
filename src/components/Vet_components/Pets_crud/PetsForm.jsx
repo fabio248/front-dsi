@@ -7,6 +7,7 @@ import { useFormik } from 'formik';
 //Backend petitions
 import { Species } from '../../../api/specie.api';
 import { ApiAuth } from '../../../api/Auth.api';
+import { Pets } from '../../../api/Pets.api';
 
 //MUI Material
 import Autocomplete from '@mui/material/Autocomplete';
@@ -28,7 +29,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
-//
+//hooks accessToken
+import { useAuth } from '../../../hooks';
 
 // Validations and initialValues
 import {
@@ -41,6 +43,7 @@ import './PetsFrom.css';
 
 const specieController = new Species();
 const authController = new ApiAuth();
+const petsController = new Pets();
 
 export function PetFormTextFields({ formik }) {
   const [uploadedFile, setUploadedFile] = useState(null);
@@ -618,6 +621,8 @@ const PetsForm = (props) => {
   const [date, setDate] = useState('');
   const [error, setError] = useState(false);
 
+  const { accessToken } = useAuth();
+
   //manipulacion y validacion de los campos
   const formik = useFormik({
     initialValues: initialPetValues(pet),
@@ -626,7 +631,10 @@ const PetsForm = (props) => {
     onSubmit: async (formValue) => {
       try {
         if (!pet) {
+          //registro de la informacion si los campos son vacios
         } else {
+          //aqui ira la peticion donde se actualizaran los datos
+          await petsController.updatePets(accessToken, pet.id, formValue);
         }
         //onReload();
         //close();

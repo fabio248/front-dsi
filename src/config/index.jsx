@@ -13,12 +13,13 @@ const configApiBackend = {
   refreshAccessToken: import.meta.env.VITE_REFRESH_ACCESS_TOKEN,
   pets: import.meta.env.VITE_PETS,
   species: import.meta.env.VITE_SPECIES,
-  appointment: import.meta.env.VITE_APPOINTMENTS,
+  appointments: import.meta.env.VITE_APPOINTMENTS,
 };
 
 const configJwt = {
   access: import.meta.env.VITE_ACCESS,
   refresh: import.meta.env.VITE_REFRESH,
+  providerToken: import.meta.env.VITE_PROVIDERTOKEN,
 };
 
 export { config, configApiBackend, configJwt };

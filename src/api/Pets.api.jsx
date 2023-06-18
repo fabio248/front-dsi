@@ -42,10 +42,12 @@ export class Pets {
     }
   }
 
-
-  // CREAR MASCOTA 
+  // CREAR MASCOTA
   async createPets(accessToken, idUser, pet) {
     try {
+      if (!pet.whichPets) {
+        delete pet.whichPets;
+      }
       const url = `${config.baseApi}/${configApiBackend.users}/${idUser}/${configApiBackend.pets}`;
       const params = {
         method: 'POST',
@@ -95,11 +97,36 @@ export class Pets {
     }
   }
 
+  async filePets(accessToken, petId, data) {
+    try {
+      const formData = new FormData();
 
+      Object.keys(data).forEach((key) => {
+        formData.append(key, data[key]);
+      });
+      if (data.file) {
+        formData.append('exam', data.file);
+      }
+
+      const url = `${config.baseApi}/${configApiBackend.pets}/${petId}`;
+      const params = {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: formData,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
 
   // ACTUALIZAR MASCOTA
   async updatePets(accessToken, idPets, pet) {
     try {
+      if (!pet.whichPets) {
+        delete pet.whichPets;
+      }
       const url = `${config.baseApi}/${configApiBackend.pets}/${idPets}`;
       const params = {
         method: 'PATCH',

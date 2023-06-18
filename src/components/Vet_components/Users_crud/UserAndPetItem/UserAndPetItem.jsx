@@ -13,10 +13,9 @@ import { format } from 'date-fns';
 import PetsIcon from '@mui/icons-material/Pets';
 
 export function UserAndPetItem({ pet }) {
-  
   let newBirthday;
   newBirthday = pet.birthday.split('T')[0];
-  const [year, month, day ] = newBirthday.split('-');
+  const [year, month, day] = newBirthday.split('-');
   newBirthday = `${day}/${month}/${year}`;
 
   return (
@@ -62,8 +61,6 @@ export function UserAndPetItem({ pet }) {
             <b>Color del pelaje: </b>
             <span style={{ color: 'gray' }}>{pet.color}</span>
             <br />
-            <b>Color del pelaje: </b>
-            <span style={{ color: 'gray' }}>{pet.color}</span>
             <div
               style={{
                 borderBottom: '3px solid grey',
@@ -140,7 +137,6 @@ export function UserAndPetItem({ pet }) {
                 {pet.medicalHistory.physicalExam.palpitations}
               </span>
               <br />
-              <b>Aquí se renderizarán los documentos solo si existen</b>
             </>
           </b>
         </ListItemText>

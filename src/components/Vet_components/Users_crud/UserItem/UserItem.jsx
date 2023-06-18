@@ -220,7 +220,7 @@ export function UserItem(props) {
         close={onOpenClosePets}
         title={titlePets}
       >
-        <PetsForm close={onOpenClosePets} />
+        <PetsForm close={onOpenClosePets} idUser = {user.id} />
       </Modal_create_pet>
       <Modal_verInfoClientAndPet
         show={showVisualizar}

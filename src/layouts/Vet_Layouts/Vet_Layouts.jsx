@@ -22,6 +22,7 @@ import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import EventIcon from '@mui/icons-material/Event';
 import { Logout } from '../../components/Admin/Auth/Logout';
 import { Grid } from '@mui/material';
+import { NavLink } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -47,26 +48,41 @@ export function Vet_Layouts(props) {
 
       <Toolbar />
       <List>
+      <NavLink
+          to='/admin/users'
+          style={{
+            textDecoration: 'none', // Quitar subrayado
+            color: 'black', // Color de texto deseado
+          }}
+        >
         <ListItem disablePadding>
-          <ListItemButton component='a' href='/admin/users'>
+          <ListItemButton component='a'>
             <ListItemIcon>
               <PeopleAltIcon />
             </ListItemIcon>
             <ListItemText primary='Clientes' />
           </ListItemButton>
         </ListItem>
+        </NavLink>
         <Divider />
+        <NavLink
+          to='/admin/calendar'
+          style={{
+            textDecoration: 'none', // Quitar subrayado
+            color: 'black', // Color de texto deseado
+          }}
+        >
         <ListItem disablePadding>
-          <ListItemButton component='a' href='/admin/calendar'>
+          <ListItemButton component='a'>
             <ListItemIcon>
               <EventIcon />
             </ListItemIcon>
             <ListItemText primary='Programación de citas' />
           </ListItemButton>
         </ListItem>
-      </List>
+        </NavLink>
+
       <Divider />
-      <List>
         <ListItem disablePadding>
           <ListItemButton
             component='a'
@@ -79,17 +95,24 @@ export function Vet_Layouts(props) {
             <ListItemText primary='Visualizar citas' />
           </ListItemButton>
         </ListItem>
-      </List>
+
       <Divider />
-      <List>
+      <NavLink
+          to='/admin/userAndPets'
+          style={{
+            textDecoration: 'none', // Quitar subrayado
+            color: 'black', // Color de texto deseado
+          }}
+        >
         <ListItem disablePadding>
-          <ListItemButton component='a' href='/admin/userAndPets'>
+          <ListItemButton component='a'>
             <ListItemIcon>
               <PersonAddAltIcon />
             </ListItemIcon>
             <ListItemText primary='Agregar Clientes y sus mascotas' />
           </ListItemButton>
         </ListItem>
+        </NavLink>
       </List>
     </div>
   );

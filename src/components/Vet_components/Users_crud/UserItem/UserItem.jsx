@@ -85,7 +85,7 @@ export function UserItem(props) {
 
   //funcion que ejecuta el boton correspondiente (Create PetsIcon)
   const onCreatePetForUser = () => {
-    setTitlePets('Crear Mascota para el cliente seleccionado');
+    setTitlePets('Crear Mascota para el cliente seleccionado.');
     onOpenClosePets();
   };
 

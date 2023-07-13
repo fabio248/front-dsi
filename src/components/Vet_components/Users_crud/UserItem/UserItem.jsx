@@ -35,6 +35,7 @@ import { UserAndPetsListered } from '../UserAndPetsListered';
 //import petitions of back
 import { User } from '../../../../api/User.api';
 import { ApiAuth } from '../../../../api/Auth.api';
+import { NavLink } from 'react-router-dom';
 
 //controladores de las clases API
 const userController = new User();
@@ -139,7 +140,11 @@ export function UserItem(props) {
             </Avatar>
           </ListItemAvatar>
           <ListItemText>
-            <p>
+            <p> 
+              <NavLink to = {`/admin/users/${user.id}`}>
+              <b>Perfil </b>
+              </NavLink>
+              <br />
               <b>Usuario: </b>
               {user.firstName} {user.lastName}
               <br />

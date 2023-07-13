@@ -39,10 +39,11 @@ Button{
 }
 
 .imagen-appbar {
-  
+  margin-top: -20px;
+  display: flex;
+  justify-content: center;
   height: auto;
   width: auto;
-  max-height: 100%;
-  max-width: 100%;
-  object-fit: contain;
+  max-height: 75%;
+  max-width: 75%;
 }

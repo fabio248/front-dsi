@@ -42,7 +42,7 @@ export function Clients_Layouts(props) {
   };
 
   const drawer = (
-    <div>
+    <div className='main-container'>
       <div className="image-container">
         <img
           src="../../../public/galeria/logo.png"
@@ -50,10 +50,9 @@ export function Clients_Layouts(props) {
           className="imagen-appbar"
         />
       </div>
-      <Toolbar />
-      <Divider />
+      <Divider sx = {{ mt: -3}}/>
       <List>
-        <ListItem disablePadding style={{ height: '80px' }}>
+        <ListItem disablePadding >
           <NavLink
             to='/client/catalogo'
             style={{
@@ -78,7 +77,7 @@ export function Clients_Layouts(props) {
             color: 'black', // Color de texto deseado
           }}
         >
-          <ListItem disablePadding style={{ height: '80px' }}>
+          <ListItem disablePadding >
             <ListItemButton>
               <ListItemIcon>
                 <InfoIcon />
@@ -97,7 +96,7 @@ export function Clients_Layouts(props) {
             color: 'black', // Color de texto deseado
           }}
         >
-          <ListItem disablePadding style={{ height: '80px' }}>
+          <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
                 <MenuBookIcon />

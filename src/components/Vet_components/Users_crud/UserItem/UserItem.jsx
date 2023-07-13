@@ -12,6 +12,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import { createTheme, ThemeProvider } from '@mui/material';
 
 //style of format
 import { format } from 'date-fns';
@@ -126,12 +127,14 @@ export function UserItem(props) {
     const [year, month, day] = newBirthday.split('-');
     newBirthday = `${day}/${month}/${year}`;
   }
+
+  const defaultTheme = createTheme();
   return (
-    <>
+    <ThemeProvider theme={defaultTheme}>
       <Demo>
         <ListItem sx={{ display: 'flex', flexWrap: 'wrap' }}>
           <ListItemAvatar sx={{ margin: '0 auto' }}>
-            <Avatar sx={{ mx: 4, width: 60, height: 60 }}>
+            <Avatar sx={{ mx: 4, width: 60, height: 60, bgcolor: '#8EC167'}}>
               <PersonIcon sx={{ fontSize: 45 }} />
             </Avatar>
           </ListItemAvatar>
@@ -234,6 +237,6 @@ export function UserItem(props) {
           dataUser={user}
         />
       </Modal_verInfoClientAndPet>
-    </>
+    </ThemeProvider>
   );
 }

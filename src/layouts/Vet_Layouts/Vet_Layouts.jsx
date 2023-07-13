@@ -46,7 +46,7 @@ export function Vet_Layouts(props) {
         />
       </div>
 
-      <Toolbar />
+      <Divider sx = {{ mt: -3}}/>
       <List>
       <NavLink
           to='/admin/users'
@@ -113,6 +113,7 @@ export function Vet_Layouts(props) {
           </ListItemButton>
         </ListItem>
         </NavLink>
+        <Divider />
       </List>
     </div>
   );

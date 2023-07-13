@@ -32,13 +32,15 @@ Button{
 
 .imagen {
   width: 100%; 
-  height: auto; 
+  height: auto;
+  margin: 0;
 }
 .imagen-appbar {
-  margin-top: 45px;
+  margin-top: -20px;
+  display: flex;
+  justify-content: center;
   height: auto;
   width: auto;
-  max-height: 100%;
-  max-width: 100%;
-  object-fit: contain;
+  max-height: 75%;
+  max-width: 75%;
 }

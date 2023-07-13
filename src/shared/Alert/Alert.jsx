@@ -6,6 +6,9 @@ import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import { AlertTitle } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const defaultTheme = createTheme();
 
 // Alertas para validaciones ( Éxito, Fracaso, Advertencia o Infomración)
 export function Alerta ({ type = 'warning', message = 'This is an alert', title = 'WARNING',  strong = 'Check it out'}) {
@@ -24,6 +27,7 @@ export function Alerta ({ type = 'warning', message = 'This is an alert', title 
   };
 
   return (
+    <ThemeProvider theme={defaultTheme}>
     <Stack spacing={2} sx={{ width: '100%', textAlign: 'left' }}>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity={type} sx={{ width: '100%' }}>
@@ -32,5 +36,6 @@ export function Alerta ({ type = 'warning', message = 'This is an alert', title 
         </Alert>
       </Snackbar>
     </Stack>
+    </ThemeProvider>
   );
 }

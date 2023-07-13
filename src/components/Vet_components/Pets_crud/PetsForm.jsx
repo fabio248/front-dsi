@@ -578,7 +578,17 @@ export function PetFormTextFields({ formik }) {
         <Grid container spacing={3} sx={{ fullWidth: true, margin: 0 }}>
           <Grid item xs={12} sm={24}>
             <Box {...getRootProps()} sx={dropzoneStyle}>
-              <input {...getInputProps()} />
+              <input
+                {...getInputProps()}
+                value={formik.values.uploadedFile}
+                // onChange={(event) => {
+                //   formik.setFieldValue(
+                //     'file',
+                //     event.currentTarget.uploadedFile[0]
+                //   ); // Actualiza el valor del campo "file" en Formik
+                // }}
+              />
+
               {isDragActive ? (
                 <Typography variant='body1' color='text.secondary'>
                   Suelta los archivos aquí...
@@ -590,6 +600,7 @@ export function PetFormTextFields({ formik }) {
                     : 'Arrastra y suelta archivos aquí, o haz clic para seleccionar archivos'}
                 </Typography>
               )}
+
               {uploadedFile && (
                 <Box sx={{ mt: 2 }}>
                   <Button
@@ -632,7 +643,9 @@ const PetsForm = (props) => {
       try {
         if (!pet) {
           //registro de la informacion si los campos son vacios
+
           await petsController.createPets(accessToken, idUser, formValue);
+          // await petsController.filePets(accessToken, idUser);
         } else {
           //aqui ira la peticion donde se actualizaran los datos
           await petsController.updatePets(accessToken, pet.id, formValue);
@@ -643,7 +656,7 @@ const PetsForm = (props) => {
           //onReload();
         }, 3000);
       } catch (error) {
-        setIsError(true)
+        setIsError(true);
         console.log(error);
         //onReload();
         //console.error(error);
@@ -683,21 +696,29 @@ const PetsForm = (props) => {
             </Button>
           </Grid>
           {success && (
-                <Alerta
-                  type={'success'}
-                  title={pet ? 'Mascota Actuallizado' : 'Usuario Regsitrado'}
-                  message={pet ? 'Se ha actualizado correctamente la mascota' : 'Se ha registrado correctamente'}
-                  strong={pet ? `${pet.name}` : 'Verifica el registro'}
-                />
-              )}
-              {isError && (
-                <Alerta
-                  type={'error'}
-                  title={'¡Ha ocurrido un problema!'}
-                  message={pet ? 'No se ha podido actualizar mascota' : 'No se ha podido completar el registro'}
-                  strong={pet ? `${pet.name}` : 'Verifica la información ingresada'}
-                />
-              )}
+            <Alerta
+              type={'success'}
+              title={pet ? 'Mascota Actuallizado' : 'Usuario Regsitrado'}
+              message={
+                pet
+                  ? 'Se ha actualizado correctamente la mascota'
+                  : 'Se ha registrado correctamente'
+              }
+              strong={pet ? `${pet.name}` : 'Verifica el registro'}
+            />
+          )}
+          {isError && (
+            <Alerta
+              type={'error'}
+              title={'¡Ha ocurrido un problema!'}
+              message={
+                pet
+                  ? 'No se ha podido actualizar mascota'
+                  : 'No se ha podido completar el registro'
+              }
+              strong={pet ? `${pet.name}` : 'Verifica la información ingresada'}
+            />
+          )}
         </form>
       </div>
     </>

@@ -25,7 +25,7 @@ import './UserForm.css';
 const authControl = new ApiAuth();
 const userControl = new User();
 
-export  function UserFormTextFields({formik}){
+export function UserFormTextFields({ formik }) {
   const roles = [
     { label: 'client', key: 'user', value: 'client' },
     { label: 'admin', key: 'admin', value: 'admin' },
@@ -47,9 +47,7 @@ export  function UserFormTextFields({formik}){
           size='small'
           onChange={formik.handleChange}
           value={formik.values.firstName}
-          error={
-            formik.touched.firstName && Boolean(formik.errors.firstName)
-          }
+          error={formik.touched.firstName && Boolean(formik.errors.firstName)}
           helperText={formik.touched.firstName && formik.errors.firstName}
         />
       </Grid>
@@ -62,9 +60,7 @@ export  function UserFormTextFields({formik}){
           size='small'
           value={formik.values.lastName || null}
           onChange={formik.handleChange}
-          error={
-            formik.touched.lastName && Boolean(formik.errors.lastName)
-          }
+          error={formik.touched.lastName && Boolean(formik.errors.lastName)}
           helperText={formik.touched.lastName && formik.errors.lastName}
         />
       </Grid>
@@ -85,22 +81,24 @@ export  function UserFormTextFields({formik}){
       <Grid item xs={12} sm={6}>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DatePicker
-            label="Fecha de Nacimiento"
-            name="birthday"
+            label='Fecha de Nacimiento'
+            name='birthday'
             value={formik.values.birthday}
             onChange={handleDateChange}
             onBlur={formik.handleBlur}
-            slotProps={{ textField: { size: 'small', fullWidth: true} }}
+            slotProps={{ textField: { size: 'small', fullWidth: true } }}
             renderInput={(params) => (
               <TextField
                 {...params}
-                error={formik.touched.birthday && Boolean(formik.errors.birthday)}
+                error={
+                  formik.touched.birthday && Boolean(formik.errors.birthday)
+                }
               />
             )}
             disableFuture // Deshabilitar fechas posteriores al día de hoy
             showTodayButton // Mostrar botón para seleccionar la fecha actual
             clearable // Permitir borrar la fecha seleccionada
-            format = 'dd/MM/yyyy'
+            format='dd/MM/yyyy'
           />
           {formik.touched.birthday && formik.errors.birthday && (
             <FormHelperText error>{formik.errors.birthday}</FormHelperText>
@@ -117,9 +115,7 @@ export  function UserFormTextFields({formik}){
           size='small'
           value={formik.values.password}
           onChange={formik.handleChange}
-          error={
-            formik.touched.password && Boolean(formik.errors.password)
-          }
+          error={formik.touched.password && Boolean(formik.errors.password)}
           helperText={formik.touched.password && formik.errors.password}
         />
       </Grid>
@@ -135,11 +131,12 @@ export  function UserFormTextFields({formik}){
           }
           value={formik.values.role}
           renderInput={(params) => (
-            <TextField 
-            {...params} 
-            label='Selecciona un Rol'
-            error={formik.touched.role && formik.errors.role}
-            helperText={formik.touched.role && formik.errors.role} />
+            <TextField
+              {...params}
+              label='Selecciona un Rol'
+              error={formik.touched.role && formik.errors.role}
+              helperText={formik.touched.role && formik.errors.role}
+            />
           )}
         />
       </Grid>
@@ -185,9 +182,7 @@ export  function UserFormTextFields({formik}){
           size='small'
           value={formik.values.direction}
           onChange={formik.handleChange}
-          error={
-            formik.touched.direction && Boolean(formik.errors.direction)
-          }
+          error={formik.touched.direction && Boolean(formik.errors.direction)}
           helperText={formik.touched.direction && formik.errors.direction}
         />
       </Grid>
@@ -217,7 +212,7 @@ export  function UserFormTextFields({formik}){
       </Grid>
     </Grid>
   );
-} 
+}
 
 const UserForm = (props) => {
   const { close, onReload, user } = props;
@@ -243,22 +238,21 @@ const UserForm = (props) => {
           onReload();
         }, 3000);
       } catch (error) {
-        setIsError(true)
+        setIsError(true);
         onReload();
         console.error(error);
       }
     },
   });
 
-  
   return (
     <>
       <div>
         <form onSubmit={formik.handleSubmit}>
           <br />
 
-            {/*Campos de llenado del fomrulario*/}
-            <UserFormTextFields formik = {formik} />
+          {/*Campos de llenado del fomrulario*/}
+          <UserFormTextFields formik={formik} />
 
           <br />
           <Grid
@@ -276,22 +270,38 @@ const UserForm = (props) => {
               Cancelar
             </Button>
           </Grid>
-            {success && (
-                <Alerta
-                  type={'success'}
-                  title={user ? 'Usuario Actuallizado' : 'Usuario Regsitrado'}
-                  message={user ? 'Se ha actualizado correctamente el usuario' : 'Se ha registrado correctamente'}
-                  strong={user ? `${user.firstName} ${user.lastName}` : 'Verifica el registro'}
-                />
-              )}
-              {isError && (
-                <Alerta
-                  type={'error'}
-                  title={'¡Ha ocurrido un problema!'}
-                  message={user ? 'No se ha podido actualizar el usuario' : 'No se ha podido completar el registro'}
-                  strong={user ? `${user.firstName} ${user.lastName}` : 'Verifica la información ingresada'}
-                />
-              )}
+          {success && (
+            <Alerta
+              type={'success'}
+              title={user ? 'Usuario Actuallizado' : 'Usuario Regsitrado'}
+              message={
+                user
+                  ? 'Se ha actualizado correctamente el usuario'
+                  : 'Se ha registrado correctamente'
+              }
+              strong={
+                user
+                  ? `${user.firstName} ${user.lastName}`
+                  : 'Verifica el registro'
+              }
+            />
+          )}
+          {isError && (
+            <Alerta
+              type={'error'}
+              title={'¡Ha ocurrido un problema!'}
+              message={
+                user
+                  ? 'No se ha podido actualizar el usuario'
+                  : 'No se ha podido completar el registro'
+              }
+              strong={
+                user
+                  ? `${user.firstName} ${user.lastName}`
+                  : 'Verifica la información ingresada'
+              }
+            />
+          )}
         </form>
       </div>
     </>

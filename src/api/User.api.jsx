@@ -109,6 +109,9 @@ export class User {
   //REGISTRAR UN USUARIO Y SU MASCOTA
   async registerUserAndPet(accessToken, clientData, petData) {
     try {
+      if (!petData.whichPets) {
+        delete petData.whichPets;
+      }
       const url = `${config.baseApi}/${configApiBackend.users}/${configApiBackend.pets}`;
       const params = {
         method: 'POST', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
@@ -129,7 +132,7 @@ export class User {
           phone: clientData.phone,
           direction: clientData.direction,
           dui: clientData.dui,
-          pet:{
+          pet: {
             name: petData.name,
             specie: petData.specie.id,
             raza: petData.raza,
@@ -138,27 +141,27 @@ export class User {
             birthday: format(petData.birthday, 'dd/MM/yyyy'),
             gender: petData.gender,
             pedigree: petData.pedigree,
-            medicalHistory:{
+            medicalHistory: {
               isHaveAllVaccine: petData.vacuna,
               isReproduced: petData.reproduccion,
               descendants: petData.descendencia,
               room: petData.habitaculo,
               diasesEvaluation: petData.enfermedad,
               observation: petData.observacion,
-              food:{
-                  quantity: petData.quantityFood,
-                  type: petData.typeFood,
+              food: {
+                quantity: petData.quantityFood,
+                type: petData.typeFood,
               },
-              physicalExam:{
-                  weight: petData.weight,
-                  palpitations: petData.palpitaciones
+              physicalExam: {
+                weight: petData.weight,
+                palpitations: petData.palpitaciones,
               },
-              otherPet:{
-                  isLiveOtherPets: petData.convivencia,
-                  whichPets: petData.whichPets,
-              }
-            }
-          }
+              otherPet: {
+                isLiveOtherPets: petData.convivencia,
+                whichPets: petData.whichPets,
+              },
+            },
+          },
         }),
       };
 

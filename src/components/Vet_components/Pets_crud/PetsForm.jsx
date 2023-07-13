@@ -28,6 +28,7 @@ import { useDropzone } from 'react-dropzone';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { Alerta } from '../../../shared';
 
 //hooks accessToken
 import { useAuth } from '../../../hooks';
@@ -577,7 +578,17 @@ export function PetFormTextFields({ formik }) {
         <Grid container spacing={3} sx={{ fullWidth: true, margin: 0 }}>
           <Grid item xs={12} sm={24}>
             <Box {...getRootProps()} sx={dropzoneStyle}>
-              <input {...getInputProps()} />
+              <input
+                {...getInputProps()}
+                value={formik.values.uploadedFile}
+                // onChange={(event) => {
+                //   formik.setFieldValue(
+                //     'file',
+                //     event.currentTarget.uploadedFile[0]
+                //   ); // Actualiza el valor del campo "file" en Formik
+                // }}
+              />
+
               {isDragActive ? (
                 <Typography variant='body1' color='text.secondary'>
                   Suelta los archivos aquí...
@@ -589,6 +600,7 @@ export function PetFormTextFields({ formik }) {
                     : 'Arrastra y suelta archivos aquí, o haz clic para seleccionar archivos'}
                 </Typography>
               )}
+
               {uploadedFile && (
                 <Box sx={{ mt: 2 }}>
                   <Button
@@ -616,7 +628,9 @@ export function PetFormTextFields({ formik }) {
 }
 
 const PetsForm = (props) => {
-  const { close, pet, onReload } = props;
+  const { close, pet, onReload, idUser } = props;
+  const [isError, setIsError] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const { accessToken } = useAuth();
 
@@ -629,14 +643,23 @@ const PetsForm = (props) => {
       try {
         if (!pet) {
           //registro de la informacion si los campos son vacios
+
+          await petsController.createPets(accessToken, idUser, formValue);
+          // await petsController.filePets(accessToken, idUser);
         } else {
           //aqui ira la peticion donde se actualizaran los datos
           await petsController.updatePets(accessToken, pet.id, formValue);
         }
-        onReload();
-        close();
+        setSuccess(true);
+        setTimeout(() => {
+          close();
+          //onReload();
+        }, 3000);
       } catch (error) {
-        console.error(error);
+        setIsError(true);
+        console.log(error);
+        //onReload();
+        //console.error(error);
       }
     },
   });
@@ -672,6 +695,30 @@ const PetsForm = (props) => {
               Cancelar
             </Button>
           </Grid>
+          {success && (
+            <Alerta
+              type={'success'}
+              title={pet ? 'Mascota Actuallizado' : 'Usuario Regsitrado'}
+              message={
+                pet
+                  ? 'Se ha actualizado correctamente la mascota'
+                  : 'Se ha registrado correctamente'
+              }
+              strong={pet ? `${pet.name}` : 'Verifica el registro'}
+            />
+          )}
+          {isError && (
+            <Alerta
+              type={'error'}
+              title={'¡Ha ocurrido un problema!'}
+              message={
+                pet
+                  ? 'No se ha podido actualizar mascota'
+                  : 'No se ha podido completar el registro'
+              }
+              strong={pet ? `${pet.name}` : 'Verifica la información ingresada'}
+            />
+          )}
         </form>
       </div>
     </>

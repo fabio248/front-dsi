@@ -12,6 +12,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import { createTheme, ThemeProvider } from '@mui/material';
 
 //style of format
 import { format } from 'date-fns';
@@ -34,6 +35,7 @@ import { UserAndPetsListered } from '../UserAndPetsListered';
 //import petitions of back
 import { User } from '../../../../api/User.api';
 import { ApiAuth } from '../../../../api/Auth.api';
+import { NavLink } from 'react-router-dom';
 
 //controladores de las clases API
 const userController = new User();
@@ -126,17 +128,23 @@ export function UserItem(props) {
     const [year, month, day] = newBirthday.split('-');
     newBirthday = `${day}/${month}/${year}`;
   }
+
+  const defaultTheme = createTheme();
   return (
-    <>
+    <ThemeProvider theme={defaultTheme}>
       <Demo>
         <ListItem sx={{ display: 'flex', flexWrap: 'wrap' }}>
           <ListItemAvatar sx={{ margin: '0 auto' }}>
-            <Avatar sx={{ mx: 4, width: 60, height: 60 }}>
+            <Avatar sx={{ mx: 4, width: 60, height: 60, bgcolor: '#8EC167'}}>
               <PersonIcon sx={{ fontSize: 45 }} />
             </Avatar>
           </ListItemAvatar>
           <ListItemText>
-            <p>
+            <p> 
+              <NavLink to = {`/admin/users/${user.id}`}>
+              <b>Perfil </b>
+              </NavLink>
+              <br />
               <b>Usuario: </b>
               {user.firstName} {user.lastName}
               <br />
@@ -220,7 +228,7 @@ export function UserItem(props) {
         close={onOpenClosePets}
         title={titlePets}
       >
-        <PetsForm close={onOpenClosePets} />
+        <PetsForm close={onOpenClosePets} idUser = {user.id} />
       </Modal_create_pet>
       <Modal_verInfoClientAndPet
         show={showVisualizar}
@@ -234,6 +242,6 @@ export function UserItem(props) {
           dataUser={user}
         />
       </Modal_verInfoClientAndPet>
-    </>
+    </ThemeProvider>
   );
 }

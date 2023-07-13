@@ -46,10 +46,8 @@ const AgendarCita = (props) => {
       const accessToken = authController.getAccessToken();
       try {
         if (!event) {
-
-          console.log(format(formValue.startDate, 'dd/MM/yyyy HH:mm'));
           await appointmentcontroller.registerAppointment(accessToken, formValue);
-          //await createCalendarEvent();
+          await createCalendarEvent();
         }
         else {
           //UPDATE
@@ -117,7 +115,7 @@ const AgendarCita = (props) => {
           // Authorization: 'Bearer ' + session.provider_token,
           Authorization: 'Bearer ' + authController.getProviderToken(),
         },
-        body: JSON.stringify(),
+        body: JSON.stringify(event),
       });
       if (response.status !== 200)throw new Error('');
     } catch (error) {

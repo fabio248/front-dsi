@@ -16,7 +16,7 @@ const style = {
   width: '90vw',
   maxWidth: '1100px',
   maxHeight: '90vh',
-  height: '100vh',
+  height: '75vh',
   overflowY: 'auto',
   bgcolor: 'background.paper',
   border: '2px solid #000',
@@ -24,19 +24,7 @@ const style = {
   p: 4,
 };
 
-export function Modal_verInfoClientAndPet({
-  show,
-  close,
-  title,
-  children,
-  dataUser,
-}) {
-  let newBirthdayUser;
-  newBirthdayUser = dataUser.birthday.split('T')[0];
-  const [year, month, day ] = newBirthdayUser.split('-');
-  newBirthdayUser = `${day}/${month}/${year}`;
-
-
+export function Modal_verInfoClientAndPet({ show, close, title, children }) {
   const handleModalClose = () => {
     close();
   };
@@ -48,7 +36,7 @@ export function Modal_verInfoClientAndPet({
         onClose={handleModalClose}
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'
-        style={{ tabSize: '250px' }}
+        style={{ tabSize: '200px' }}
       >
         <Box sx={style}>
           <Typography
@@ -71,44 +59,10 @@ export function Modal_verInfoClientAndPet({
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(2, 1fr)',
-                gap: '20px',
+                gap: '15px',
                 textAlign: 'center',
               }}
-            >
-              <div>
-                <div>
-                  <b>Propietario: </b>
-                  {dataUser.firstName} {dataUser.lastName}
-                </div>
-                <div>
-                  <b>Documento de Identidad (DUI): </b>
-                  {dataUser.dui}
-                </div>
-                <div>
-                  <b>Dirección: </b>
-                  {dataUser.direction}
-                </div>
-                <div>
-                  <b>Role del Usuario: </b>
-                  {dataUser.role}
-                </div>
-              </div>
-
-              <div>
-                <div>
-                  <b>Número Telefónico: </b>
-                  {dataUser.phone}
-                </div>
-                <div>
-                  <b>Nacimiento: </b>
-                  {newBirthdayUser}
-                </div>
-                <div>
-                  <b>Correo Electrónico: </b>
-                  {dataUser.email}
-                </div>
-              </div>
-            </div>
+            ></div>
             <Divider />
             {children}
           </Typography>

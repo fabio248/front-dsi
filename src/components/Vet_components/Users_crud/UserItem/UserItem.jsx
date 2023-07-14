@@ -10,12 +10,11 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import PersonIcon from '@mui/icons-material/Person';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemIcon from '@mui/material/ListItemIcon';
+
 import ListItemText from '@mui/material/ListItemText';
 import { createTheme, ThemeProvider } from '@mui/material';
 
 //style of format
-import { format } from 'date-fns';
 import './UserItem.css';
 
 //Modal Update/Register/Delete/CreatePet
@@ -24,13 +23,11 @@ import {
   Modal_delete,
   Alerta,
   Modal_create_pet,
-  Modal_verInfoClientAndPet,
 } from '../../../../shared';
 
 //objetos children que se renderizan dentro del modal
 import { UserForm } from '../UserForm';
 import { PetsForm } from '../../Pets_crud';
-import { UserAndPetsListered } from '../UserAndPetsListered';
 
 //import petitions of back
 import { User } from '../../../../api/User.api';
@@ -64,10 +61,6 @@ export function UserItem(props) {
   //seteo del titulo del modal de eliminar
   const [titleDelete, setTitleDelete] = useState('');
 
-  //seteo del titulo del modal de visualizar
-  const [showVisualizar, setShowVisualizar] = useState(false);
-  const [titleSeeInfoClientAndPet, setTitleSeeInfoClientAndPet] = useState('');
-
   //useState que controla el estado del (abrir o cerrar) modal Create Pets
   const [showPets, setShowPets] = useState(false);
   const [titlePets, setTitlePets] = useState('');
@@ -76,8 +69,6 @@ export function UserItem(props) {
   const onOpenCloseModal = () => setShowModal((prevState) => !prevState);
   const onCloseConfirm = () => setShowConfirm((prevState) => !prevState);
   const onOpenClosePets = () => setShowPets((prevState) => !prevState);
-  const onOpenInfoClientAndPets = () =>
-    setShowVisualizar((prevState) => !prevState);
 
   //funcion que ejecuta el boton correspondiente (Update pencilIcon)
   const openUpdateUser = () => {
@@ -96,14 +87,6 @@ export function UserItem(props) {
     setTitleDelete(`Eliminar usuario: ${user.firstName} ${user.lastName}`);
     setConfirmMessage(`¿Esta seguro de que desea eliminar al usuario?`);
     onCloseConfirm();
-  };
-
-  //ejecuta la funcion de visualizacion de informacion de cliente y su mascota (VisibilityIcon)
-  const openInfoClientAndPets = () => {
-    setTitleSeeInfoClientAndPet(
-      `Visualizando Datos del cliente con sus mascotas `
-    );
-    onOpenInfoClientAndPets();
   };
 
   //ejecuta la peticion de eliminacion de usuario
@@ -135,15 +118,12 @@ export function UserItem(props) {
       <Demo>
         <ListItem sx={{ display: 'flex', flexWrap: 'wrap' }}>
           <ListItemAvatar sx={{ margin: '0 auto' }}>
-            <Avatar sx={{ mx: 4, width: 60, height: 60, bgcolor: '#8EC167'}}>
+            <Avatar sx={{ mx: 4, width: 60, height: 60, bgcolor: '#8EC167' }}>
               <PersonIcon sx={{ fontSize: 45 }} />
             </Avatar>
           </ListItemAvatar>
           <ListItemText>
-            <p> 
-              <NavLink to = {`/admin/users/${user.id}`}>
-              <b>Perfil </b>
-              </NavLink>
+            <p>
               <br />
               <b>Usuario: </b>
               {user.firstName} {user.lastName}
@@ -170,11 +150,13 @@ export function UserItem(props) {
           <ListItemAvatar
             sx={{ display: 'flex', flexDirection: 'row', margin: '0 auto' }}
           >
-            <Grid item>
-              <IconButton color='info' onClick={openInfoClientAndPets}>
-                <VisibilityIcon sx={{ fontSize: 30 }} />
-              </IconButton>
-            </Grid>
+            <NavLink to={`/admin/users/${user.id}`}>
+              <Grid item>
+                <IconButton color='info'>
+                  <VisibilityIcon sx={{ fontSize: 30 }} />
+                </IconButton>
+              </Grid>
+            </NavLink>
             <Grid item>
               <IconButton color='warning' onClick={openUpdateUser}>
                 <ModeEditIcon sx={{ fontSize: 30 }} />
@@ -228,20 +210,8 @@ export function UserItem(props) {
         close={onOpenClosePets}
         title={titlePets}
       >
-        <PetsForm close={onOpenClosePets} idUser = {user.id} />
+        <PetsForm close={onOpenClosePets} idUser={user.id} />
       </Modal_create_pet>
-      <Modal_verInfoClientAndPet
-        show={showVisualizar}
-        close={onOpenInfoClientAndPets}
-        title={titleSeeInfoClientAndPet}
-        dataUser={user}
-      >
-        <UserAndPetsListered
-          close={onOpenInfoClientAndPets}
-          idUser={user.id}
-          dataUser={user}
-        />
-      </Modal_verInfoClientAndPet>
     </ThemeProvider>
   );
 }

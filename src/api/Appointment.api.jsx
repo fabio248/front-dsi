@@ -2,38 +2,37 @@ import { config, configApiBackend } from '../config';
 import { format } from 'date-fns';
 
 export class ApiCitas {
-    //REGISTRO
-    async registerAppointment(accessToken, data) {
-      try {
-        const url = `${config.baseApi}/${configApiBackend.appointments}`;
-        const params = {
-          method: 'POST', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
-          headers: {
-            // El tipo de contenido (este puede ser Authorization, Content-Type, conection etc)
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
-          // Este puede variar si es texto plano del body es un stringfy o tambien puede ser formData
-          body: JSON.stringify({
-            // Parametros a enviar
-            startDate: format(data.startDate, 'dd/MM/yyyy HH:mm'),
-            endDate: format(data.endDate, 'dd/MM/yyyy HH:mm'),
-            name: data.name,
-            description: data.descripcion,       
-            emailClient: data.emailClient,
-      
-          }),
-        };
-        const response = await fetch(url, params);
-        const result = await response.json();
-  
-        if (response.status !== 201) throw result; // Valida la respuesta del back
-        return result;
-      } catch (error) {
-        throw error; // Manejo del error
-      }
+  //REGISTRO
+  async registerAppointment(accessToken, data) {
+    try {
+      const url = `${config.baseApi}/${configApiBackend.appointments}`;
+      const params = {
+        method: 'POST', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
+        headers: {
+          // El tipo de contenido (este puede ser Authorization, Content-Type, conection etc)
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        // Este puede variar si es texto plano del body es un stringfy o tambien puede ser formData
+        body: JSON.stringify({
+          // Parametros a enviar
+          startDate: format(data.startDate, 'dd/MM/yyyy HH:mm'),
+          endDate: format(data.endDate, 'dd/MM/yyyy HH:mm'),
+          name: data.name,
+          description: data.descripcion,
+          emailClient: data.emailClient,
+        }),
+      };
+      const response = await fetch(url, params);
+      const result = await response.json();
+
+      if (response.status !== 201) throw result; // Valida la respuesta del back
+      return result;
+    } catch (error) {
+      throw error; // Manejo del error
     }
-  
+  }
+
   //SEND EMAIL EVENT
   async sendEmail(data) {
     try {
@@ -48,7 +47,6 @@ export class ApiCitas {
         body: JSON.stringify({
           // Parametros a enviar
           emailClient: data.emailClient,
-          
         }),
       };
       // Fetch funcion que genera la peticion al back con la URL(a donde debe ir) y params(que parametros envias)
@@ -83,4 +81,3 @@ export class ApiCitas {
     }
   }
 }
-  

@@ -1,10 +1,9 @@
 import { config, configApiBackend } from '../config';
-
 import { format } from 'date-fns';
 export class Pets {
   async getPetsForUsers(accessToken, userId) {
     try {
-      const url = `${config.baseApi}/${configApiBackend.users}/${userId}`;
+      const url = `${config.baseApi}/${configApiBackend.users}/${userId}/pets`;
       const params = {
         method: 'GET',
         headers: {
@@ -57,7 +56,7 @@ export class Pets {
         },
         body: JSON.stringify({
           name: pet.name,
-          specie: pet.specie.id,
+          specieId: pet.specie.id,
           raza: pet.raza,
           color: pet.color,
           isHaveTatto: pet.isHaveTattoo,
@@ -137,7 +136,7 @@ export class Pets {
         body: JSON.stringify({
           // pet: {
           name: pet.name,
-          specie: pet.specie.id,
+          specieId: pet.specie.id,
           raza: pet.raza,
           color: pet.color,
           isHaveTatto: pet.isHaveTattoo,

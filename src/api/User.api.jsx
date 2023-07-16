@@ -134,7 +134,7 @@ export class User {
           dui: clientData.dui,
           pet: {
             name: petData.name,
-            specie: petData.specie.id,
+            specieId: petData.specie.id,
             raza: petData.raza,
             color: petData.color,
             isHaveTatto: petData.isHaveTattoo,

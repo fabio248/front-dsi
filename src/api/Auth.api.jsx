@@ -26,7 +26,7 @@ export class ApiAuth {
       const response = await fetch(url, params);
       const result = await response.json();
 
-      if (response.status !== 201) throw result; // Valida la respuesta del back
+      if (response.status !== 200) throw result; // Valida la respuesta del back
       return result;
     } catch (error) {
       throw error; // Manejo del error
@@ -88,6 +88,7 @@ export class ApiAuth {
 
       const response = await fetch(url, params);
       const result = await response.json();
+      console.log({ result });
 
       if (response.status !== 200) throw result; // Valida la respuesta del back
 

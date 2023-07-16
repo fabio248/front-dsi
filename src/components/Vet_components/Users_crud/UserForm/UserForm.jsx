@@ -240,7 +240,6 @@ const UserForm = (props) => {
       } catch (error) {
         setIsError(true);
         onReload();
-        console.error(error);
       }
     },
   });

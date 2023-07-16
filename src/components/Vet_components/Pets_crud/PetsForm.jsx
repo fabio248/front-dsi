@@ -66,23 +66,15 @@ export function PetFormTextFields({ formik }) {
       const accessToken = authController.getAccessToken();
       const response = await specieController.getAllspecies(accessToken);
 
-      setTimeout(() => {
-        if (active) {
-          setSpecies([...response.data]);
-        }
-      }, 600);
+      if (active) {
+        setSpecies(response);
+      }
     })();
 
     return () => {
       active = false;
     };
   }, [loading]);
-
-  useEffect(() => {
-    if (!open) {
-      setSpecies([]);
-    }
-  }, [open]);
 
   const onDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];

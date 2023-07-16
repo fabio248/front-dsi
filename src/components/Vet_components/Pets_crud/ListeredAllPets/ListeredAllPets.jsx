@@ -30,8 +30,9 @@ export function ListeredAllPets({ reload, onReload }) {
 
         const responsePets = await petsController.getAllPets(accessToken);
         const responseUser = await userController.getAllUsers(accessToken);
-        setUsers(responseUser.data);
-        setPets(responsePets.data);
+
+        setUsers(responseUser);
+        setPets(responsePets);
       } catch (error) {}
     })();
   }, [onReload, reload]);

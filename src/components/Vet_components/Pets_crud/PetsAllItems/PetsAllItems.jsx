@@ -40,7 +40,6 @@ export function PetsAllItems({ pet, onReload }) {
   const [year, month, day] = newBirthday.split('-');
   newBirthday = `${day}/${month}/${year}`;
 
-
   //verificacion de error en la ejecución
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);

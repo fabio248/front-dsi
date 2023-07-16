@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 
 // Esquemas de validaciones y manipulación de datos
 import { useFormik } from 'formik';
-import { initialValues, validationSchemaRegister } from './AgendarCitaValidation';
+import {
+  initialValues,
+  validationSchemaRegister,
+} from './AgendarCitaValidation';
 
 // Backend petitions
 import { ApiCitas } from '../../../api/Appointment.api';
@@ -16,10 +19,10 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { FormHelperText } from '@mui/material';
-import { format } from 'date-fns'
+import { format } from 'date-fns';
 
 // Componentes y funciones personalizadas
-import { Alerta } from '../../../shared/Alert'
+import { Alerta } from '../../../shared/Alert';
 
 // Estilos
 import './AgendarCita.css';
@@ -29,10 +32,11 @@ const appointmentcontroller = new ApiCitas();
 const authController = new ApiAuth();
 
 //Error personalizado
-const googleErrorMessage = 'Inicia sesión con Google para poder crear evento en Google Calendar';
+const googleErrorMessage =
+  'Inicia sesión con Google para poder crear evento en Google Calendar';
 
 const AgendarCita = (props) => {
-  const {close, onReload, event} = props;
+  const { close, onReload, event } = props;
   const [eventError, setEventError] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -46,10 +50,12 @@ const AgendarCita = (props) => {
       const accessToken = authController.getAccessToken();
       try {
         if (!event) {
-          await appointmentcontroller.registerAppointment(accessToken, formValue);
+          await appointmentcontroller.registerAppointment(
+            accessToken,
+            formValue
+          );
           await createCalendarEvent();
-        }
-        else {
+        } else {
           //UPDATE
         }
         setSuccess(true);
@@ -57,19 +63,21 @@ const AgendarCita = (props) => {
         setTimeout(() => {
           setSuccess(false);
         }, 6000);
-
       } catch (err) {
-        err.message == googleErrorMessage ? setEventError(err.message) : setError(err.message);
+        if (err.message == googleErrorMessage) {
+          setEventError(err.message);
+        } else if (err.statusCode === 409) {
+          setError('Ya existe cita en este horario');
+        } else {
+          setError(err.message);
+        }
         setTimeout(() => {
           setError('');
           setEventError('');
         }, 6000);
       }
     },
-  }
-  );
-
-  
+  });
 
   const handleDateChange = (date) => {
     formik.setFieldValue('startDate', date);
@@ -78,12 +86,20 @@ const AgendarCita = (props) => {
   };
 
   async function createCalendarEvent() {
-    const { name, descripcion, startDate, endDate, firstName, lastName, emailClient } = formik.values;
-    
+    const {
+      name,
+      descripcion,
+      startDate,
+      endDate,
+      firstName,
+      lastName,
+      emailClient,
+    } = formik.values;
+
     const event = {
       summary: name,
       //sendNotifications: true,
-      sendNotifications:{
+      sendNotifications: {
         useDefault: true,
       },
       description: descripcion,
@@ -97,35 +113,44 @@ const AgendarCita = (props) => {
         dateTime: endDate,
         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       },
-      attendees: [{ email: 'veterinariamistum2013@gmail.com' }, { email: emailClient }],
+      attendees: [
+        { email: 'veterinariamistum2013@gmail.com' },
+        { email: emailClient },
+      ],
       reminders: {
         useDefault: false,
         overrides: [
           { method: 'email', minutes: 120 },
           { method: 'popup', minutes: 30 },
         ],
-      
       },
     };
 
     try {
-      const response = await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events`, {
-        method: 'POST',
-        headers: {
-          // Authorization: 'Bearer ' + session.provider_token,
-          Authorization: 'Bearer ' + authController.getProviderToken(),
-        },
-        body: JSON.stringify(event),
-      });
-      if (response.status !== 200)throw new Error('');
+      const response = await fetch(
+        `https://www.googleapis.com/calendar/v3/calendars/primary/events`,
+        {
+          method: 'POST',
+          headers: {
+            // Authorization: 'Bearer ' + session.provider_token,
+            Authorization: 'Bearer ' + authController.getProviderToken(),
+          },
+          body: JSON.stringify(event),
+        }
+      );
+      if (response.status !== 200) {
+        throw new Error('');
+      }
     } catch (error) {
-      throw new Error('Inicia sesión con Google para poder crear evento en Google Calendar');
+      throw new Error(
+        'Inicia sesión con Google para poder crear evento en Google Calendar'
+      );
     }
   }
 
   return (
     <>
-      <Box sx = {{ px: 4}}>
+      <Box sx={{ px: 4 }}>
         <form onSubmit={formik.handleSubmit}>
           <h3>Agendar Cita</h3>
 
@@ -140,7 +165,9 @@ const AgendarCita = (props) => {
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  error={formik.touched.startDate && Boolean(formik.errors.startDate)}
+                  error={
+                    formik.touched.startDate && Boolean(formik.errors.startDate)
+                  }
                 />
               )}
               disablePast // Deshabilitar fechas anteriores al día de hoy
@@ -177,7 +204,9 @@ const AgendarCita = (props) => {
             size='small'
             value={formik.values.descripcion}
             onChange={formik.handleChange}
-            error={formik.touched.descripcion && Boolean(formik.errors.descripcion)}
+            error={
+              formik.touched.descripcion && Boolean(formik.errors.descripcion)
+            }
             helperText={formik.touched.descripcion && formik.errors.descripcion}
           />
 
@@ -193,7 +222,9 @@ const AgendarCita = (props) => {
                 size='small'
                 onChange={formik.handleChange}
                 value={formik.values.firstName}
-                error={formik.touched.firstName && Boolean(formik.errors.firstName)}
+                error={
+                  formik.touched.firstName && Boolean(formik.errors.firstName)
+                }
                 helperText={formik.touched.firstName && formik.errors.firstName}
               />
             </Grid>
@@ -206,7 +237,9 @@ const AgendarCita = (props) => {
                 size='small'
                 value={formik.values.lastName}
                 onChange={formik.handleChange}
-                error={formik.touched.lastName && Boolean(formik.errors.lastName)}
+                error={
+                  formik.touched.lastName && Boolean(formik.errors.lastName)
+                }
                 helperText={formik.touched.lastName && formik.errors.lastName}
               />
             </Grid>
@@ -220,8 +253,13 @@ const AgendarCita = (props) => {
                 placeholder='ClientAccountGoogle@gmail.com'
                 value={formik.values.emailClient}
                 onChange={formik.handleChange}
-                error={formik.touched.emailClient && Boolean(formik.errors.emailClient)}
-                helperText={formik.touched.emailClient && formik.errors.emailClient}
+                error={
+                  formik.touched.emailClient &&
+                  Boolean(formik.errors.emailClient)
+                }
+                helperText={
+                  formik.touched.emailClient && formik.errors.emailClient
+                }
               />
             </Grid>
           </Grid>
@@ -243,37 +281,42 @@ const AgendarCita = (props) => {
             >
               Crear Evento en Google Calendar
             </Button>
-
           </Grid>
           {success && (
             <Alerta
-            type={'success'}
-            title={'Cita Registrada'}
-            message={'Se ha registrado correctamente la cita y el evento en Google Calendar'}
-            strong={`Verifica la cita`}
+              type={'success'}
+              title={'Cita Registrada'}
+              message={
+                'Se ha registrado correctamente la cita y el evento en Google Calendar'
+              }
+              strong={`Verifica la cita`}
             />
-            )}
+          )}
           {error && (
             <Alerta
-            type={'error'}
-            title={'¡Ha ocurrido un problema!'}
-            message={
-              error == 'User not found' 
-              ? 'No se encuentra registrado el correo de'
-              : error }
-            strong={
-              error == 'User not found' 
-              ? `${formik.values.firstName} ${formik.values.lastName}`
-              : 'Verifica tu información'}
-          />
+              type={'error'}
+              title={'¡Ha ocurrido un problema!'}
+              message={
+                error == 'User not found'
+                  ? 'No se encuentra registrado el correo de'
+                  : error
+              }
+              strong={
+                error == 'User not found'
+                  ? `${formik.values.firstName} ${formik.values.lastName}`
+                  : 'Verifica tu información'
+              }
+            />
           )}
           {eventError && (
             <Alerta
-            type={'warning'}
-            title={'Evento de Google Calendar no creado!'}
-            message={'Se ha registrado su cita pero no se ha podido agendar evento'}
-            strong={ eventError }
-          />
+              type={'warning'}
+              title={'Evento de Google Calendar no creado!'}
+              message={
+                'Se ha registrado su cita pero no se ha podido agendar evento'
+              }
+              strong={eventError}
+            />
           )}
         </form>
       </Box>
@@ -282,5 +325,3 @@ const AgendarCita = (props) => {
 };
 
 export { AgendarCita };
-
-

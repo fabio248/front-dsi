@@ -120,12 +120,6 @@ export function UserItem(props) {
     }
   };
 
-  let newBirthday;
-  if (user) {
-    newBirthday = user.birthday.split('T')[0];
-    const [year, month, day] = newBirthday.split('-');
-    newBirthday = `${day}/${month}/${year}`;
-  }
   return (
     <>
       <Demo>
@@ -153,7 +147,7 @@ export function UserItem(props) {
               {user.dui ? user.dui : ''}
               <br />
               <b>{user.birthday ? 'Fecha de nacimiento: ' : ''}</b>
-              {user.birthday ? newBirthday : ''}
+              {user.birthday ? user.birthday : ''}
               <br />
               <b>{user.phone ? 'Teléfono: ' : ''}</b>
               {user.phone ? user.phone : ''}
@@ -220,7 +214,7 @@ export function UserItem(props) {
         close={onOpenClosePets}
         title={titlePets}
       >
-        <PetsForm close={onOpenClosePets} idUser = {user.id} />
+        <PetsForm close={onOpenClosePets} idUser={user.id} />
       </Modal_create_pet>
       <Modal_verInfoClientAndPet
         show={showVisualizar}

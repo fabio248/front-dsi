@@ -34,7 +34,7 @@ export function ListeredAppointByEmail() {
         user_id
       );
 
-      setEventsOfuser(events.data);
+      setEventsOfuser(events);
     })();
   }, []);
 

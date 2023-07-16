@@ -23,7 +23,7 @@ export function UserAndPetsListered({ idUser, dataUser }) {
 
       const response = await petsController.getPetsForUsers(dataAccess, idUser);
 
-      setUserAndPet(response.data.pet);
+      setUserAndPet(response.pets);
     })();
   }, []);
 

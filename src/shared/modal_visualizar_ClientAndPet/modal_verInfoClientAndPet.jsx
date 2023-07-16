@@ -31,12 +31,6 @@ export function Modal_verInfoClientAndPet({
   children,
   dataUser,
 }) {
-  let newBirthdayUser;
-  newBirthdayUser = dataUser.birthday.split('T')[0];
-  const [year, month, day ] = newBirthdayUser.split('-');
-  newBirthdayUser = `${day}/${month}/${year}`;
-
-
   const handleModalClose = () => {
     close();
   };
@@ -101,7 +95,7 @@ export function Modal_verInfoClientAndPet({
                 </div>
                 <div>
                   <b>Nacimiento: </b>
-                  {newBirthdayUser}
+                  {dataUser.birthday}
                 </div>
                 <div>
                   <b>Correo Electrónico: </b>

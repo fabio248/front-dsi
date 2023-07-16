@@ -20,7 +20,7 @@ export function ListUsers(props) {
 
         const response = await userController.getAllUsers(accessToken);
 
-        setUsers(response.data);
+        setUsers(response);
       } catch (error) {}
     })();
   }, [reload]);

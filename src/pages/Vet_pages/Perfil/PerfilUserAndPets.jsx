@@ -11,7 +11,6 @@ import {
   Typography,
   Button,
 } from '@mui/material';
-
 //render of pets
 import { PerfilPets } from './PerfilPets';
 
@@ -37,17 +36,9 @@ export function PerfilUserAndPets() {
         dataAccess,
         params.userId
       );
-
-      setUserAndPet(response.data);
+      setUserAndPet(response);
     })();
   }, []);
-
-  let newBirthday;
-  if (userAnPet) {
-    newBirthday = userAnPet.birthday.split('T')[0];
-    const [year, month, day] = newBirthday.split('-');
-    newBirthday = `${day}/${month}/${year}`;
-  }
   return (
     <>
       <AppBar position='static'>
@@ -104,7 +95,7 @@ export function PerfilUserAndPets() {
               <br />
               <br />
               <b>{userAnPet.birthday ? 'Fecha de nacimiento: ' : ''}</b>
-              {userAnPet.birthday ? newBirthday : ''}
+              {userAnPet.birthday ? userAnPet.birthday : ''}
               <br />
               <br />
               <b>{userAnPet.phone ? 'Teléfono: ' : ''}</b>
@@ -123,7 +114,7 @@ export function PerfilUserAndPets() {
               >
                 Mascotas
               </h1>
-              {size(userAnPet.pet) === 0 ? (
+              {size(userAnPet.pets) === 0 ? (
                 <>
                   <Typography
                     variant='h5'
@@ -146,8 +137,8 @@ export function PerfilUserAndPets() {
                   msOverflowStyle: 'none', // Oculta el scrollbar en navegadores antiguos de Internet Explorer
                 }}
               >
-                {map(userAnPet.pet, (pets) => (
-                  <PerfilPets key={pets.id} pet={pets} />
+                {map(userAnPet.pets, (pet) => (
+                  <PerfilPets key={pet.id} pet={pet} />
                 ))}
               </div>
             </Paper>

@@ -20,11 +20,6 @@ export function PerfilPets({ pet }) {
 
   const [titleSeeInfoClientAndPet, setTitleSeeInfoClientAndPet] = useState('');
 
-  let newBirthday;
-  newBirthday = pet.birthday.split('T')[0];
-  const [year, month, day] = newBirthday.split('-');
-  newBirthday = `${day}/${month}/${year}`;
-
   //ejecuta la funcion de visualizacion de informacion de cliente y su mascota (VisibilityIcon)
   const openInfoClientAndPets = () => {
     setTitleSeeInfoClientAndPet(`Datos específicos de la mascota`);
@@ -58,7 +53,7 @@ export function PerfilPets({ pet }) {
             <span style={{ color: 'gray' }}>{pet.gender}</span>
             <br />
             <b>Nacimiento de la mascota U adquisición: </b>
-            <span style={{ color: 'gray' }}>{newBirthday}</span>
+            <span style={{ color: 'gray' }}>{pet.birthday}</span>
             <br />
           </b>
         </ListItemText>

@@ -19,11 +19,6 @@ export function PetsItem(props) {
     backgroundColor: theme.palette.background.paper,
   }));
 
-  let newBirthday;
-  newBirthday = pet.birthday.split('T')[0];
-  const [year, month, day] = newBirthday.split('-');
-  newBirthday = `${day}/${month}/${year}`;
-
   console.log(pet);
   return (
     <div>
@@ -52,7 +47,7 @@ export function PetsItem(props) {
               {pet.gender}
               <br />
               <b>Nacimiento de la mascota: </b>
-              {newBirthday}
+              {pet.birthday}
 
               <br />
               {/* <b>{user.direction ? 'Direccion: ' : ''}</b> */}

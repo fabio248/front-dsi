@@ -34,7 +34,7 @@ export function ListeredPets() {
         dataAccess,
         identify
       );
-      setUserAndPet(response.pet);
+      setUserAndPet(response.pets);
       setDataUser(response);
     })();
   }, []);

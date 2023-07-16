@@ -37,6 +37,7 @@ import { NavLink } from 'react-router-dom';
 //controladores de las clases API
 const userController = new User();
 const authController = new ApiAuth();
+const defaultTheme = createTheme();
 
 export function UserItem(props) {
   //elementos enviados a UserItem en props

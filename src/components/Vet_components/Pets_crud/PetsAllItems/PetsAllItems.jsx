@@ -36,12 +36,6 @@ export function PetsAllItems({ pet, onReload }) {
   const Demo = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
   }));
-
-  let newBirthday;
-  newBirthday = pet.birthday.split('T')[0];
-  const [year, month, day] = newBirthday.split('-');
-  newBirthday = `${day}/${month}/${year}`;
-
   //verificacion de error en la ejecución
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -121,7 +115,7 @@ export function PetsAllItems({ pet, onReload }) {
               <br />
 
               <b>Nacimiento de la mascota U adquisición: </b>
-              {newBirthday}
+              {pet.birthday}
               <br />
               <b>Color del pelaje: </b>
               {pet.color}

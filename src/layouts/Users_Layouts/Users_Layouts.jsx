@@ -49,11 +49,8 @@ export function Users_Layouts(props) {
           className="imagen-appbar"
         />
       </div>
-      
-      <Toolbar /> 
-      <List>
-      <Divider />
-        <ListItem disablePadding style={{ height: '80px' }}>
+      <Divider sx = {{ mt: -3}}/>
+        <ListItem disablePadding>
           <NavLink 
           to='/catalogo'
           style={{
@@ -94,7 +91,7 @@ export function Users_Layouts(props) {
         textDecoration: 'none', // Quitar subrayado
         color: 'black', // Color de texto deseado
       }}>
-        <ListItem disablePadding style={{ height: '80px' }}>
+        <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
                 <MenuBookIcon />
@@ -111,7 +108,7 @@ export function Users_Layouts(props) {
             textDecoration: 'none', // Quitar subrayado
             color: 'black', // Color de texto deseado
           }}>
-      <ListItem disablePadding style={{ height: '80px' }}>
+      <ListItem disablePadding>
           <ListItemButton>
             <ListItemIcon>
               <PhotoSizeSelectActualIcon />
@@ -121,26 +118,24 @@ export function Users_Layouts(props) {
       </ListItem>
       </NavLink>
       <Divider />
-      </List>
+
       <div style={{ position: 'absolute', left: '10px', bottom: '10px' }}>
         <IconButton
-          color="inherit"
           aria-label="Facebook"
           component="a"
           href="https://www.facebook.com/profile.php?id=100069913175592"
           target="_blank"
-          style={{fontSize: '2rem' }}
+          style={{fontSize: '2rem', color: '#573874' }}
         >
           <FaFacebook />
         </IconButton>
 
         <IconButton
-          color="inherit"
           aria-label="WhatsApp"
           component="a"
           href="https://wa.me/50361366565"
           target="_blank"
-          style={{fontSize: '2rem' }}
+          style={{fontSize: '2rem', color: '#573874' }}
         >
           <FaWhatsapp />
         </IconButton>
@@ -185,7 +180,7 @@ export function Users_Layouts(props) {
                     <Button
                       className="btn-login"
                       variant="contained"
-                      style={{ backgroundColor: '#44ACC1' }}
+                      style={{ backgroundColor: '#8EC167' }}
                       href = "/login"
                     >
                       INICIAR SESION

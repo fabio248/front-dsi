@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 
 //mui material
+import { Divider, Avatar } from '@mui/material';
+import { Grid, IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
-import { Grid, IconButton } from '@mui/material';
 import ListItemText from '@mui/material/ListItemText';
-import { Divider, Avatar } from '@mui/material';
 import PetsIcon from '@mui/icons-material/Pets';
 
 //Iconos de Mui material
@@ -14,12 +14,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 
+//react router dom
+import { NavLink } from 'react-router-dom';
+
 //Modales compartidos
-import { Modal_visualizarClient, Alerta } from '../../../../shared';
-import { Modal_create_pet, Modal_delete } from '../../../../shared';
+import { Modal_create_pet, Modal_delete, Alerta } from '../../../../shared';
 
 //renderizado de los elementos
-import { UserAndPetsListered } from '../../Users_crud';
+// import { UserAndPetsListered } from '../../Users_crud';
 import { PetsForm } from '../../Pets_crud';
 
 //import petitions of back
@@ -52,18 +54,13 @@ export function PetsAllItems({ pet, onReload }) {
   const [titleDelete, setTitleDelete] = useState('');
 
   //seteo del titulo del modal de visualizar
-  const [showVisualizar, setShowVisualizar] = useState(false);
-  const [titleSeeInfoClientAndPet, setTitleSeeInfoClientAndPet] = useState('');
   const [titleUpdatePet, setTitleUpdatePet] = useState('');
 
   //render elementos of update pet
   const [showUpdatePets, setShowUpdatePets] = useState(false);
-  // const [reload, setReload] = useState(false);
 
   //funciones que cambia el estado
   const onCloseConfirm = () => setShowConfirm((prevState) => !prevState);
-  const onOpenInfoClientAndPets = () =>
-    setShowVisualizar((prevState) => !prevState);
   const onOpenClosePets = () => setShowUpdatePets((prevState) => !prevState);
   // const  onReload = () => setReload((prevState) => !prevState);
 
@@ -88,14 +85,6 @@ export function PetsAllItems({ pet, onReload }) {
     } catch (error) {
       console.error(error);
     }
-  };
-
-  //ejecuta la funcion de visualizacion de informacion de cliente y su mascota (VisibilityIcon)
-  const openInfoClientAndPets = () => {
-    setTitleSeeInfoClientAndPet(
-      `Visualizando Datos del cliente con sus mascotas `
-    );
-    onOpenInfoClientAndPets();
   };
 
   const openUpdatePets = () => {
@@ -130,33 +119,28 @@ export function PetsAllItems({ pet, onReload }) {
               <b>Género: </b>
               {pet.gender}
               <br />
-              <b>¿Tatuajes o marcas?: </b>
-              {pet.isHaveTatto == true ? 'Si posee' : 'No posee'}
-              <br />
-              <b>Posee Todas sus vacunas?: </b>
-              {pet.medicalHistory.isHaveAllVaccine == true
-                ? 'No posee'
-                : 'Si posee'}
-              <br />
+
               <b>Nacimiento de la mascota U adquisición: </b>
               {newBirthday}
               <br />
               <b>Color del pelaje: </b>
               {pet.color}
               <br />
-              <b>¿Pedigrí?: </b>
+              {/* <b>¿Pedigrí?: </b>
               {pet.pedigree == false ? 'No posee' : 'Si posee'}
-              <br />
+              <br /> */}
             </div>
           </ListItemText>
           <ListItemAvatar
             sx={{ display: 'flex', flexDirection: 'row', margin: '0 auto' }}
           >
-            <Grid item>
-              <IconButton color='info' onClick={openInfoClientAndPets}>
-                <VisibilityIcon sx={{ fontSize: 30 }} />
-              </IconButton>
-            </Grid>
+            <NavLink to={`/admin/users/${pet.user.id}`}>
+              <Grid item>
+                <IconButton color='info'>
+                  <VisibilityIcon sx={{ fontSize: 30 }} />
+                </IconButton>
+              </Grid>
+            </NavLink>
             <Grid item>
               <IconButton color='warning' onClick={openUpdatePets}>
                 <ModeEditIcon sx={{ fontSize: 30 }} />
@@ -189,18 +173,6 @@ export function PetsAllItems({ pet, onReload }) {
           <PetsIcon color='action' style={{ width: '60px', height: '40px' }} />
         </Divider>
       </Demo>
-      <Modal_visualizarClient
-        show={showVisualizar}
-        close={onOpenInfoClientAndPets}
-        title={titleSeeInfoClientAndPet}
-        dataUser={pet.user}
-      >
-        <UserAndPetsListered
-          close={onOpenInfoClientAndPets}
-          idUser={pet.user.id}
-          onReload={onReload}
-        />
-      </Modal_visualizarClient>
       <Modal_delete
         onOpen={showConfirm}
         onCancel={onCloseConfirm}

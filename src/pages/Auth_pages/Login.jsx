@@ -194,7 +194,6 @@ export function Login() {
   }, [loading]);
 
   return (
-    <ThemeProvider theme={defaultTheme}>
       <Grid container component='main' sx={{ height: '100vh' }}>
         <CssBaseline />
         <Grid
@@ -235,8 +234,8 @@ export function Login() {
                 </Button>
               </Grid>
             </Grid>
-            <Avatar sx={{ m: 1, bgcolor: '#795548' }}>
-              <PetsIcon />
+            <Avatar sx={{ m: 1, bgcolor: '#8EC167' }}>
+              <PetsIcon sx = {{ color: '#FFF'}} />
             </Avatar>
             <Typography component='h1' variant='h5'>
               Inicia sesión
@@ -381,6 +380,5 @@ export function Login() {
           </Box>
         </Grid>
       </Grid>
-    </ThemeProvider>
   );
 }

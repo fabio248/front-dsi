@@ -4,6 +4,7 @@ import { Vet_Layouts } from '../layouts';
 
 import { useAuth } from '../hooks';
 import { ProtectedRoute } from '../components/Admin/Auth/ProtectedRoutes';
+import { PerfilUserAndPets } from '../pages';
 
 // const user = useAuth();
 
@@ -42,6 +43,7 @@ export function Vet_routes() {
           path='/admin/calendar'
           element={Layout(Vet_Layouts, AgendarCita)}
         ></Route>
+        <Route path='/admin/users/:userId' element={<PerfilUserAndPets />} />
       </Route>
     </Routes>
   );

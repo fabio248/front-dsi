@@ -88,7 +88,6 @@ export function Registro() {
   };
 
   return (
-    <ThemeProvider theme={defaultTheme}>
       <Container component='main' maxWidth='xs'>
         <CssBaseline />
         <Box
@@ -98,8 +97,8 @@ export function Registro() {
             flexDirection: 'column',
             alignItems: 'center',
           }}>
-          <Avatar sx={{ m: 1, bgcolor: '#03a9f4' }}>
-            <PersonAddAltSharpIcon />
+          <Avatar sx={{ m: 1, bgcolor: '#8EC167' }}>
+            <PersonAddAltSharpIcon sx = {{ color: '#FFF'}}/>
           </Avatar>
           <Typography component='h1' variant='h5'>
             Registrarme
@@ -237,7 +236,7 @@ export function Registro() {
               type='submit'
               fullWidth
               variant='contained'
-              sx={{ mt: 3, mb: 2, bgcolor: '#009688', ':hover' : { bgcolor: '#00897b'}}}
+              sx={{ mt: 3, mb: 2 }}
             >
               Registrarme
             </Button>
@@ -268,6 +267,5 @@ export function Registro() {
         </Box>
         <Copyright sx={{ mt: 5 }} />
       </Container>
-    </ThemeProvider>
   );
 }

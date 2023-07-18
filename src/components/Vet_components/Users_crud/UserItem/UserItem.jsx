@@ -132,19 +132,35 @@ export function UserItem(props) {
               {user.email}
               <br />
               <b>Role: </b>
-              {user.role}
+              {user.role === 'client' ? 'Cliente' : 'Administrador'}
               <br />
-              <b>{user.direction ? 'Direccion: ' : ''}</b>
-              {user.direction ? user.direction : ''}
-              <br />
-              <b>{user.dui ? 'DUI: ' : ''}</b>
-              {user.dui ? user.dui : ''}
-              <br />
-              <b>{user.birthday ? 'Fecha de nacimiento: ' : ''}</b>
-              {user.birthday ? user.birthday : ''}
-              <br />
-              <b>{user.phone ? 'Teléfono: ' : ''}</b>
-              {user.phone ? user.phone : ''}
+              {user.direction ? (
+                <>
+                  <b>Direccion: </b>
+                  {user.direction}
+                  <br />
+                </>
+              ) : null}
+              {user.dui ? (
+                <>
+                  <b>DUI: </b>
+                  {user.dui}
+                  <br />
+                </>
+              ) : null}
+              {user.birthday ? (
+                <>
+                  <b>Fecha de nacimiento: </b>
+                  {user.birthday}
+                  <br />
+                </>
+              ) : null}
+              {user.phone ? (
+                <>
+                  <b>Teléfono:</b>
+                  {user.phone}
+                </>
+              ) : null}
             </p>
           </ListItemText>
           <ListItemAvatar

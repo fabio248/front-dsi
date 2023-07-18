@@ -46,7 +46,7 @@ export function PerfilUserAndPets() {
           <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
             Veterinaria Mistum
           </Typography>
-          <NavLink to={'/admin'}>
+          <NavLink to={'/admin/users'}>
             <Button
               variant='contained'
               color='success'

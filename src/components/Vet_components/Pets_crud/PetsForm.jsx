@@ -46,12 +46,14 @@ const specieController = new Species();
 const authController = new ApiAuth();
 const petsController = new Pets();
 
-export function PetFormTextFields({ formik }) {
+export function PetFormTextFields({ formik, onDropFile }) {
   const [uploadedFile, setUploadedFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [isError, setIsError] = useState(false);
   const [species, setSpecies] = useState([]);
   const [open, setOpen] = useState(false);
+  const [data, setData] = useState(null);
+
   const loading = open && species.length === 0;
 
   // Rescatando todas las especies
@@ -78,14 +80,27 @@ export function PetFormTextFields({ formik }) {
 
   const onDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
+    // let binaryStr = '';
     if (file && isFileValid(file)) {
+      // acceptedFiles.forEach((file) => {
+      const reader = new FileReader();
+
+      reader.onload = async () => {
+        // Do whatever you want with the file contents
+        const binaryStr = reader.result;
+        console.log(binaryStr);
+        setData(binaryStr);
+      };
+      reader.readAsArrayBuffer(file);
+      // });
       setUploadedFile(file);
       setErrorMessage('');
       setIsError(false);
+      console.log(onDropFile(data));
     } else {
       setUploadedFile(null);
       setErrorMessage(
-        'Formato de archivo no válido. Se aceptan archivos PDF, Word y imágenes (PNG, JPG, JPEG).'
+        'Formato de archivo no válido. Se aceptan archivos PDF y imágenes (PNG, JPG, JPEG).'
       );
       setIsError(true);
     }
@@ -94,9 +109,9 @@ export function PetFormTextFields({ formik }) {
   const isFileValid = (file) => {
     const acceptedFormats = [
       'application/pdf',
-      'application/msword',
       'image/png',
       'image/jpeg',
+      'image/jpg',
     ];
     return acceptedFormats.includes(file.type);
   };
@@ -139,10 +154,6 @@ export function PetFormTextFields({ formik }) {
     { label: 'macho', key: 'M', value: 'macho' },
     { label: 'hembra', key: 'F', value: 'hembra' },
   ];
-
-  const handleDateChange = (date) => {
-    formik.setFieldValue('birthday', date);
-  };
 
   return (
     <>
@@ -259,7 +270,7 @@ export function PetFormTextFields({ formik }) {
               label='Fecha de Nacimiento'
               name='birthday'
               value={formik.values.birthday}
-              onChange={handleDateChange}
+              onChange={'dadasdasdas'}
               onBlur={formik.handleBlur}
               slotProps={{ textField: { size: 'small', fullWidth: true } }}
               renderInput={(params) => (
@@ -570,16 +581,7 @@ export function PetFormTextFields({ formik }) {
         <Grid container spacing={3} sx={{ fullWidth: true, margin: 0 }}>
           <Grid item xs={12} sm={24}>
             <Box {...getRootProps()} sx={dropzoneStyle}>
-              <input
-                {...getInputProps()}
-                value={formik.values.uploadedFile}
-                // onChange={(event) => {
-                //   formik.setFieldValue(
-                //     'file',
-                //     event.currentTarget.uploadedFile[0]
-                //   ); // Actualiza el valor del campo "file" en Formik
-                // }}
-              />
+              <input {...getInputProps()} />
 
               {isDragActive ? (
                 <Typography variant='body1' color='text.secondary'>
@@ -620,11 +622,21 @@ export function PetFormTextFields({ formik }) {
 }
 
 const PetsForm = (props) => {
-  const { close, pet, onReload, idUser } = props;
+  const { close, pet, idUser } = props;
   const [isError, setIsError] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [fileUploaded, setFileUploaded] = useState(false);
+  const [uploadedFile, setUploadedFile] = useState(null);
+  let response = null;
+  let result = null;
 
   const { accessToken } = useAuth();
+
+  const handleDropFile = async (file) => {
+    // Handle the file here
+    setUploadedFile(file);
+    setFileUploaded(true);
+  };
 
   //manipulacion y validacion de los campos
   const formik = useFormik({
@@ -637,21 +649,32 @@ const PetsForm = (props) => {
           //registro de la informacion si los campos son vacios
 
           await petsController.createPets(accessToken, idUser, formValue);
+
           // await petsController.filePets(accessToken, idUser);
         } else {
           //aqui ira la peticion donde se actualizaran los datos
           await petsController.updatePets(accessToken, pet.id, formValue);
         }
+
+        // Only make the filePets API call if the file was uploaded
+        if (fileUploaded) {
+          response = await petsController.filePets(
+            accessToken,
+            uploadedFile.type,
+            pet.id
+          );
+          console.log(uploadedFile);
+          // result = await petsController.amazonQuery(response.url, uploadedFile);
+          // console.log(result);
+        }
+
         setSuccess(true);
         setTimeout(() => {
           close();
-          //onReload();
         }, 3000);
       } catch (error) {
         setIsError(true);
         console.log(error);
-        //onReload();
-        //console.error(error);
       }
     },
   });
@@ -660,7 +683,11 @@ const PetsForm = (props) => {
       <div className='hide-scrollbar'>
         <form onSubmit={formik.handleSubmit}>
           {/*Campos de llenado del fomrulario*/}
-          <PetFormTextFields formik={formik} />
+          <PetFormTextFields
+            formik={formik}
+            pet={pet}
+            onDropFile={handleDropFile}
+          />
 
           <Grid
             sx={{

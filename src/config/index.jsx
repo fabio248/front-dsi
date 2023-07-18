@@ -14,6 +14,7 @@ const configApiBackend = {
   pets: import.meta.env.VITE_PETS,
   species: import.meta.env.VITE_SPECIES,
   appointments: import.meta.env.VITE_APPOINTMENTS,
+  files: import.meta.env.VITE_FILE,
 };
 
 const configJwt = {

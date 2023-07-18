@@ -24,7 +24,7 @@ export function ListUsers() {
   if (!users) {
     return (
       <Typography variant='h6' style={{ textAlign: 'center' }}>
-        ¡No Se Encontraron Clientes registrados!
+        ¡No se encontraron clientes registrados!
       </Typography>
     );
   }

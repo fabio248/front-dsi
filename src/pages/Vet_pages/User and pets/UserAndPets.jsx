@@ -11,14 +11,12 @@ import PetsIcon from '@mui/icons-material/Pets';
 import { ListeredAllPets } from '../../../components/Vet_components';
 
 export function UserAndPets() {
-  const [reload, setReload] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => setValue(newValue);
 
   const onOpenCloseModal = () => setShowModal((prevState) => !prevState);
-  const onReload = () => setReload((prevState) => !prevState);
 
   return (
     <>
@@ -28,7 +26,7 @@ export function UserAndPets() {
             <Basic_modal
               onClose={onOpenCloseModal}
               show={showModal}
-              title={'Crear Nuevo cliente y mascota'}
+              title={'Crear nuevo cliente y mascota'}
             >
               <h2>Formulario para registro de cliente y su mascota</h2>
             </Basic_modal>
@@ -45,9 +43,7 @@ export function UserAndPets() {
                 <Tab icon={<PetsIcon />} label='Mascotas' {...a11yProps(0)} />
               </Tabs>
             </Box>
-            {/* renderizando a las mascotas */}
-
-            <ListeredAllPets reload={reload} onReload={onReload} />
+            <ListeredAllPets />
           </Box>
         </div>
       </div>

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, NavLink } from 'react-router-dom';
+import React from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 
 // MUI Material
 import {
@@ -10,6 +10,7 @@ import {
   Toolbar,
   Typography,
   Button,
+  CircularProgress,
 } from '@mui/material';
 //render of pets
 import { PerfilPets } from './PerfilPets';
@@ -20,41 +21,47 @@ import { size, map } from 'lodash';
 // peticiones al Back
 import { Pets } from '../../../api/Pets.api';
 import { ApiAuth } from '../../../api/Auth.api';
+import { useQuery } from '@tanstack/react-query';
 
 const petsController = new Pets();
 const apiAuthController = new ApiAuth();
 
 export function PerfilUserAndPets() {
   let params = useParams();
-  const [userAnPet, setUserAndPet] = useState(false);
-
-  useEffect(() => {
-    (async () => {
-      const dataAccess = apiAuthController.getAccessToken();
-
+  const navigate = useNavigate();
+  const { data: userAndPet, isLoading } = useQuery({
+    queryKey: ['users', params.userId],
+    queryFn: async () => {
+      const accessToken = apiAuthController.getAccessToken();
       const response = await petsController.getPetsForUsers(
-        dataAccess,
+        accessToken,
         params.userId
       );
-      setUserAndPet(response);
-    })();
-  }, []);
+      return response;
+    },
+  });
+
   return (
     <>
       <AppBar position='static'>
         <Toolbar>
-          <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
+          <Typography
+            variant='h6'
+            component='div'
+            sx={{ flexGrow: 1 }}
+            onClick={() => navigate('/admin')}
+          >
             Veterinaria Mistum
           </Typography>
-          <NavLink to={'/admin'}>
-            <Button
-              variant='contained'
-              color='success'
-              style={{ color: 'white' }}
-            >
-              Regresar
-            </Button>
-          </NavLink>
+
+          <Button
+            variant='contained'
+            color='success'
+            style={{ color: 'white' }}
+            onClick={() => navigate(-1)}
+          >
+            Regresar
+          </Button>
         </Toolbar>
       </AppBar>
       <br />
@@ -74,36 +81,72 @@ export function PerfilUserAndPets() {
                 Propietario
               </h1>
               <br />
-              <b>Usuario: </b>
-              {userAnPet.firstName} {userAnPet.lastName}
-              <br />
-              <br />
-              <b>Correo: </b>
-              {userAnPet.email}
-              <br />
-              <br />
-              <b>Role: </b>
-              {userAnPet.role}
-              <br />
-              <br />
-              <b>{userAnPet.direction ? 'Direccion: ' : ''}</b>
-              {userAnPet.direction ? userAnPet.direction : ''}
-              <br />
-              <br />
-              <b>{userAnPet.dui ? 'DUI: ' : ''}</b>
-              {userAnPet.dui ? userAnPet.dui : ''}
-              <br />
-              <br />
-              <b>{userAnPet.birthday ? 'Fecha de nacimiento: ' : ''}</b>
-              {userAnPet.birthday ? userAnPet.birthday : ''}
-              <br />
-              <br />
-              <b>{userAnPet.phone ? 'Teléfono: ' : ''}</b>
-              {userAnPet.phone ? userAnPet.phone : ''}
+              {isLoading ? (
+                <div
+                  style={{
+                    minHeight: '250px',
+                    maxHeight: '670px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <CircularProgress style={{ alignSelf: 'center' }} />
+                </div>
+              ) : (
+                <>
+                  <b>Usuario: </b>
+                  {userAndPet.firstName} {userAndPet.lastName}
+                  <br />
+                  <br />
+                  <b>Correo: </b>
+                  {userAndPet.email}
+                  <br />
+                  <br />
+                  <b>Role: </b>
+                  {userAndPet.role === 'client' ? 'Cliente' : 'Administrador'}
+                  <br />
+                  <br />
+                  {userAndPet.direction ? (
+                    <>
+                      <b>Direccion: </b>
+                      {userAndPet.direction}
+                      <br />
+                      <br />
+                    </>
+                  ) : null}
+                  {userAndPet.dui ? (
+                    <>
+                      <b>DUI: </b>
+                      {userAndPet.dui}
+                      <br />
+                      <br />
+                    </>
+                  ) : null}
+                  {userAndPet.birthday ? (
+                    <>
+                      <b>Fecha de nacimiento: </b>
+                      {userAndPet.birthday}
+                      <br />
+                      <br />
+                    </>
+                  ) : null}
+                  {userAndPet.phone ? (
+                    <>
+                      <b>Teléfono:</b>
+                      {userAndPet.phone}
+                    </>
+                  ) : null}
+                </>
+              )}
             </Paper>
           </Grid>
           <Grid item xs={17} md={8}>
-            <Paper style={{ padding: '20px' }}>
+            <Paper
+              style={{
+                padding: '20px',
+              }}
+            >
               <h1
                 style={{
                   textAlign: 'center',
@@ -114,33 +157,47 @@ export function PerfilUserAndPets() {
               >
                 Mascotas
               </h1>
-              {size(userAnPet.pets) === 0 ? (
+              {!isLoading && size(userAndPet.pets) === 0 ? (
                 <>
                   <Typography
                     variant='h5'
                     style={{ textAlign: 'center', marginTop: '65px' }}
                     color={'black'}
                   >
-                    ¡No se encontraron mascotas registradas! :(
+                    ¡{userAndPet.firstName} aún no tiene mascotas registradas!
                   </Typography>
                 </>
+              ) : null}
+              {isLoading ? (
+                <div
+                  style={{
+                    minHeight: '250px',
+                    maxHeight: '670px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <CircularProgress style={{ alignSelf: 'center' }} />
+                </div>
               ) : (
-                ''
+                <div
+                  style={{
+                    minHeight: '250px',
+                    maxHeight: '670px',
+                    overflowY: 'scroll',
+                    scrollbarWidth: 'thin',
+                    scrollbarColor: 'transparent transparent', // Oculta el scrollbar en navegadores que soportan "scrollbar-color"
+                    msOverflowStyle: 'none', // Oculta el scrollbar en navegadores antiguos de Internet Explorer
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
+                >
+                  {map(userAndPet.pets, (pet) => (
+                    <PerfilPets key={pet.id} pet={pet} />
+                  ))}
+                </div>
               )}
-              <div
-                style={{
-                  minHeight: '250px',
-                  maxHeight: '670px',
-                  overflowY: 'scroll',
-                  scrollbarWidth: 'thin',
-                  scrollbarColor: 'transparent transparent', // Oculta el scrollbar en navegadores que soportan "scrollbar-color"
-                  msOverflowStyle: 'none', // Oculta el scrollbar en navegadores antiguos de Internet Explorer
-                }}
-              >
-                {map(userAnPet.pets, (pet) => (
-                  <PerfilPets key={pet.id} pet={pet} />
-                ))}
-              </div>
             </Paper>
           </Grid>
         </Grid>

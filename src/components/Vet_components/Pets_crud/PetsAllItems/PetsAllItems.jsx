@@ -116,16 +116,14 @@ export function PetsAllItems({ pet }) {
               <b>Género: </b>
               {pet.gender}
               <br />
-
               <b>Nacimiento de la mascota U adquisición: </b>
               {pet.birthday}
               <br />
               <b>Color del pelaje: </b>
               {pet.color}
               <br />
-              {/* <b>¿Pedigrí?: </b>
-              {pet.pedigree == false ? 'No posee' : 'Si posee'}
-              <br /> */}
+              <b>Dueño: </b>
+              {pet.user.firstName} {pet.user.lastName}
             </div>
           </ListItemText>
           <ListItemAvatar

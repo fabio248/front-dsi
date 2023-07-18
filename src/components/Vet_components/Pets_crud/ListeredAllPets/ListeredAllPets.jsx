@@ -18,7 +18,7 @@ import { useQuery } from '@tanstack/react-query';
 const petsController = new Pets();
 const apiAuthController = new ApiAuth();
 
-export function ListeredAllPets({ reload, onReload }) {
+export function ListeredAllPets() {
   const accessToken = apiAuthController.getAccessToken();
 
   const { isLoading, data: pets } = useQuery({
@@ -47,7 +47,7 @@ export function ListeredAllPets({ reload, onReload }) {
       }}
     >
       {map(pets, (pet) => (
-        <PetsAllItems key={pet.id} pet={pet} onReload={onReload} />
+        <PetsAllItems key={pet.id} pet={pet} />
       ))}
     </div>
   );

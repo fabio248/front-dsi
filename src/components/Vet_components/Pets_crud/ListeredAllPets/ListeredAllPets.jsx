@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 //import petitions of back
 import { Pets } from '../../../../api/Pets.api';
 import { ApiAuth } from '../../../../api/Auth.api';
-import { User } from '../../../../api/User.api';
 
 //clases de renderizado
 import { PetsAllItems } from '../PetsAllItems';
@@ -12,34 +11,24 @@ import { PetsAllItems } from '../PetsAllItems';
 import { CircularProgress } from '@mui/material';
 import { Typography } from '@mui/material';
 
-import { size, map } from 'lodash';
+import { map } from 'lodash';
+import { useQuery } from '@tanstack/react-query';
 
 //clase Pets
 const petsController = new Pets();
 const apiAuthController = new ApiAuth();
-const userController = new User();
 
 export function ListeredAllPets({ reload, onReload }) {
-  const [pets, setPets] = useState(false);
-  const [users, setUsers] = useState(false);
+  const accessToken = apiAuthController.getAccessToken();
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const accessToken = await apiAuthController.getAccessToken();
+  const { isLoading, data: pets } = useQuery({
+    queryKey: ['pets'],
+    queryFn: async () => await petsController.getAllPets(accessToken),
+  });
 
-        const responsePets = await petsController.getAllPets(accessToken);
-        const responseUser = await userController.getAllUsers(accessToken);
+  if (isLoading) return <CircularProgress />;
 
-        setUsers(responseUser);
-        setPets(responsePets);
-      } catch (error) {}
-    })();
-  }, [onReload, reload]);
-
-  if (!pets) return <CircularProgress />;
-
-  if (size(pets) === 0) {
+  if (!pets) {
     return (
       <Typography variant='h6' style={{ textAlign: 'center' }}>
         ¡No Se Encontraron Mascotas registradas! :(

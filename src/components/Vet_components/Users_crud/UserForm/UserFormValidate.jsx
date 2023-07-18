@@ -3,12 +3,9 @@ import { format, parse } from 'date-fns';
 import { isValid } from 'date-fns';
 
 export function initialValues(user) {
-  let newBirthday, dateObject;
+  let dateObject;
   if (user) {
-    newBirthday = user.birthday.split('T')[0];
-    const [year, month, day] = newBirthday.split('-');
-    newBirthday = `${day}/${month}/${year}`;
-    dateObject = parse(newBirthday, 'dd/MM/yyyy', new Date());
+    dateObject = parse(user.birthday, 'dd/MM/yyyy', new Date());
   }
 
   return {

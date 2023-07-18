@@ -3,14 +3,10 @@ import { format, parse } from 'date-fns';
 import { isValid } from 'date-fns';
 
 export function initialPetValues(pet) {
-  let newBirthday, dateObject;
+  let dateObject;
   if (pet) {
-    newBirthday = pet.birthday.split('T')[0];
-    const [year, month, day] = newBirthday.split('-');
-    newBirthday = `${day}/${month}/${year}`;
-    dateObject = parse(newBirthday, 'dd/MM/yyyy', new Date());
+    dateObject = parse(pet.birthday, 'dd/MM/yyyy', new Date());
   }
-
   return {
     name: pet?.name || '',
     specie: pet?.specie || null,
@@ -40,7 +36,7 @@ export function initialPetValues(pet) {
     palpitaciones: pet?.medicalHistory?.physicalExam?.palpitations || '',
     //  },
     //},
-    file: null,
+    uploadedFile: null,
   };
 }
 

@@ -41,6 +41,7 @@ import {
 
 //estilos
 import './PetsFrom.css';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const specieController = new Species();
 const authController = new ApiAuth();
@@ -51,30 +52,21 @@ export function PetFormTextFields({ formik }) {
   const [errorMessage, setErrorMessage] = useState('');
   const [isError, setIsError] = useState(false);
   const [species, setSpecies] = useState([]);
-  const [open, setOpen] = useState(false);
-  const loading = open && species.length === 0;
+  const [openSpecieList, setOpenSpeciesList] = useState(false);
+  const fetchSpeciesCatalog = openSpecieList && species === 0;
 
-  // Rescatando todas las especies
-  useEffect(() => {
-    let active = true;
-
-    if (!loading) {
-      return undefined;
-    }
-
-    (async () => {
-      const accessToken = authController.getAccessToken();
-      const response = await specieController.getAllspecies(accessToken);
-
-      if (active) {
-        setSpecies(response);
-      }
-    })();
-
-    return () => {
-      active = false;
-    };
-  }, [loading]);
+  const { data: speciesCatalog, isLoading } = useQuery(
+    {
+      queryKey: ['species'],
+      queryFn: async () => {
+        const accessToken = authController.getAccessToken();
+        const data = await specieController.getAllspecies(accessToken);
+        setSpecies(data);
+        return data;
+      },
+    },
+    [fetchSpeciesCatalog]
+  );
 
   const onDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -166,18 +158,18 @@ export function PetFormTextFields({ formik }) {
             id='specie'
             name='specie'
             size='small'
-            open={open}
+            open={openSpecieList}
             onOpen={() => {
-              setOpen(true);
+              setOpenSpeciesList(true);
             }}
             onClose={() => {
-              setOpen(false);
+              setOpenSpeciesList(false);
             }}
-            isOptionEqualToValue={(specie, value) => {
-              specie.id === value.id;
+            isOptionEqualToValue={(speciesCatalog, value) => {
+              speciesCatalog.id === value.id;
             }}
-            getOptionLabel={(specie) => specie.name}
-            options={species}
+            getOptionLabel={(speciesCatalog) => speciesCatalog.name}
+            options={speciesCatalog}
             onChange={(e, value) => formik.setFieldValue('specie', value)}
             value={formik.values.specie}
             renderInput={(params) => (
@@ -188,7 +180,7 @@ export function PetFormTextFields({ formik }) {
                   ...params.InputProps,
                   endAdornment: (
                     <>
-                      {loading ? (
+                      {isLoading ? (
                         <CircularProgress color='inherit' size={20} />
                       ) : null}
                       {params.InputProps.endAdornment}
@@ -620,11 +612,39 @@ export function PetFormTextFields({ formik }) {
 }
 
 const PetsForm = (props) => {
-  const { close, pet, onReload, idUser } = props;
+  const { close, pet, idUser } = props;
   const [isError, setIsError] = useState(false);
   const [success, setSuccess] = useState(false);
+  const queryClient = useQueryClient();
 
-  const { accessToken } = useAuth();
+  const createPetMutation = useMutation({
+    mutationFn: async ({ idUser, formValue }) => {
+      const { accessToken } = useAuth();
+
+      return await petsController.createPets(accessToken, idUser, formValue);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['pets']);
+      setSuccess(true);
+    },
+    onError: () => {
+      setIsError(true);
+    },
+  });
+
+  const updatePetMuatation = useMutation({
+    mutationFn: async ({ petId, formValue }) => {
+      const { accessToken } = useAuth();
+      return await petsController.updatePets(accessToken, petId, formValue);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['pets']);
+      setSuccess(true);
+    },
+    onError: () => {
+      setIsError(true);
+    },
+  });
 
   //manipulacion y validacion de los campos
   const formik = useFormik({
@@ -632,27 +652,16 @@ const PetsForm = (props) => {
     validationSchema: validationSchemaPetRegister(pet),
     validateOnChange: false,
     onSubmit: async (formValue) => {
-      try {
-        if (!pet) {
-          //registro de la informacion si los campos son vacios
-
-          await petsController.createPets(accessToken, idUser, formValue);
-          // await petsController.filePets(accessToken, idUser);
-        } else {
-          //aqui ira la peticion donde se actualizaran los datos
-          await petsController.updatePets(accessToken, pet.id, formValue);
-        }
-        setSuccess(true);
-        setTimeout(() => {
-          close();
-          //onReload();
-        }, 3000);
-      } catch (error) {
-        setIsError(true);
-        console.log(error);
-        //onReload();
-        //console.error(error);
+      if (!pet) {
+        createPetMutation.mutate({ idUser, formValue });
       }
+
+      //aqui ira la peticion donde se actualizaran los datos
+      updatePetMuatation.mutate({ petId: pet.id, formValue });
+
+      setTimeout(() => {
+        close();
+      }, 1500);
     },
   });
   return (
@@ -690,7 +699,9 @@ const PetsForm = (props) => {
           {success && (
             <Alerta
               type={'success'}
-              title={pet ? 'Mascota Actuallizado' : 'Usuario Regsitrado'}
+              title={
+                pet ? 'Mascota actuallizado' : 'Usuario y mascota registrado'
+              }
               message={
                 pet
                   ? 'Se ha actualizado correctamente la mascota'

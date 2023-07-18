@@ -8,32 +8,20 @@ import './Users.css';
 
 export function Users() {
   const [showModal, setShowModal] = useState(false);
-  const [reload, setReload] = useState(false);
   const [value, setValue] = useState(0);
-  const [isLoading, setIsLoading] = useState(false); // Estado de carga
 
   const onOpenCloseModal = () => setShowModal((prevState) => !prevState);
   const onReload = () => setReload((prevState) => !prevState);
   const handleChange = (event, newValue) => setValue(newValue);
-
-  const handleRegistrarUsuario = () => {
-    setIsLoading(true); // Activar el estado de carga
-    // Simulación de una llamada asíncrona (puedes reemplazarlo con tu lógica real)
-    setTimeout(() => {
-      setIsLoading(false); // Desactivar el estado de carga
-      onOpenCloseModal(); // Abrir o cerrar el modal después de la carga
-    }, 250);
-  };
 
   return (
     <div className='users-page'>
       <Button
         className='user-page_add'
         variant='contained'
-        onClick={handleRegistrarUsuario} // Utilizar la función de carga
-        disabled={isLoading} // Deshabilitar el botón durante la carga
+        onClick={onOpenCloseModal}
       >
-        {isLoading ? 'Cargando...' : 'Registrar Usuario'}
+        Registrar Usuario
       </Button>
 
       <div className='box-container'>
@@ -52,7 +40,7 @@ export function Users() {
             </Tabs>
           </Box>
           {/* renderizando a los usuarios */}
-          <ListUsers reload={reload} onReload={onReload} />
+          <ListUsers />
         </Box>
       </div>
       {showModal && (

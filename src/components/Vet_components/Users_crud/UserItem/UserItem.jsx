@@ -33,6 +33,7 @@ import { PetsForm } from '../../Pets_crud';
 import { User } from '../../../../api/User.api';
 import { ApiAuth } from '../../../../api/Auth.api';
 import { NavLink } from 'react-router-dom';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 //controladores de las clases API
 const userController = new User();
@@ -41,10 +42,10 @@ const defaultTheme = createTheme();
 
 export function UserItem(props) {
   //elementos enviados a UserItem en props
-  const { user, onReload } = props;
+  const { user } = props;
 
   //verificacion de error en la ejecución
-  const [error, setError] = useState('');
+  const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
 
   const Demo = styled('div')(({ theme }) => ({
@@ -89,21 +90,27 @@ export function UserItem(props) {
     setConfirmMessage(`¿Esta seguro de que desea eliminar al usuario?`);
     onCloseConfirm();
   };
+  const accessToken = authController.getAccessToken();
+  const queryClient = useQueryClient();
+
+  const deleteUserMutation = useMutation({
+    mutationFn: async ({ accessToken }) => {
+      await userController.deleteUser(accessToken, user.id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['users']);
+      setSuccess(true);
+      onCloseConfirm();
+    },
+    onError: () => {
+      onCloseConfirm();
+      setError(true);
+    },
+  });
 
   //ejecuta la peticion de eliminacion de usuario
   const onDeleteUser = async () => {
-    try {
-      setError('');
-      const accessToken = await authController.getAccessToken();
-      await userController.deleteUser(accessToken, user.id);
-      setSuccess(true);
-      onCloseConfirm();
-      setTimeout(() => {
-        onReload();
-      }, '3000');
-    } catch (error) {
-      console.error(error);
-    }
+    deleteUserMutation.mutate({ accessToken });
   };
 
   return (
@@ -161,7 +168,7 @@ export function UserItem(props) {
               </IconButton>
               {success && (
                 <Alerta
-                  type={'info'}
+                  type={'success'}
                   title={'¡Usuario Eliminado!'}
                   message={'Se ha elimnado correctamente usuario'}
                   strong={user.firstName + ' ' + user.lastName}
@@ -188,7 +195,7 @@ export function UserItem(props) {
         </Divider>
       </Demo>
       <Modal_users show={showModal} close={onOpenCloseModal} title={titleModal}>
-        <UserForm close={onOpenCloseModal} onReload={onReload} user={user} />
+        <UserForm close={onOpenCloseModal} user={user} />
       </Modal_users>
       <Modal_delete
         onOpen={showConfirm}

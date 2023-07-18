@@ -21,6 +21,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 //estilos
 import './UserForm.css';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const authControl = new ApiAuth();
 const userControl = new User();
@@ -215,32 +216,73 @@ export function UserFormTextFields({ formik }) {
 }
 
 const UserForm = (props) => {
-  const { close, onReload, user } = props;
+  const { close, user } = props;
   const [isError, setIsError] = useState(false);
   const [success, setSuccess] = useState(false);
-
+  const [messageError, setMessageError] = useState('');
   const { accessToken } = useAuth();
+  const queryClient = useQueryClient();
+
+  const createUserMutation = useMutation({
+    mutationFn: authControl.registerUserForVet,
+    onMutate: () => {
+      setIsError(false);
+    },
+    onSuccess: () => {
+      setSuccess(true);
+      queryClient.invalidateQueries(['users']);
+      setTimeout(() => {
+        close();
+      }, 1500);
+    },
+    onError: (error) => {
+      if (error.statusCode === 409) {
+        setMessageError('Ya existe un usuario con este correo');
+      } else {
+        setMessageError('No se ha podido completar el registro');
+      }
+      setIsError(true);
+    },
+  });
+
+  const updateUserMutation = useMutation({
+    mutationFn: ({ accessToken, userId, formValue }) => {
+      return userControl.updateUser(accessToken, userId, formValue);
+    },
+    onMutate: () => {
+      setIsError(false);
+      setSuccess(false);
+    },
+    onSuccess: () => {
+      setSuccess(true);
+      queryClient.invalidateQueries(['users']);
+      setTimeout(() => {
+        close();
+      }, 1500);
+    },
+    onError: (error) => {
+      if (error.statusCode === 409) {
+        setMessageError('Ya existe un usuario con este correo');
+      }
+      setMessageError('No se ha podido actualizar el usuario');
+      setIsError(true);
+    },
+  });
 
   const formik = useFormik({
     initialValues: initialValues(user),
     validationSchema: validationSchemaRegister(user),
     validateOnChange: false,
     onSubmit: async (formValue) => {
-      try {
-        if (!user) {
-          await authControl.registerUserForVet(formValue);
-        } else {
-          await userControl.updateUser(accessToken, user.id, formValue);
-        }
-        setSuccess(true);
-        setTimeout(() => {
-          close();
-          onReload();
-        }, 3000);
-      } catch (error) {
-        setIsError(true);
-        onReload();
+      if (!user) {
+        createUserMutation.mutate(formValue);
       }
+
+      updateUserMutation.mutate({
+        accessToken,
+        userId: user.id,
+        formValue,
+      });
     },
   });
 
@@ -289,11 +331,7 @@ const UserForm = (props) => {
             <Alerta
               type={'error'}
               title={'¡Ha ocurrido un problema!'}
-              message={
-                user
-                  ? 'No se ha podido actualizar el usuario'
-                  : 'No se ha podido completar el registro'
-              }
+              message={messageError}
               strong={
                 user
                   ? `${user.firstName} ${user.lastName}`

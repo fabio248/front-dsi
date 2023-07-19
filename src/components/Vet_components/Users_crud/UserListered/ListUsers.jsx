@@ -1,39 +1,34 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { User } from '../../../../api/User.api';
 import { ApiAuth } from '../../../../api/Auth.api';
-import { size, map } from 'lodash';
+import { map } from 'lodash';
 import { UserItem } from '../UserItem';
-import { CircularProgress } from '@mui/material';
-import { PetsAllItems } from '../../Pets_crud';
+import { CircularProgress, Typography } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 const userController = new User();
 const AuthController = new ApiAuth();
 
-export function ListUsers(props) {
-  const { reload, onReload } = props;
-  const [users, setUsers] = useState(false);
+export function ListUsers() {
+  const accessToken = AuthController.getAccessToken();
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const accessToken = AuthController.getAccessToken();
+  const { isLoading, data: users } = useQuery({
+    queryKey: ['users'],
+    queryFn: async () => await userController.getAllUsers(accessToken),
+  });
 
-        const response = await userController.getAllUsers(accessToken);
+  if (isLoading) {
+    return <CircularProgress />;
+  }
 
-        setUsers(response);
-      } catch (error) {}
-    })();
-  }, [reload]);
-
-  if (!users) return <CircularProgress />;
-
-  if (size(users) === 0) {
+  if (!users) {
     return (
       <Typography variant='h6' style={{ textAlign: 'center' }}>
-        ¡No Se Encontraron Clientes registrados!
+        ¡No se encontraron clientes registrados!
       </Typography>
     );
   }
+
   return (
     <div
       style={{
@@ -46,7 +41,7 @@ export function ListUsers(props) {
       }}
     >
       {map(users, (user) => (
-        <UserItem key={user.id} user={user} onReload={onReload} />
+        <UserItem key={user.id} user={user} />
       ))}
     </div>
   );

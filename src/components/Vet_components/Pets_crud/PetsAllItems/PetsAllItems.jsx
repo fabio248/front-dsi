@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 //mui material
 import { Divider, Avatar } from '@mui/material';
 import { Grid, IconButton } from '@mui/material';
@@ -32,12 +32,12 @@ import { ApiAuth } from '../../../../api/Auth.api';
 const petController = new Pets();
 const authController = new ApiAuth();
 
-export function PetsAllItems({ pet, onReload }) {
+export function PetsAllItems({ pet }) {
   const Demo = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
   }));
   //verificacion de error en la ejecución
-  const [error, setError] = useState('');
+  const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
 
   //useState que controla el estado del (abrir o cerrar) modal Delete
@@ -56,29 +56,33 @@ export function PetsAllItems({ pet, onReload }) {
   //funciones que cambia el estado
   const onCloseConfirm = () => setShowConfirm((prevState) => !prevState);
   const onOpenClosePets = () => setShowUpdatePets((prevState) => !prevState);
-  // const  onReload = () => setReload((prevState) => !prevState);
+
+  const queryClient = useQueryClient();
+  const deletePetMutation = useMutation({
+    mutationFn: async () => {
+      const accessToken = await authController.getAccessToken();
+      return await petController.deletePet(accessToken, pet.id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['pets']);
+      setSuccess(true);
+      onCloseConfirm();
+    },
+    onError: () => {
+      setError(true);
+    },
+  });
 
   //funcion que ejecuta el boton correspondiente (Delete TrashIcon)
   const openDeletePet = () => {
-    setTitleDelete(` Eliminar macota: ${pet.name}   `);
+    setTitleDelete(` Eliminar macota: ${pet.name}`);
     setConfirmMessage(`¿Está seguro de que desea eliminar mascota?`);
     onCloseConfirm();
   };
 
   //ejecuta la peticion de eliminacion de mascota
   const onDeletePet = async () => {
-    try {
-      setError('');
-      const accessToken = await authController.getAccessToken();
-      await petController.deletePet(accessToken, pet.id);
-      setSuccess(true);
-      onCloseConfirm();
-      setTimeout(() => {
-        onReload();
-      }, '3000');
-    } catch (error) {
-      console.error(error);
-    }
+    deletePetMutation.mutate();
   };
 
   const openUpdatePets = () => {
@@ -87,7 +91,6 @@ export function PetsAllItems({ pet, onReload }) {
   };
   return (
     <div>
-      {' '}
       <Demo>
         <ListItem sx={{ display: 'flex', flexWrap: 'wrap' }}>
           <ListItemAvatar sx={{ margin: '0 auto' }}>
@@ -113,16 +116,14 @@ export function PetsAllItems({ pet, onReload }) {
               <b>Género: </b>
               {pet.gender}
               <br />
-
               <b>Nacimiento de la mascota U adquisición: </b>
               {pet.birthday}
               <br />
               <b>Color del pelaje: </b>
               {pet.color}
               <br />
-              {/* <b>¿Pedigrí?: </b>
-              {pet.pedigree == false ? 'No posee' : 'Si posee'}
-              <br /> */}
+              <b>Dueño: </b>
+              {pet.user.firstName} {pet.user.lastName}
             </div>
           </ListItemText>
           <ListItemAvatar
@@ -180,7 +181,7 @@ export function PetsAllItems({ pet, onReload }) {
         close={onOpenClosePets}
         title={titleUpdatePet}
       >
-        <PetsForm close={onOpenClosePets} onReload={onReload} pet={pet} />
+        <PetsForm close={onOpenClosePets} pet={pet} />
       </Modal_create_pet>
     </div>
   );

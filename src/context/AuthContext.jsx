@@ -55,7 +55,7 @@ export function AuthProvider(props) {
       const { accessToken } = await authController.refreshAccessToken(
         refreshToken
       );
-      authController.setAccessToken(accesToken);
+      authController.setAccessToken(accessToken);
       await login(accessToken);
     } catch (error) {
       console.error(error);

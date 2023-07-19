@@ -4,17 +4,13 @@ import React, { useState } from 'react';
 import { Basic_modal } from '../../../shared';
 
 //Mui material
-import { Box, Tabs, Tab } from '@mui/material';
-import PetsIcon from '@mui/icons-material/Pets';
+import { Box } from '@mui/material';
 
 //importar vista de renderizado de las mascotas
 import { ListeredAllPets } from '../../../components/Vet_components';
 
 export function UserAndPets() {
   const [showModal, setShowModal] = useState(false);
-  const [value, setValue] = useState(0);
-
-  const handleChange = (event, newValue) => setValue(newValue);
 
   const onOpenCloseModal = () => setShowModal((prevState) => !prevState);
 
@@ -33,16 +29,17 @@ export function UserAndPets() {
           </div>
         </Box>
         <div className='box-container'>
-          <Box sx={{ width: '100%' }}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-              <Tabs
-                value={value}
-                onChange={handleChange}
-                aria-label='basic tabs example'
-              >
-                <Tab icon={<PetsIcon />} label='Mascotas' {...a11yProps(0)} />
-              </Tabs>
-            </Box>
+          <Box
+            sx={{
+              width: '100%',
+              maxHeight: 'calc(100vh - 200px)',
+              overflow: 'auto',
+              scrollbarWidth: 'none', // Oculta el scrollbar en navegadores compatibles
+              '&::-webkit-scrollbar': {
+                display: 'none', // Oculta el scrollbar en navegadores basados en WebKit
+              },
+            }}
+          >
             <ListeredAllPets />
           </Box>
         </div>

@@ -6,11 +6,18 @@ import { ApiAuth } from '../../../../api/Auth.api';
 
 //clases de renderizado
 import { PetsAllItems } from '../PetsAllItems';
-
+import SearchIcon from '@mui/icons-material/Search';
+import InputAdornment from '@mui/material/InputAdornment';
 //mui material
-import { CircularProgress } from '@mui/material';
-import { Typography } from '@mui/material';
-
+import {
+  Box,
+  Tabs,
+  Tab,
+  Typography,
+  CircularProgress,
+  Grid,
+  TextField,
+} from '@mui/material';
 import { map } from 'lodash';
 import { useQuery } from '@tanstack/react-query';
 
@@ -34,8 +41,51 @@ export function ListeredAllPets() {
         ¡No Se Encontraron Mascotas registradas! :(
       </Typography>
     );
-  }
+  });
+
+  //condicion del filtro
+  const hasFilteredUsersAndPets = size(filteredData) > 0;
+
   return (
+    <div>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Grid container spacing={3} alignItems='center'>
+          <Grid item>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label='basic tabs example'
+            >
+              <Tab icon={<PetsIcon />} label='Mascotas' {...a11yProps(0)} />
+            </Tabs>
+          </Grid>
+          <Grid item sx={{ flexGrow: 1 }}>
+            {/* Espacio flexible */}
+          </Grid>
+          <Grid item>
+            <TextField
+              style={{
+                width: '500px',
+                alignItems: 'left',
+                borderWidth: '2px',
+                borderRadius: '1px',
+                borderColor: 'antiquewhite',
+              }}
+              label='Buscar...'
+              value={searchQuery}
+              onChange={handleSearchChange}
+              placeholder='Introduce cualquier dato de la mascota del cliente...'
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
+        </Grid>
+      </Box>
     <div
       style={{
         margin: '16px',
@@ -51,4 +101,11 @@ export function ListeredAllPets() {
       ))}
     </div>
   );
+}
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
 }

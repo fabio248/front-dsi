@@ -1,35 +1,16 @@
-.container {
-  margin-top: '1rem';
-  display: 'flex';
-  justify-content: 'space-between';
-}
-
-h2 {
-  text-align: left;
-}
 .Vet-page {
   display: flex;
   flex-direction: column;
-  height: 85vh;
-  overflow: hidden;
-  justify-content: flex-end;
-}
-
-.vet-page_add {
-  background-color: #f0f0f0;
-  padding: 10px;
-  width: 210px;
-  height: 50px;
-  text-align: right;
+  /* Agrega otros estilos que necesites para el contenedor principal */
 }
 
 .box-container {
-  flex: 1;
+  flex-grow: 1;
   overflow-y: auto;
-  scrollbar-width: none; /* Para navegadores basados en Mozilla */
-  -ms-overflow-style: none; /* Para navegadores basados en Internet Explorer / Edge */
+  /* Agrega otros estilos que necesites para el contenedor de mascotas */
 }
 
-.box-container::-webkit-scrollbar {
-  display: none; /* Para navegadores basados en WebKit (Chrome, Safari, Opera) */
+.pets-container {
+  max-height: 400px; /* Establece la altura máxima deseada */
+  /* Agrega otros estilos que necesites para el contenedor de mascotas */
 }

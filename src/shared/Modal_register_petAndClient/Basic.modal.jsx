@@ -117,9 +117,13 @@ export function Basic_modal(props) {
 
   return (
     <div>
-      <TriggerButton onClick={handleOpen}>
+      <Button
+        onClick={handleOpen}
+        variant='contained'
+        style={{ height: '50px' }}
+      >
         Registrar cliente y su mascota
-      </TriggerButton>
+      </Button>
       <StyledModal
         open={open}
         onClose={handleClose}

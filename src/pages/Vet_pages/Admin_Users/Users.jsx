@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Tab, Tabs, Button, Box, Typography } from '@mui/material';
-import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
+import { Button, Box } from '@mui/material';
+
 import { ListUsers, UserForm } from '../../../components';
 import { Modal_users } from '../../../shared';
 import './Users.css';
@@ -12,7 +11,6 @@ export function Users() {
 
   const onOpenCloseModal = () => setShowModal((prevState) => !prevState);
   const onReload = () => setReload((prevState) => !prevState);
-  const handleChange = (event, newValue) => setValue(newValue);
 
   return (
     <div className='users-page'>
@@ -26,19 +24,6 @@ export function Users() {
 
       <div className='box-container'>
         <Box sx={{ width: '100%' }}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              aria-label='basic tabs example'
-            >
-              <Tab
-                icon={<PeopleOutlineIcon />}
-                label='Usuarios'
-                {...a11yProps(0)}
-              />
-            </Tabs>
-          </Box>
           {/* renderizando a los usuarios */}
           <ListUsers />
         </Box>
@@ -54,34 +39,4 @@ export function Users() {
       )}
     </div>
   );
-}
-
-function TabPanel({ children, value, index }) {
-  return (
-    <div
-      role='tabpanel'
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
 }

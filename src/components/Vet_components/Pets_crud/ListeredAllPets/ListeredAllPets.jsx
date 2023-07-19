@@ -7,6 +7,7 @@ import { ApiAuth } from '../../../../api/Auth.api';
 //clases de renderizado
 import { PetsAllItems } from '../PetsAllItems';
 import SearchIcon from '@mui/icons-material/Search';
+import PetsIcon from '@mui/icons-material/Pets';
 import InputAdornment from '@mui/material/InputAdornment';
 //mui material
 import {
@@ -41,21 +42,14 @@ export function ListeredAllPets() {
         ¡No Se Encontraron Mascotas registradas! :(
       </Typography>
     );
-  });
-
-  //condicion del filtro
-  const hasFilteredUsersAndPets = size(filteredData) > 0;
+  }
 
   return (
     <div>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Grid container spacing={3} alignItems='center'>
           <Grid item>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              aria-label='basic tabs example'
-            >
+            <Tabs aria-label='basic tabs example'>
               <Tab icon={<PetsIcon />} label='Mascotas' {...a11yProps(0)} />
             </Tabs>
           </Grid>
@@ -72,8 +66,6 @@ export function ListeredAllPets() {
                 borderColor: 'antiquewhite',
               }}
               label='Buscar...'
-              value={searchQuery}
-              onChange={handleSearchChange}
               placeholder='Introduce cualquier dato de la mascota del cliente...'
               InputProps={{
                 startAdornment: (
@@ -86,19 +78,20 @@ export function ListeredAllPets() {
           </Grid>
         </Grid>
       </Box>
-    <div
-      style={{
-        margin: '16px',
-        backgroundColor: '#f0f0f0',
-        padding: '20px',
-        borderRadius: '10px',
-        boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-        overflow: 'hidden',
-      }}
-    >
-      {map(pets, (pet) => (
-        <PetsAllItems key={pet.id} pet={pet} />
-      ))}
+      <div
+        style={{
+          margin: '16px',
+          backgroundColor: '#f0f0f0',
+          padding: '20px',
+          borderRadius: '10px',
+          boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+          overflow: 'hidden',
+        }}
+      >
+        {map(pets, (pet) => (
+          <PetsAllItems key={pet.id} pet={pet} />
+        ))}
+      </div>
     </div>
   );
 }

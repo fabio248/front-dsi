@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { User } from '../../../../api/User.api';
 import { ApiAuth } from '../../../../api/Auth.api';
 import { map } from 'lodash';
@@ -46,11 +46,7 @@ export function ListUsers() {
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Grid container spacing={3} alignItems='center'>
           <Grid item>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              aria-label='basic tabs example'
-            >
+            <Tabs aria-label='basic tabs example'>
               <Tab
                 icon={<PeopleOutlineIcon />}
                 label='Usuarios'
@@ -71,8 +67,6 @@ export function ListUsers() {
                 borderColor: 'antiquewhite',
               }}
               label='Buscar...'
-              value={searchQuery}
-              onChange={handleSearchChange}
               placeholder='Introduce cualquier dato del cliente...'
               InputProps={{
                 startAdornment: (
@@ -86,26 +80,20 @@ export function ListUsers() {
         </Grid>
       </Box>
       <br />
-      {hasFilteredUsers ? (
-        <div
-          style={{
-            margin: '16px',
-            backgroundColor: '#f0f0f0',
-            padding: '20px',
-            borderRadius: '10px',
-            boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-            overflow: 'hidden',
-          }}
-        >
-          {map(filteredUsers, (user) => (
-            <UserItem key={user.id} user={user} onReload={onReload} />
-          ))}
-        </div>
-      ) : (
-        <Typography variant='h6' style={{ textAlign: 'center' }}>
-          ¡No se encontraron usuarios registrados!
-        </Typography>
-      )}
+      <div
+        style={{
+          margin: '16px',
+          backgroundColor: '#f0f0f0',
+          padding: '20px',
+          borderRadius: '10px',
+          boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+          overflow: 'hidden',
+        }}
+      >
+        {map(users, (user) => (
+          <UserItem key={user.id} user={user} />
+        ))}
+      </div>
     </div>
   );
 }

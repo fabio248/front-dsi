@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 
 //esquemas de validaciones y manipulacion de datos
 import { useFormik } from 'formik';
@@ -42,6 +42,7 @@ import {
 //estilos
 import './PetsFrom.css';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
 const specieController = new Species();
 const authController = new ApiAuth();
@@ -55,18 +56,15 @@ export function PetFormTextFields({ formik }) {
   const [openSpecieList, setOpenSpeciesList] = useState(false);
   const fetchSpeciesCatalog = openSpecieList && species === 0;
 
-  const { data: speciesCatalog, isLoading } = useQuery(
-    {
-      queryKey: ['species'],
-      queryFn: async () => {
-        const accessToken = authController.getAccessToken();
-        const data = await specieController.getAllspecies(accessToken);
-        setSpecies(data);
-        return data;
-      },
+  const { data: speciesCatalog = [], isLoading } = useQuery({
+    queryKey: ['species'],
+    queryFn: async () => {
+      const accessToken = authController.getAccessToken();
+      const data = await specieController.getAllspecies(accessToken);
+      setSpecies(data);
+      return data;
     },
-    [fetchSpeciesCatalog]
-  );
+  });
 
   const onDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -178,14 +176,7 @@ export function PetFormTextFields({ formik }) {
                 label='Seleccione una especie'
                 InputProps={{
                   ...params.InputProps,
-                  endAdornment: (
-                    <>
-                      {isLoading ? (
-                        <CircularProgress color='inherit' size={20} />
-                      ) : null}
-                      {params.InputProps.endAdornment}
-                    </>
-                  ),
+                  endAdornment: <>{params.InputProps.endAdornment}</>,
                 }}
                 error={formik.touched.specie && formik.errors.specie}
                 helperText={formik.touched.specie && formik.errors.specie}

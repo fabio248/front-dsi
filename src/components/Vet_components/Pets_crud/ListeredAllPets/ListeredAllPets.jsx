@@ -6,11 +6,19 @@ import { ApiAuth } from '../../../../api/Auth.api';
 
 //clases de renderizado
 import { PetsAllItems } from '../PetsAllItems';
-
+import SearchIcon from '@mui/icons-material/Search';
+import PetsIcon from '@mui/icons-material/Pets';
+import InputAdornment from '@mui/material/InputAdornment';
 //mui material
-import { CircularProgress } from '@mui/material';
-import { Typography } from '@mui/material';
-
+import {
+  Box,
+  Tabs,
+  Tab,
+  Typography,
+  CircularProgress,
+  Grid,
+  TextField,
+} from '@mui/material';
 import { map } from 'lodash';
 import { useQuery } from '@tanstack/react-query';
 
@@ -35,20 +43,62 @@ export function ListeredAllPets() {
       </Typography>
     );
   }
+
   return (
-    <div
-      style={{
-        margin: '16px',
-        backgroundColor: '#f0f0f0',
-        padding: '20px',
-        borderRadius: '10px',
-        boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-        overflow: 'hidden',
-      }}
-    >
-      {map(pets, (pet) => (
-        <PetsAllItems key={pet.id} pet={pet} />
-      ))}
+    <div>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Grid container spacing={3} alignItems='center'>
+          <Grid item>
+            <Tabs aria-label='basic tabs example'>
+              <Tab icon={<PetsIcon />} label='Mascotas' {...a11yProps(0)} />
+            </Tabs>
+          </Grid>
+          <Grid item sx={{ flexGrow: 1 }}>
+            {/* Espacio flexible */}
+          </Grid>
+          <Grid item>
+            <TextField
+              style={{
+                width: '500px',
+                alignItems: 'left',
+                borderWidth: '2px',
+                borderRadius: '1px',
+                borderColor: 'antiquewhite',
+              }}
+              label='Buscar...'
+              placeholder='Introduce cualquier dato de la mascota del cliente...'
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
+        </Grid>
+      </Box>
+      <div
+        style={{
+          margin: '16px',
+          backgroundColor: '#f0f0f0',
+          padding: '20px',
+          borderRadius: '10px',
+          boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+          overflow: 'hidden',
+        }}
+      >
+        {map(pets, (pet) => (
+          <PetsAllItems key={pet.id} pet={pet} />
+        ))}
+      </div>
     </div>
   );
+}
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
 }

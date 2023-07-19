@@ -40,9 +40,9 @@ const userController = new User();
 const authController = new ApiAuth();
 const defaultTheme = createTheme();
 
-export function UserItem(props) {
+export function UserItem({ user, onReload }) {
   //elementos enviados a UserItem en props
-  const { user } = props;
+  // const { user, onReload } = props;
 
   //verificacion de error en la ejecución
   const [error, setError] = useState(false);

@@ -37,32 +37,31 @@ export function Vet_Layouts(props) {
   };
   const drawer = (
     <div>
-
-      <div className="image-container">
+      <div className='image-container'>
         <img
-          src="../../../public/galeria/logo.png"
-          alt="logo"
-          className="imagen-appbar"
+          src='../../../public/galeria/logo.png'
+          alt='logo'
+          className='imagen-appbar'
         />
       </div>
 
-      <Divider sx = {{ mt: -3}}/>
+      <Divider sx={{ mt: -3 }} />
       <List>
-      <NavLink
+        <NavLink
           to='/admin/users'
           style={{
             textDecoration: 'none', // Quitar subrayado
             color: 'black', // Color de texto deseado
           }}
         >
-        <ListItem disablePadding>
-          <ListItemButton component='a'>
-            <ListItemIcon>
-              <PeopleAltIcon />
-            </ListItemIcon>
-            <ListItemText primary='Clientes' />
-          </ListItemButton>
-        </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton component='a'>
+              <ListItemIcon>
+                <PeopleAltIcon />
+              </ListItemIcon>
+              <ListItemText primary='Clientes' />
+            </ListItemButton>
+          </ListItem>
         </NavLink>
         <Divider />
         <NavLink
@@ -72,17 +71,17 @@ export function Vet_Layouts(props) {
             color: 'black', // Color de texto deseado
           }}
         >
-        <ListItem disablePadding>
-          <ListItemButton component='a'>
-            <ListItemIcon>
-              <EventIcon />
-            </ListItemIcon>
-            <ListItemText primary='Programación de citas' />
-          </ListItemButton>
-        </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton component='a'>
+              <ListItemIcon>
+                <EventIcon />
+              </ListItemIcon>
+              <ListItemText primary='Programación de citas' />
+            </ListItemButton>
+          </ListItem>
         </NavLink>
 
-      <Divider />
+        <Divider />
         <ListItem disablePadding>
           <ListItemButton
             component='a'
@@ -96,22 +95,22 @@ export function Vet_Layouts(props) {
           </ListItemButton>
         </ListItem>
 
-      <Divider />
-      <NavLink
+        <Divider />
+        <NavLink
           to='/admin/userAndPets'
           style={{
             textDecoration: 'none', // Quitar subrayado
             color: 'black', // Color de texto deseado
           }}
         >
-        <ListItem disablePadding>
-          <ListItemButton component='a'>
-            <ListItemIcon>
-              <PersonAddAltIcon />
-            </ListItemIcon>
-            <ListItemText primary='Agregar Clientes y sus mascotas' />
-          </ListItemButton>
-        </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton component='a'>
+              <ListItemIcon>
+                <PersonAddAltIcon />
+              </ListItemIcon>
+              <ListItemText primary='Agregar Clientes y sus mascotas' />
+            </ListItemButton>
+          </ListItem>
         </NavLink>
         <Divider />
       </List>
@@ -147,7 +146,7 @@ export function Vet_Layouts(props) {
                     style={{
                       position: 'absolute',
                       right: '10px',
-                      bottom: '10px',
+                      bottom: '15px',
                     }}
                   >
                     <Logout />

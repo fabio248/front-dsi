@@ -1,22 +1,31 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box, styled } from '@mui/system';
 import Modal from '@mui/base/Modal';
 // import Button from '@mui/base/Button';
 import { useSpring, animated } from '@react-spring/web';
 import { Stepper, Container, Typography, StepLabel, Step } from '@mui/material';
-import { Grid, TextField, Button } from '@mui/material';
+import { Grid, Button } from '@mui/material';
 
 //pantallas a renderizar
 import Cliente_Register from '../../pages/Vet_pages/User and pets/Cliente.Register';
 import Mascotas_register from '../../pages/Vet_pages/User and pets/mascotas.register';
-import { UserFormTextFields, PetFormTextFields } from '../../components/Vet_components'
-import { Alerta } from '../'
+import {
+  UserFormTextFields,
+  PetFormTextFields,
+} from '../../components/Vet_components';
+import { Alerta } from '../';
 
 //Validaciones
 import { useFormik } from 'formik';
-import  { initialValues, validationSchemaRegister } from '../../components/Vet_components/Users_crud';
-import { initialPetValues, validationSchemaPetRegister } from '../../components/Vet_components/Pets_crud';
+import {
+  initialValues,
+  validationSchemaRegister,
+} from '../../components/Vet_components/Users_crud';
+import {
+  initialPetValues,
+  validationSchemaPetRegister,
+} from '../../components/Vet_components/Pets_crud';
 
 //API
 import { User } from '../../api/User.api';
@@ -42,9 +51,9 @@ export function Basic_modal(props) {
 
   const [activeStep, setActiveStep] = React.useState(0);
 
-  function handleNext(){
+  function handleNext() {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
+  }
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
     setError('');
@@ -72,7 +81,7 @@ export function Basic_modal(props) {
         setSuccess(false);
         handleNext();
       } catch (error) {
-        setClientError(true)
+        setClientError(true);
         console.error(error);
       }
     },
@@ -114,12 +123,15 @@ export function Basic_modal(props) {
     //setSuccess(true);
   };
 
-
   return (
     <div>
-      <TriggerButton onClick={handleOpen}>
+      <Button
+        onClick={handleOpen}
+        variant='contained'
+        style={{ height: '50px' }}
+      >
         Registrar Cliente y su mascota
-      </TriggerButton>
+      </Button>
       <StyledModal
         open={open}
         onClose={handleClose}
@@ -173,15 +185,16 @@ export function Basic_modal(props) {
                 ) : (
                   <React.Fragment>
                     {mostrarPaginas(handleNext)}
-                    <Grid 
-                    component = 'form' 
-                    onSubmit = { 
-                      activeStep == 0 
-                      ? formikUser.handleSubmit 
-                      : activeStep == 1 
-                        ? formikPet.handleSubmit 
-                        : null 
-                    } >
+                    <Grid
+                      component='form'
+                      onSubmit={
+                        activeStep == 0
+                          ? formikUser.handleSubmit
+                          : activeStep == 1
+                          ? formikPet.handleSubmit
+                          : null
+                      }
+                    >
                       <Box
                         sx={{
                           display: 'flex',
@@ -189,17 +202,17 @@ export function Basic_modal(props) {
                           pt: 4,
                           maxHeight: 450,
                           overflow: 'auto',
-                          msOverflowStyle: 'none', /* IE and Edge */
-                          scrollbarWidth: 'none', /* Firefox */
+                          msOverflowStyle: 'none' /* IE and Edge */,
+                          scrollbarWidth: 'none' /* Firefox */,
                           '&::-webkit-scrollbar': {
-                            display: 'none', /* Chrome, Safari, and Opera */
+                            display: 'none' /* Chrome, Safari, and Opera */,
                           },
                         }}
                       >
                         {activeStep == 0 ? (
-                          <UserFormTextFields formik = {formikUser} />
+                          <UserFormTextFields formik={formikUser} />
                         ) : (
-                          <PetFormTextFields formik = {formikPet} />
+                          <PetFormTextFields formik={formikPet} />
                         )}
                       </Box>
                       <Box
@@ -259,7 +272,9 @@ export function Basic_modal(props) {
         <Alerta
           type={'success'}
           title={'¡Registro exitoso!'}
-          message={'Se ha completado el registro del usuario y la mascota exitosamente'}
+          message={
+            'Se ha completado el registro del usuario y la mascota exitosamente'
+          }
           strong={'Verifica los registros'}
         />
       )}
@@ -267,8 +282,16 @@ export function Basic_modal(props) {
         <Alerta
           type={'error'}
           title={'¡Ha ocurrido un problema!'}
-          message={error == 'Email already taken'? 'El correo electrónico brindado ya se encuentra registrado' : `Error: ${error}`}
-          strong={error == 'Email already taken' ? 'Ingresa un correo diferente' :'Verifica los datos ingresados'}
+          message={
+            error == 'Email already taken'
+              ? 'El correo electrónico brindado ya se encuentra registrado'
+              : `Error: ${error}`
+          }
+          strong={
+            error == 'Email already taken'
+              ? 'Ingresa un correo diferente'
+              : 'Verifica los datos ingresados'
+          }
         />
       )}
     </div>
@@ -361,7 +384,7 @@ const style = (theme) => ({
   flexDirection: 'column',
   wrap: true,
   alignItems: 'center',
-  justifycontent:'center',
+  justifycontent: 'center',
   minWidth: 400,
   maxWidth: 1000,
   maxHeight: 800,

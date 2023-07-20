@@ -1,5 +1,5 @@
-import { method } from 'lodash';
 import { config, configApiBackend } from '../config';
+import axios from 'axios';
 import { format } from 'date-fns';
 export class Pets {
   async getPetsForUsers(accessToken, userId) {
@@ -121,20 +121,21 @@ export class Pets {
     }
   }
 
-  async amazonQuery(urlComming, file) {
+  async amazonQuery(urlComming, fileBuffer, fileOriginal) {
     try {
-      const formData = new FormData();
-      formData.append('file', file);
+      // Convert the ArrayBuffer to a Blob with the correct content type
+      const blob = new Blob([fileBuffer], { type: fileOriginal.type });
 
-      const params = {
+      // Create the configuration object with the Blob as the data
+      const config = {
         method: 'PUT',
-        body: formData,
+        url: urlComming,
+        data: blob,
       };
 
-      const response = await fetch(urlComming, params);
-      const result = response.json();
-      if (response.status !== 200) throw result;
-      return result;
+      // Perform the request using Axios
+      const response = await axios(config);
+      return response.data;
     } catch (error) {
       throw error;
     }

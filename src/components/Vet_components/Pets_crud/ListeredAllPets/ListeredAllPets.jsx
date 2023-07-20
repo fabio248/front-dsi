@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 //import petitions of back
 import { Pets } from '../../../../api/Pets.api';
@@ -28,6 +28,7 @@ const apiAuthController = new ApiAuth();
 
 export function ListeredAllPets() {
   const accessToken = apiAuthController.getAccessToken();
+  const [value, setValue] = useState(0);
 
   const { isLoading, data: pets } = useQuery({
     queryKey: ['pets'],
@@ -49,7 +50,7 @@ export function ListeredAllPets() {
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Grid container spacing={3} alignItems='center'>
           <Grid item>
-            <Tabs aria-label='basic tabs example'>
+            <Tabs aria-label='basic tabs example' value={value}>
               <Tab icon={<PetsIcon />} label='Mascotas' {...a11yProps(0)} />
             </Tabs>
           </Grid>

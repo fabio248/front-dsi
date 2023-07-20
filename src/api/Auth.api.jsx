@@ -88,7 +88,6 @@ export class ApiAuth {
 
       const response = await fetch(url, params);
       const result = await response.json();
-      console.log({ result });
 
       if (response.status !== 200) throw result; // Valida la respuesta del back
 

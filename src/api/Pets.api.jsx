@@ -126,15 +126,12 @@ export class Pets {
       // Convert the ArrayBuffer to a Blob with the correct content type
       const blob = new Blob([fileBuffer], { type: fileOriginal.type });
 
-      // Create the configuration object with the Blob as the data
-      const config = {
-        method: 'PUT',
-        url: urlComming,
-        data: blob,
-      };
-
       // Perform the request using Axios
-      const response = await axios(config);
+      const response = await axios.put(urlComming, blob, {
+        headers: {
+          'Content-Type': fileOriginal.type,
+        },
+      });
       return response.data;
     } catch (error) {
       throw error;

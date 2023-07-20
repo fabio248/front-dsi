@@ -51,16 +51,13 @@ export function PetFormTextFields({ formik, onBinaryStrChange, onDropFile }) {
   const [uploadedFile, setUploadedFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [isError, setIsError] = useState(false);
-  const [species, setSpecies] = useState([]);
   const [openSpecieList, setOpenSpeciesList] = useState(false);
-  const fetchSpeciesCatalog = openSpecieList && species === 0;
 
-  const { data: speciesCatalog = [], isLoading } = useQuery({
+  const { data: speciesCatalog = [] } = useQuery({
     queryKey: ['species'],
     queryFn: async () => {
       const accessToken = authController.getAccessToken();
       const data = await specieController.getAllspecies(accessToken);
-      setSpecies(data);
       return data;
     },
   });
@@ -87,7 +84,7 @@ export function PetFormTextFields({ formik, onBinaryStrChange, onDropFile }) {
       } else {
         setUploadedFile(null);
         setErrorMessage(
-          'Formato de archivo no válido. Se aceptan archivos PDF, Word y imágenes (PNG, JPG, JPEG).'
+          'Formato de archivo no válido. Se aceptan archivos PDF y imágenes (PNG, JPG, JPEG).'
         );
         setIsError(true);
       }
@@ -646,7 +643,20 @@ const PetsForm = (props) => {
   const updatePetMuatation = useMutation({
     mutationFn: async ({ petId, formValue }) => {
       const accessToken = authController.getAccessToken();
-      return await petsController.updatePets(accessToken, petId, formValue);
+      if (fileCharged) {
+        const { url } = await petsController.filePets(
+          accessToken,
+          fileOriginal.type,
+          pet.id
+        );
+        try {
+          await petsController.amazonQuery(url, uploadData, fileOriginal);
+        } catch (error) {
+          console.error('Error al cargar el archivo en AWS S3:', error);
+        }
+
+        return await petsController.updatePets(accessToken, petId, formValue);
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['pets']);
@@ -678,26 +688,6 @@ const PetsForm = (props) => {
       }
       //aqui ira la peticion donde se actualizaran los datos
       updatePetMuatation.mutate({ petId: pet.id, formValue });
-
-      if (fileCharged) {
-        const accessToken = authController.getAccessToken();
-        const response = await petsController.filePets(
-          accessToken,
-          fileOriginal.type,
-          pet.id
-        );
-        console.log(response.url);
-        try {
-          await petsController.amazonQuery(
-            response.url,
-            uploadData,
-            fileOriginal
-          );
-          console.log('Archivo cargado correctamente en AWS S3');
-        } catch (error) {
-          console.error('Error al cargar el archivo en AWS S3:', error);
-        }
-      }
 
       setTimeout(() => {
         close();

@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { User } from '../../../../api/User.api';
+import React from 'react';
 import { ApiAuth } from '../../../../api/Auth.api';
 import { map } from 'lodash';
 import { UserItem } from '../UserItem';
@@ -11,22 +10,21 @@ import {
   Box,
   CircularProgress,
   Grid,
+  Button,
 } from '@mui/material';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
-import PropTypes from 'prop-types';
-import { useQuery } from '@tanstack/react-query';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { useUser } from '../../../../hooks/UseUser';
 
-const userController = new User();
-const AuthController = new ApiAuth();
+const authController = new ApiAuth();
 
 export function ListUsers() {
-  const accessToken = AuthController.getAccessToken();
+  const accessToken = authController.getAccessToken();
 
-  const { isLoading, data: users } = useQuery({
-    queryKey: ['users'],
-    queryFn: async () => await userController.getAllUsers(accessToken),
+  const { isLoading, users, hasNextPage, fetchNextPage, isFetching } = useUser({
+    accessToken,
   });
 
   if (isLoading) {
@@ -50,7 +48,7 @@ export function ListUsers() {
               <Tab
                 icon={<PeopleOutlineIcon />}
                 label='Usuarios'
-                {...a11yProps(0)}
+                id={`simple-tab-0`}
               />
             </Tabs>
           </Grid>
@@ -90,38 +88,33 @@ export function ListUsers() {
           overflow: 'hidden',
         }}
       >
-        {map(users, (user) => (
-          <UserItem key={user.id} user={user} />
-        ))}
+        <InfiniteScroll
+          dataLength={users.length}
+          hasMore={hasNextPage || isLoading}
+          next={() => fetchNextPage()}
+          endMessage={
+            <p style={{ textAlign: 'center' }}>
+              <b>Ya tienes todos los usuarios cargados</b>
+            </p>
+          }
+          scrollThreshold={0.5}
+        >
+          {map(users, (user) => (
+            <UserItem key={user.id} user={user} />
+          ))}
+        </InfiniteScroll>
       </div>
+      {hasNextPage & !isFetching ? (
+        <Button onClick={() => fetchNextPage()}>Cargar más usuarios</Button>
+      ) : undefined}
+      {isFetching ? <CircularProgress /> : undefined}
     </div>
   );
 }
 
-function TabPanel({ children, value, index }) {
-  return (
-    <div
-      role='tabpanel'
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-    >
-      {map(users, (user) => (
-        <UserItem key={user.id} user={user} />
-      ))}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
-
-function a11yProps(index) {
+function a11yProps() {
   return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    id: `simple-tab-0`,
+    'aria-controls': `simple-tabpanel-0`,
   };
 }

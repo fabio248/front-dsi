@@ -31,9 +31,13 @@ export class User {
     }
   }
   //OBTENER TODOS LOS USUARIOS REGISTRADOS EN LA BASE
-  async getAllUsers(accessToken) {
+  async getAllUsers(accessToken, page, search = null) {
     try {
-      const url = `${config.baseApi}/${configApiBackend.users}`;
+      let url = `${config.baseApi}/${configApiBackend.users}?page=${page}&limit=5`;
+
+      if (search) {
+        url = `${config.baseApi}/${configApiBackend.users}?search=${search}&page=${page}&limit=4`;
+      }
       const params = {
         method: 'GET', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
         headers: {

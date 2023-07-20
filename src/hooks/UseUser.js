@@ -3,11 +3,15 @@ import { User } from '../api/User.api';
 
 const userController = new User();
 
-export function useUser({ accessToken }) {
+export function useUser({ accessToken, search }) {
   const result = useInfiniteQuery({
-    queryKey: ['users'],
+    queryKey: ['users', search],
     queryFn: async ({ pageParam = 1 }) => {
-      const data = await userController.getAllUsers(accessToken, pageParam);
+      const data = await userController.getAllUsers(
+        accessToken,
+        pageParam,
+        search
+      );
       return data;
     },
     getNextPageParam: (lastPage) => {

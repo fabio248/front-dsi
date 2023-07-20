@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ApiAuth } from '../../../../api/Auth.api';
 import { map } from 'lodash';
 import { UserItem } from '../UserItem';
 import {
-  TextField,
   Typography,
   Tab,
   Tabs,
@@ -13,31 +12,30 @@ import {
   Button,
 } from '@mui/material';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
-import SearchIcon from '@mui/icons-material/Search';
-import InputAdornment from '@mui/material/InputAdornment';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { useUser } from '../../../../hooks/UseUser';
+import { useDebounce, useUser } from '../../../../hooks';
+import { SearchInput } from '../../../../shared/components/SearchInput';
+import { useSearchParams } from 'react-router-dom';
 
 const authController = new ApiAuth();
 
 export function ListUsers() {
+  const [query] = useSearchParams();
+  const search = query.get('search');
+
   const accessToken = authController.getAccessToken();
 
-  const { isLoading, users, hasNextPage, fetchNextPage, isFetching } = useUser({
-    accessToken,
-  });
+  const deboncedQuery = useDebounce(search, 500);
 
-  if (isLoading) {
-    return <CircularProgress />;
-  }
+  const { isLoading, users, hasNextPage, fetchNextPage, isFetching, refetch } =
+    useUser({
+      accessToken,
+      search: deboncedQuery,
+    });
 
-  if (!users) {
-    return (
-      <Typography variant='h6' style={{ textAlign: 'center' }}>
-        ¡No se encontraron clientes registrados!
-      </Typography>
-    );
-  }
+  useEffect(() => {
+    refetch();
+  }, [deboncedQuery]);
 
   return (
     <div>
@@ -56,24 +54,7 @@ export function ListUsers() {
             {/* Espacio flexible */}
           </Grid>
           <Grid item>
-            <TextField
-              style={{
-                width: '500px',
-                alignItems: 'left',
-                borderWidth: '2px',
-                borderRadius: '1px',
-                borderColor: 'antiquewhite',
-              }}
-              label='Buscar...'
-              placeholder='Introduce cualquier dato del cliente...'
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position='start'>
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              }}
-            />
+            <SearchInput isFetching={isFetching} />
           </Grid>
         </Grid>
       </Box>
@@ -92,11 +73,6 @@ export function ListUsers() {
           dataLength={users.length}
           hasMore={hasNextPage || isLoading}
           next={() => fetchNextPage()}
-          endMessage={
-            <p style={{ textAlign: 'center' }}>
-              <b>Ya tienes todos los usuarios cargados</b>
-            </p>
-          }
           scrollThreshold={0.5}
         >
           {map(users, (user) => (
@@ -108,6 +84,16 @@ export function ListUsers() {
         <Button onClick={() => fetchNextPage()}>Cargar más usuarios</Button>
       ) : undefined}
       {isFetching ? <CircularProgress /> : undefined}
+      {!hasNextPage & (users.length !== 0) ? (
+        <Typography style={{ textAlign: 'center', fontWeight: 500 }}>
+          Ya tienes todos los usuarios cargados
+        </Typography>
+      ) : undefined}
+      {users.length === 0 ? (
+        <Typography style={{ textAlign: 'center', fontWeight: 500 }}>
+          No hay usuarios {search ? 'con este filtro' : undefined}
+        </Typography>
+      ) : undefined}
     </div>
   );
 }

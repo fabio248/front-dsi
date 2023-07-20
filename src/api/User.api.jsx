@@ -38,6 +38,7 @@ export class User {
       if (search) {
         url = `${config.baseApi}/${configApiBackend.users}?search=${search}&page=${page}&limit=4`;
       }
+      console.log({ url });
       const params = {
         method: 'GET', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
         headers: {

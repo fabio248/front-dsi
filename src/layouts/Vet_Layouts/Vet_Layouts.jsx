@@ -17,19 +17,16 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import PetsIcon from '@mui/icons-material/Pets';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import EventIcon from '@mui/icons-material/Event';
 import { Logout } from '../../components/Admin/Auth/Logout';
-import { Grid } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 
 const drawerWidth = 240;
 
 export function Vet_Layouts(props) {
-  const { children } = props;
+  const { children, window } = props;
 
-  const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {

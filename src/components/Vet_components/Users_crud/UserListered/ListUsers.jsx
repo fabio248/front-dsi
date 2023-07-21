@@ -1,45 +1,41 @@
-import React, { useState } from 'react';
-import { User } from '../../../../api/User.api';
+import React, { useState, useEffect } from 'react';
 import { ApiAuth } from '../../../../api/Auth.api';
 import { map } from 'lodash';
 import { UserItem } from '../UserItem';
 import {
-  TextField,
   Typography,
   Tab,
   Tabs,
   Box,
   CircularProgress,
   Grid,
+  Button,
 } from '@mui/material';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
-import SearchIcon from '@mui/icons-material/Search';
-import InputAdornment from '@mui/material/InputAdornment';
-import PropTypes from 'prop-types';
-import { useQuery } from '@tanstack/react-query';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { useDebounce, useUser } from '../../../../hooks';
+import { SearchInput } from '../../../../shared/components/SearchInput';
+import { useSearchParams } from 'react-router-dom';
 
-const userController = new User();
-const AuthController = new ApiAuth();
+const authController = new ApiAuth();
 
 export function ListUsers() {
-  const accessToken = AuthController.getAccessToken();
+  const [query] = useSearchParams();
+  const search = query.get('search');
 
-  const { isLoading, data: users } = useQuery({
-    queryKey: ['users'],
-    queryFn: async () => await userController.getAllUsers(accessToken),
-  });
+  const accessToken = authController.getAccessToken();
 
-  if (isLoading) {
-    return <CircularProgress />;
-  }
+  const deboncedQuery = useDebounce(search, 500);
 
-  if (!users) {
-    return (
-      <Typography variant='h6' style={{ textAlign: 'center' }}>
-        ¡No se encontraron clientes registrados!
-      </Typography>
-    );
-  }
+  const { isLoading, users, hasNextPage, fetchNextPage, isFetching, refetch } =
+    useUser({
+      accessToken,
+      search: deboncedQuery,
+    });
+
+  useEffect(() => {
+    refetch();
+  }, [deboncedQuery]);
 
   return (
     <div>
@@ -50,7 +46,7 @@ export function ListUsers() {
               <Tab
                 icon={<PeopleOutlineIcon />}
                 label='Usuarios'
-                {...a11yProps(0)}
+                id={`simple-tab-0`}
               />
             </Tabs>
           </Grid>
@@ -58,24 +54,7 @@ export function ListUsers() {
             {/* Espacio flexible */}
           </Grid>
           <Grid item>
-            <TextField
-              style={{
-                width: '500px',
-                alignItems: 'left',
-                borderWidth: '2px',
-                borderRadius: '1px',
-                borderColor: 'antiquewhite',
-              }}
-              label='Buscar...'
-              placeholder='Introduce cualquier dato del cliente...'
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position='start'>
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              }}
-            />
+            <SearchInput isFetching={isFetching} />
           </Grid>
         </Grid>
       </Box>
@@ -90,38 +69,38 @@ export function ListUsers() {
           overflow: 'hidden',
         }}
       >
-        {map(users, (user) => (
-          <UserItem key={user.id} user={user} />
-        ))}
+        <InfiniteScroll
+          dataLength={users.length}
+          hasMore={hasNextPage || isLoading}
+          next={() => fetchNextPage()}
+          scrollThreshold={0.5}
+        >
+          {map(users, (user) => (
+            <UserItem key={user.id} user={user} />
+          ))}
+        </InfiniteScroll>
       </div>
+      {hasNextPage & !isFetching ? (
+        <Button onClick={() => fetchNextPage()}>Cargar más usuarios</Button>
+      ) : undefined}
+      {isFetching ? <CircularProgress /> : undefined}
+      {!hasNextPage & (users.length !== 0) ? (
+        <Typography style={{ textAlign: 'center', fontWeight: 500 }}>
+          Ya tienes todos los usuarios cargados
+        </Typography>
+      ) : undefined}
+      {users.length === 0 ? (
+        <Typography style={{ textAlign: 'center', fontWeight: 500 }}>
+          No hay usuarios {search ? 'con este filtro' : undefined}
+        </Typography>
+      ) : undefined}
     </div>
   );
 }
 
-function TabPanel({ children, value, index }) {
-  return (
-    <div
-      role='tabpanel'
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-    >
-      {map(users, (user) => (
-        <UserItem key={user.id} user={user} />
-      ))}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
-
-function a11yProps(index) {
+function a11yProps() {
   return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    id: `simple-tab-0`,
+    'aria-controls': `simple-tabpanel-0`,
   };
 }

@@ -124,7 +124,6 @@ export function Login() {
     });
     if (error) {
       alert('Error logging in to google provider with supabase');
-      console.log(error);
     }
   }
 
@@ -136,7 +135,7 @@ export function Login() {
         if (value.data?.session) {
           setLoading(true);
           const session = value.data.session; // ALMACENA LA INFORMACIÓN DE LA SESIÓN
-          authLoginController.setProviderToken(session.provider_token)
+          authLoginController.setProviderToken(session.provider_token);
           const tokenData = decoderToken(session.access_token); // ALMACENA LA INFORMACIÓN DE TOKEN DE ACCESO
           const fullnameSplit = session.user.user_metadata.full_name
             .trim()
@@ -156,7 +155,7 @@ export function Login() {
             lastName: lastName ? lastName : 'LastName',
             birthday: '01/01/2000', //default date
             email: session.user.email,
-            phone: session.user.phone ? session.user.phone : '0000-0000' , //default phone
+            phone: session.user.phone ? session.user.phone : '0000-0000', //default phone
             password: tokenData.sub,
             role: 'client',
           };
@@ -184,9 +183,7 @@ export function Login() {
                 });
               }, 80);
             }
-          } catch (error) {
-            console.log(error);
-          }
+          } catch (error) {}
         }
       });
     }
@@ -194,191 +191,189 @@ export function Login() {
   }, [loading]);
 
   return (
-      <Grid container component='main' sx={{ height: '100vh' }}>
-        <CssBaseline />
-        <Grid
-          item
-          xs={false}
-          sm={4}
-          md={7}
+    <Grid container component='main' sx={{ height: '100vh' }}>
+      <CssBaseline />
+      <Grid
+        item
+        xs={false}
+        sm={4}
+        md={7}
+        sx={{
+          backgroundImage: 'url(https://source.unsplash.com/random?pets)',
+          backgroundRepeat: 'no-repeat',
+          backgroundColor: (t) =>
+            t.palette.mode === 'light'
+              ? t.palette.grey[50]
+              : t.palette.grey[900],
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      />
+      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <Box
           sx={{
-            backgroundImage: 'url(https://source.unsplash.com/random?pets)',
-            backgroundRepeat: 'no-repeat',
-            backgroundColor: (t) =>
-              t.palette.mode === 'light'
-                ? t.palette.grey[50]
-                : t.palette.grey[900],
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
+            my: 4,
+            mx: 4,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
-        />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-          <Box
-            sx={{
-              my: 4,
-              mx: 4,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
-            <Grid container spacing={4} sx={{ mt: 0 }}>
-              <Grid item xs={4}>
-                <Button
-                  fullWidth
-                  startIcon={<ArrowBackIos />}
-                  href='/'
-                  variant='text'
-                >
-                  REGRESAR
-                </Button>
-              </Grid>
-            </Grid>
-            <Avatar sx={{ m: 1, bgcolor: '#8EC167' }}>
-              <PetsIcon sx = {{ color: '#FFF'}} />
-            </Avatar>
-            <Typography component='h1' variant='h5'>
-              Inicia sesión
-            </Typography>
-            <Box
-              component='form'
-              noValidate
-              onSubmit={formik.handleSubmit}
-              sx={{ mt: 1 }}
-            >
-              <TextField
-                margin='normal'
-                required
-                fullWidth
-                id='email'
-                label='Correo electrónico'
-                name='email'
-                autoComplete='email'
-                autoFocus
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                error={formik.touched.email && Boolean(formik.errors.email)}
-                helperText={formik.touched.email && formik.errors.email}
-              />
-              <TextField
-                margin='normal'
-                required
-                fullWidth
-                name='password'
-                label='Contraseña'
-                type='password'
-                id='password'
-                autoComplete='current-password'
-                value={formik.values.password}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.password && Boolean(formik.errors.password)
-                }
-                helperText={formik.touched.password && formik.errors.password}
-              />
-
+        >
+          <Grid container spacing={4} sx={{ mt: 0 }}>
+            <Grid item xs={4}>
               <Button
-                type='submit'
                 fullWidth
-                variant='contained'
-                sx={{ mt: 3, mb: 2 }}
+                startIcon={<ArrowBackIos />}
+                href='/'
+                variant='text'
               >
-                Inicia sesión
+                REGRESAR
               </Button>
+            </Grid>
+          </Grid>
+          <Avatar sx={{ m: 1, bgcolor: '#8EC167' }}>
+            <PetsIcon sx={{ color: '#FFF' }} />
+          </Avatar>
+          <Typography component='h1' variant='h5'>
+            Inicia sesión
+          </Typography>
+          <Box
+            component='form'
+            noValidate
+            onSubmit={formik.handleSubmit}
+            sx={{ mt: 1 }}
+          >
+            <TextField
+              margin='normal'
+              required
+              fullWidth
+              id='email'
+              label='Correo electrónico'
+              name='email'
+              autoComplete='email'
+              autoFocus
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              error={formik.touched.email && Boolean(formik.errors.email)}
+              helperText={formik.touched.email && formik.errors.email}
+            />
+            <TextField
+              margin='normal'
+              required
+              fullWidth
+              name='password'
+              label='Contraseña'
+              type='password'
+              id='password'
+              autoComplete='current-password'
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              error={formik.touched.password && Boolean(formik.errors.password)}
+              helperText={formik.touched.password && formik.errors.password}
+            />
 
-              <Divider> O </Divider>
+            <Button
+              type='submit'
+              fullWidth
+              variant='contained'
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Inicia sesión
+            </Button>
 
-              <Button
-                variant='outlined'
-                sx={{ mt: 2, mb: 2 }}
-                startIcon={<Google />}
-                fullWidth
-                onClick={() => {
-                  googleSingIn();
+            <Divider> O </Divider>
+
+            <Button
+              variant='outlined'
+              sx={{ mt: 2, mb: 2 }}
+              startIcon={<Google />}
+              fullWidth
+              onClick={() => {
+                googleSingIn();
+              }}
+            >
+              Inicia sesión con Google
+            </Button>
+
+            {error && (
+              <Alerta
+                type={'error'}
+                title={'¡Fallo inicio de sesión!'}
+                message={'Correo electrónico o contraseña incorrecta'}
+                strong={'Verifica tus credenciales.'}
+              />
+            )}
+
+            {/* Mostrar CircularProgress si loading es true */}
+            {loading && (
+              <div
+                style={{
+                  position: 'fixed',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  zIndex: 9999,
+                  background: 'rgba(255, 255, 255, 0.5)',
                 }}
               >
-                Inicia sesión con Google
-              </Button>
-
-              {error && (
-                <Alerta
-                  type={'error'}
-                  title={'¡Fallo inicio de sesión!'}
-                  message={'Correo electrónico o contraseña incorrecta'}
-                  strong={'Verifica tus credenciales.'}
-                />
-              )}
-
-              {/* Mostrar CircularProgress si loading es true */}
-              {loading && (
                 <div
                   style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
                     display: 'flex',
-                    justifyContent: 'center',
                     alignItems: 'center',
-                    zIndex: 9999,
-                    background: 'rgba(255, 255, 255, 0.5)',
+                    justifyContent: 'center',
                   }}
                 >
+                  <CircularProgress
+                    size={140}
+                    variant='determinate'
+                    sx={{ color: '#795548' }}
+                    value={progress}
+                  />
                   <div
                     style={{
+                      position: 'absolute',
                       display: 'flex',
-                      alignItems: 'center',
                       justifyContent: 'center',
+                      alignItems: 'center',
+                      width: '100%',
+                      height: '100%',
                     }}
                   >
-                    <CircularProgress
-                      size={140}
-                      variant='determinate'
-                      sx={{ color: '#795548' }}
-                      value={progress}
-                    />
-                    <div
-                      style={{
-                        position: 'absolute',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        width: '100%',
-                        height: '100%',
+                    <Avatar
+                      sx={{
+                        width: 100,
+                        height: 100,
+                        backgroundColor: '#795548',
                       }}
                     >
-                      <Avatar
-                        sx={{
-                          width: 100,
-                          height: 100,
-                          backgroundColor: '#795548',
-                        }}
-                      >
-                        <PetsIcon sx={{ fontSize: 60 }} />
-                      </Avatar>
-                    </div>
+                      <PetsIcon sx={{ fontSize: 60 }} />
+                    </Avatar>
                   </div>
                 </div>
-              )}
+              </div>
+            )}
 
-              <Grid container>
-                <Grid item xs>
-                  {/* FORGOT PASSWORD COMPONENT */}
-                  {/* Contiene un cuadro Dialogo para ingresar 
+            <Grid container>
+              <Grid item xs>
+                {/* FORGOT PASSWORD COMPONENT */}
+                {/* Contiene un cuadro Dialogo para ingresar 
                     correo de recuperación de contraseña*/}
-                  <ForgotPassword />
-                </Grid>
-                <Grid item>
-                  <Link href='/register' variant='body2'>
-                    {'¿No tienes una cuenta? Regístrate'}
-                  </Link>
-                </Grid>
+                <ForgotPassword />
               </Grid>
-              <Copyright sx={{ mt: 5 }} />
-            </Box>
+              <Grid item>
+                <Link href='/register' variant='body2'>
+                  {'¿No tienes una cuenta? Regístrate'}
+                </Link>
+              </Grid>
+            </Grid>
+            <Copyright sx={{ mt: 5 }} />
           </Box>
-        </Grid>
+        </Box>
       </Grid>
+    </Grid>
   );
 }

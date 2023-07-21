@@ -45,9 +45,7 @@ export function AuthProvider(props) {
       const response = await userController.getUser(accessToken);
       setUser(response);
       setToken(accessToken);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const reLogin = async (refreshToken) => {

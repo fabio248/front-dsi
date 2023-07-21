@@ -12,9 +12,7 @@ export default function Cliente_Register() {
       telefono: '',
       nacionalidad: '',
     },
-    onSubmit: (values) => {
-      console.log(values);
-    },
+    onSubmit: (values) => {},
     validate: (values) => {
       const errors = {};
 

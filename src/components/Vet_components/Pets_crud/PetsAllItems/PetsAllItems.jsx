@@ -60,7 +60,7 @@ export function PetsAllItems({ pet }) {
   const queryClient = useQueryClient();
   const deletePetMutation = useMutation({
     mutationFn: async () => {
-      const accessToken = await authController.getAccessToken();
+      const accessToken = authController.getAccessToken();
       return await petController.deletePet(accessToken, pet.id);
     },
     onSuccess: () => {

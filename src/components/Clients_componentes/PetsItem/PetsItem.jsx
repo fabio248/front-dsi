@@ -19,7 +19,6 @@ export function PetsItem(props) {
     backgroundColor: theme.palette.background.paper,
   }));
 
-  console.log(pet);
   return (
     <div>
       {' '}

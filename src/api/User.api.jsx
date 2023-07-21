@@ -12,6 +12,7 @@ export class User {
 
       // URL de conexion con el backend
       const url = `${config.baseApi}/${configApiBackend.users}/${USER_ID}`;
+
       const params = {
         method: 'GET', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
         headers: {

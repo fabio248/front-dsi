@@ -49,7 +49,7 @@ export function ListeredAllPets() {
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Grid container spacing={3} alignItems='center'>
           <Grid item>
-            <Tabs aria-label='basic tabs example'>
+            <Tabs value={0} aria-label='basic tabs example'>
               <Tab icon={<PetsIcon />} label='Mascotas' {...a11yProps(0)} />
             </Tabs>
           </Grid>

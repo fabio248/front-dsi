@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { ApiAuth } from '../../../../api/Auth.api';
 import { map } from 'lodash';
 import { UserItem } from '../UserItem';
@@ -42,11 +42,11 @@ export function ListUsers() {
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Grid container spacing={3} alignItems='center'>
           <Grid item>
-            <Tabs aria-label='basic tabs example'>
+            <Tabs value={0} aria-label='basic tabs example'>
               <Tab
                 icon={<PeopleOutlineIcon />}
                 label='Usuarios'
-                id={`simple-tab-0`}
+                {...a11yProps(0)}
               />
             </Tabs>
           </Grid>
@@ -98,9 +98,9 @@ export function ListUsers() {
   );
 }
 
-function a11yProps() {
+function a11yProps(index) {
   return {
-    id: `simple-tab-0`,
-    'aria-controls': `simple-tabpanel-0`,
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
   };
 }

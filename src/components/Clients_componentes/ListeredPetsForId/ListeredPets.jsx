@@ -16,32 +16,29 @@ import { ApiAuth } from '../../../api/Auth.api';
 
 // estilos
 import './ListeredPets.css';
+import { useQuery } from '@tanstack/react-query';
 
 const petsController = new Pets();
 const apiAuthController = new ApiAuth();
 
 export function ListeredPets() {
-  const [userAnPet, setUserAndPet] = useState(false);
-  const [dataUser, setDataUser] = useState(false);
+  const accessToken = apiAuthController.getAccessToken();
+  const { identify } = decoderToken(accessToken);
 
-  useEffect(() => {
-    (async () => {
-      const dataAccess = apiAuthController.getAccessToken();
-
-      const { identify } = decoderToken(dataAccess);
-
+  const { data = [] } = useQuery({
+    queryKey: ['pets', { id: identify }],
+    queryFn: async () => {
       const response = await petsController.getPetsForUsers(
-        dataAccess,
+        accessToken,
         identify
       );
-      setUserAndPet(response.pets);
-      setDataUser(response);
-    })();
-  }, []);
+      return response;
+    },
+  });
 
-  if (!userAnPet) return <CircularProgress />;
+  if (!data.pets) return <CircularProgress />;
 
-  if (size(userAnPet) === 0) {
+  if (size(data.pets) === 0) {
     return (
       <Typography variant='h6' style={{ textAlign: 'center' }}>
         No se encontraron mascotas registradas, consulte al veterinario.
@@ -51,8 +48,8 @@ export function ListeredPets() {
 
   return (
     <div>
-      {map(userAnPet, (pets) => (
-        <PetsItem key={pets.id} pet={pets} dataUser={dataUser} />
+      {map(data.pets, (pet) => (
+        <PetsItem key={pet.id} pet={pet} />
       ))}
     </div>
   );

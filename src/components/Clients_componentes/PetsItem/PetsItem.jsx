@@ -8,13 +8,9 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import { Divider, Avatar } from '@mui/material';
 
-import { format } from 'date-fns';
-
 import PetsIcon from '@mui/icons-material/Pets';
 
-export function PetsItem(props) {
-  const { pet, dataUser } = props;
-
+export function PetsItem({ pet }) {
   const Demo = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
   }));

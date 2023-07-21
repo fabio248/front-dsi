@@ -14,6 +14,7 @@ import { AppoinmentsItems } from '../AppoinmentsItem';
 
 import { ApiAuth } from '../../../api/Auth.api';
 import { ApiCitas } from '../../../api/Appointment.api';
+import { useQuery } from '@tanstack/react-query';
 
 // estilos
 
@@ -21,26 +22,19 @@ const apiAuthController = new ApiAuth();
 const apiCitaController = new ApiCitas();
 
 export function ListeredAppointByEmail() {
-  const [eventsOfuser, setEventsOfuser] = useState(false);
+  const accessToken = apiAuthController.getAccessToken();
 
-  useEffect(() => {
-    (async () => {
-      const dataAccess = apiAuthController.getAccessToken();
+  const { userEmail } = decoderToken(accessToken);
 
-      const { user_id } = decoderToken(dataAccess);
+  const { data: appointments, isLoading } = useQuery({
+    queryKey: ['appointments', { email: userEmail }],
+    queryFn: async () =>
+      await apiCitaController.AppoinmentsByEmail(accessToken, userEmail),
+  });
 
-      const events = await apiCitaController.AppoinmentsByEmail(
-        dataAccess,
-        user_id
-      );
+  if (isLoading) return <CircularProgress />;
 
-      setEventsOfuser(events);
-    })();
-  }, []);
-
-  if (!eventsOfuser) return <CircularProgress />;
-
-  if (size(eventsOfuser) === 0) {
+  if (size(appointments) === 0) {
     return (
       <Typography variant='h6' style={{ textAlign: 'center' }}>
         No se encontraron eventos Agendados, consulte al veterinario.
@@ -50,8 +44,8 @@ export function ListeredAppointByEmail() {
 
   return (
     <div>
-      {map(eventsOfuser, (eventsOfuser) => (
-        <AppoinmentsItems key={eventsOfuser.id} event={eventsOfuser} />
+      {map(appointments, (appointments) => (
+        <AppoinmentsItems key={appointments.id} event={appointments} />
       ))}
     </div>
   );

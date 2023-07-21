@@ -106,14 +106,14 @@ export function Users_Layouts(props) {
           color: 'black', // Color de texto deseado
         }}
       >
-        <ListItem disablePadding>
+        {/* <ListItem disablePadding>
           <ListItemButton>
             <ListItemIcon>
               <PhotoSizeSelectActualIcon />
             </ListItemIcon>
             <ListItemText primary='Galería de fotos' />
           </ListItemButton>
-        </ListItem>
+        </ListItem> */}
       </NavLink>
       <Divider />
 

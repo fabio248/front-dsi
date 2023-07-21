@@ -6,7 +6,7 @@ export function Historia_pages() {
   return (
     <div className='container'>
       {/* LightWidget WIDGET */}
-      <script src='https://cdn.lightwidget.com/widgets/lightwidget.js'></script>
+      {/* <script src='https://cdn.lightwidget.com/widgets/lightwidget.js'></script>
       <iframe
         src='//lightwidget.com/widgets/f6fd46029b3253689639b2126424e352.html'
         allowtransparency='true'
@@ -17,7 +17,7 @@ export function Historia_pages() {
           border: '0',
           overflow: 'hidden',
         }}
-      ></iframe>
+      ></iframe> */}
 
       <h2>{titulo}</h2>
       {parrafos.map((parrafo, index) => (

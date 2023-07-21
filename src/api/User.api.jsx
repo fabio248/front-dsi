@@ -65,6 +65,10 @@ export class User {
         delete data.password;
       }
 
+      if (data.email !== null) {
+        delete data.email;
+      }
+
       const url = `${config.baseApi}/${configApiBackend.users}/${idUser}`;
       const params = {
         method: 'PATCH', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)

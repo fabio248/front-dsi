@@ -5,6 +5,7 @@ import { Vet_Layouts } from '../layouts';
 import { useAuth } from '../hooks';
 import { ProtectedRoute } from '../components/Admin/Auth/ProtectedRoutes';
 import { PerfilUserAndPets } from '../pages';
+import { Layout } from '../shared/components/Layout';
 
 export function Vet_routes() {
   const { user } = useAuth();
@@ -14,16 +15,6 @@ export function Vet_routes() {
       return role === 'admin';
     }
   }
-
-  const Layout = (Layout, Pages) => {
-    return (
-      <>
-        <Layout>
-          <Pages />
-        </Layout>
-      </>
-    );
-  };
   return (
     <Routes>
       <Route

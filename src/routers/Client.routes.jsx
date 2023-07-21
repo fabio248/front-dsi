@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Routes, BrowserRouter } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import {
   Visualizar_pages,
   Catalogo_pages,
@@ -9,17 +9,10 @@ import {
 import { Clients_Layouts } from '../layouts';
 import { useAuth } from '../hooks';
 import { ProtectedRoute } from '../components/Admin/Auth/ProtectedRoutes';
+import { Layout } from '../shared/components/Layout';
 
 export function Clients_routes() {
   const { user } = useAuth();
-
-  const Layout = (Layout, Pages) => {
-    return (
-      <Layout>
-        <Pages />
-      </Layout>
-    );
-  };
 
   function isClient() {
     if (user != null) {
@@ -31,6 +24,7 @@ export function Clients_routes() {
   return (
     <Routes>
       <Route
+        exact
         path='/client/'
         element={
           <ProtectedRoute
@@ -39,16 +33,19 @@ export function Clients_routes() {
           />
         }
       >
-        <Route path='' element={Layout(Clients_Layouts, User_pages)} />
+        <Route exact path='' element={Layout(Clients_Layouts, User_pages)} />
         <Route
+          exact
           path='catalogo'
           element={Layout(Clients_Layouts, Catalogo_pages)}
         />
         <Route
+          exact
           path='mascotas'
           element={Layout(Clients_Layouts, Mascotas_pages)}
         />
         <Route
+          exact
           path='visualizar'
           element={Layout(Clients_Layouts, Visualizar_pages)}
         />

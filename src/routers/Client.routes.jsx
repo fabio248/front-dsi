@@ -31,6 +31,7 @@ export function Clients_routes() {
   return (
     <Routes>
       <Route
+        path='/client/'
         element={
           <ProtectedRoute
             isAllowed={!!user && isClient()}
@@ -38,17 +39,17 @@ export function Clients_routes() {
           />
         }
       >
-        <Route path='/client' element={Layout(Clients_Layouts, User_pages)} />
+        <Route path='' element={Layout(Clients_Layouts, User_pages)} />
         <Route
-          path='/client/catalogo'
+          path='catalogo'
           element={Layout(Clients_Layouts, Catalogo_pages)}
         />
         <Route
-          path='/client/mascotas'
+          path='mascotas'
           element={Layout(Clients_Layouts, Mascotas_pages)}
         />
         <Route
-          path='/client/visualizar'
+          path='visualizar'
           element={Layout(Clients_Layouts, Visualizar_pages)}
         />
       </Route>

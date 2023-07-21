@@ -29,21 +29,22 @@ export function Vet_routes() {
   return (
     <Routes>
       <Route
+        path='/admin/'
         element={
           <ProtectedRoute isAllowed={!!user && isAdmin()} redirectTo='/login' />
         }
       >
+        <Route path='' element={Layout(Vet_Layouts, Auth_pages)}></Route>
         <Route
-          path='/admin/userAndPets'
+          path='userAndPets'
           element={Layout(Vet_Layouts, UserAndPets)}
         ></Route>
-        <Route path='/admin' element={Layout(Vet_Layouts, Auth_pages)}></Route>
-        <Route path='/admin/users' element={Layout(Vet_Layouts, Users)}></Route>
+        <Route path='users' element={Layout(Vet_Layouts, Users)}></Route>
         <Route
-          path='/admin/calendar'
+          path='calendar'
           element={Layout(Vet_Layouts, AgendarCita)}
         ></Route>
-        <Route path='/admin/users/:userId' element={<PerfilUserAndPets />} />
+        <Route path='users/:userId' element={<PerfilUserAndPets />} />
       </Route>
     </Routes>
   );

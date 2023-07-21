@@ -6,8 +6,6 @@ import { useAuth } from '../hooks';
 import { ProtectedRoute } from '../components/Admin/Auth/ProtectedRoutes';
 import { PerfilUserAndPets } from '../pages';
 
-// const user = useAuth();
-
 export function Vet_routes() {
   const { user } = useAuth();
   function isAdmin() {
@@ -44,7 +42,10 @@ export function Vet_routes() {
           path='calendar'
           element={Layout(Vet_Layouts, AgendarCita)}
         ></Route>
-        <Route path='users/:userId' element={<PerfilUserAndPets />} />
+        <Route
+          path='users/:userId'
+          element={Layout(Vet_Layouts, PerfilUserAndPets)}
+        />
       </Route>
     </Routes>
   );

@@ -35,11 +35,7 @@ export function Vet_Layouts(props) {
   const drawer = (
     <div>
       <div className='image-container'>
-        <img
-          src='../../../public/galeria/logo.png'
-          alt='logo'
-          className='imagen-appbar'
-        />
+        <img src='/galeria/logo.png' alt='logo' className='imagen-appbar' />
       </div>
 
       <Divider sx={{ mt: -3 }} />

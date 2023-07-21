@@ -15,17 +15,22 @@ export function Auth_pages(props) {
         ¡Bienvenido a Clínica Veterinaria MISTUM!
       </Typography>
 
-      <Grid container spacing={2} justifyContent="center" style={{ marginBottom: '20px', marginTop: '20px' }}>
+      <Grid
+        container
+        spacing={2}
+        justifyContent='center'
+        style={{ marginBottom: '20px', marginTop: '20px' }}
+      >
         <Grid item xs={5}>
           <img
-            src='../../../public/galeria/favicon.png'
+            src='/galeria/favicon.png'
             alt='logo'
             style={{ width: '90%', height: 'auto' }}
           />
         </Grid>
       </Grid>
 
-      <Typography color='#8EC167' textAlign="center">
+      <Typography color='#8EC167' textAlign='center'>
         <h2>SALUD PARA TU MASCOTA</h2>
       </Typography>
       {children}

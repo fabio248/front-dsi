@@ -28,7 +28,7 @@ export function Historia_pages() {
 
       <div>
         <img
-          src='../../../public/galeria/huella.png'
+          src='/galeria/huella.png'
           alt='Huella'
           style={{ width: '100%', height: 'auto' }}
         />
@@ -39,7 +39,7 @@ export function Historia_pages() {
 
       <div>
         <img
-          src='../../../public/galeria/huella.png'
+          src='/galeria/huella.png'
           alt='Huella'
           style={{ width: '100%', height: 'auto' }}
         />
@@ -50,7 +50,7 @@ export function Historia_pages() {
 
       <div>
         <img
-          src='../../../public/galeria/cat.gif'
+          src='/galeria/cat.gif'
           alt='cat'
           style={{ width: '400px', height: 'auto' }}
         />

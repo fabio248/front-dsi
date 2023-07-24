@@ -48,7 +48,7 @@ export function Vet_Layouts(props) {
           }}
         >
           <ListItem disablePadding>
-            <ListItemButton component='a'>
+            <ListItemButton>
               <ListItemIcon>
                 <PeopleAltIcon />
               </ListItemIcon>
@@ -65,7 +65,7 @@ export function Vet_Layouts(props) {
           }}
         >
           <ListItem disablePadding>
-            <ListItemButton component='a'>
+            <ListItemButton>
               <ListItemIcon>
                 <EventIcon />
               </ListItemIcon>
@@ -77,7 +77,6 @@ export function Vet_Layouts(props) {
         <Divider />
         <ListItem disablePadding>
           <ListItemButton
-            component='a'
             href='https://calendar.google.com/calendar/u/0/r'
             target='_blank'
           >
@@ -97,7 +96,7 @@ export function Vet_Layouts(props) {
           }}
         >
           <ListItem disablePadding>
-            <ListItemButton component='a'>
+            <ListItemButton>
               <ListItemIcon>
                 <PersonAddAltIcon />
               </ListItemIcon>

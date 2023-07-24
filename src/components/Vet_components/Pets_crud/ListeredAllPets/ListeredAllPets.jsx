@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 //import petitions of back
 import { Pets } from '../../../../api/Pets.api';
@@ -18,31 +18,41 @@ import {
   CircularProgress,
   Grid,
   TextField,
+  Button,
 } from '@mui/material';
 import { map } from 'lodash';
-import { useQuery } from '@tanstack/react-query';
+import { useSearchParams } from 'react-router-dom';
+import { SearchInput } from '../../../../shared/components/SearchInput';
+import { useDebounce } from '../../../../hooks';
+import { usePet } from '../../../../hooks/UsePet';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 //clase Pets
-const petsController = new Pets();
 const apiAuthController = new ApiAuth();
 
 export function ListeredAllPets() {
+  const [query] = useSearchParams();
+  const search = query.get('search');
   const accessToken = apiAuthController.getAccessToken();
 
-  const { isLoading, data: pets } = useQuery({
-    queryKey: ['pets'],
-    queryFn: async () => await petsController.getAllPets(accessToken),
+  const deboncedQuery = useDebounce(search, 500);
+
+  const {
+    isLoading,
+    pets,
+    isFetching,
+    refetch,
+    hasNextPage,
+    fetchNextPage,
+    totalPets,
+  } = usePet({
+    accessToken,
+    search: deboncedQuery,
   });
 
-  if (isLoading) return <CircularProgress />;
-
-  if (!pets) {
-    return (
-      <Typography variant='h6' style={{ textAlign: 'center' }}>
-        ¡No Se Encontraron Mascotas registradas! :(
-      </Typography>
-    );
-  }
+  useEffect(() => {
+    refetch();
+  }, [deboncedQuery]);
 
   return (
     <div>
@@ -56,25 +66,9 @@ export function ListeredAllPets() {
           <Grid item sx={{ flexGrow: 1 }}>
             {/* Espacio flexible */}
           </Grid>
+          <Grid item>Total mascotas registradas: {totalPets}</Grid>
           <Grid item>
-            <TextField
-              style={{
-                width: '500px',
-                alignItems: 'left',
-                borderWidth: '2px',
-                borderRadius: '1px',
-                borderColor: 'antiquewhite',
-              }}
-              label='Buscar...'
-              placeholder='Introduce cualquier dato de la mascota del cliente...'
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position='start'>
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              }}
-            />
+            <SearchInput isFetching={isFetching} />
           </Grid>
         </Grid>
       </Box>
@@ -88,10 +82,35 @@ export function ListeredAllPets() {
           overflow: 'hidden',
         }}
       >
-        {map(pets, (pet) => (
-          <PetsAllItems key={pet.id} pet={pet} />
-        ))}
+        <InfiniteScroll
+          dataLength={pets.length}
+          hasMore={hasNextPage || isLoading}
+          next={() => fetchNextPage()}
+          scrollThreshold={0.5}
+        >
+          {map(pets, (pet) => (
+            <PetsAllItems key={pet.id} pet={pet} />
+          ))}
+        </InfiniteScroll>
       </div>
+
+      {hasNextPage & !isFetching ? (
+        <Button onClick={() => fetchNextPage()}>Cargar más mascotas</Button>
+      ) : undefined}
+
+      {isFetching ? <CircularProgress /> : undefined}
+
+      {!hasNextPage & (pets.length !== 0) ? (
+        <Typography style={{ textAlign: 'center', fontWeight: 500 }}>
+          Ya tienes todos los mascotas cargados
+        </Typography>
+      ) : undefined}
+
+      {pets.length === 0 && !isFetching ? (
+        <Typography style={{ textAlign: 'center', fontWeight: 500 }}>
+          No hay mascotas {search ? 'con este filtro' : undefined}
+        </Typography>
+      ) : undefined}
     </div>
   );
 }

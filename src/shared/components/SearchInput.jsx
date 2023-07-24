@@ -14,7 +14,7 @@ export const SearchInput = ({ isFetching }) => {
     <form onSubmit={handleSubmit}>
       <TextField
         style={{
-          width: '300px',
+          width: '350px',
           borderWidth: '2px',
           borderRadius: '1px',
           borderColor: 'antiquewhite',

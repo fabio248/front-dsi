@@ -7,16 +7,9 @@ import {
   Galeria_pages,
 } from '../pages';
 import { Users_Layouts } from '../layouts';
+import { Layout } from '../shared/components/Layout';
 
 export function Users_routes() {
-  const Layout = (Layout, Pages) => {
-    return (
-      <Layout>
-        <Pages />
-      </Layout>
-    );
-  };
-
   return (
     <Routes>
       <Route path='/' element={Layout(Users_Layouts, Catalogo_pages)} />

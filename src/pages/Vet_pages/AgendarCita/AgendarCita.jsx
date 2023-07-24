@@ -55,7 +55,6 @@ const AgendarCita = ({ event }) => {
             formValue
           );
           queryClient.invalidateQueries(['appointments']);
-          createAppointmentMutation.mutate({ formValue });
           await createCalendarEvent();
         } else {
           //UPDATE

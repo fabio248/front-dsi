@@ -29,7 +29,7 @@ import { Alerta } from '../../shared/Alert';
 
 // API - Clase para autentificación
 import { ApiAuth } from '../../api/Auth.api';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 function Copyright(props) {
   return (
@@ -101,9 +101,11 @@ export function Registro() {
           alignItems: 'center',
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: '#8EC167' }}>
-          <PersonAddAltSharpIcon sx={{ color: '#FFF' }} />
-        </Avatar>
+        <NavLink to='/'>
+          <Avatar sx={{ m: 1, bgcolor: '#8EC167' }}>
+            <PersonAddAltSharpIcon sx={{ color: '#FFF' }} />
+          </Avatar>
+        </NavLink>
         <Typography component='h1' variant='h5'>
           Registrarme
         </Typography>
@@ -147,28 +149,6 @@ export function Registro() {
                 onChange={formik.handleChange}
               />
             </Grid>
-            {/*<Grid item xs={12}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['DatePicker']}>
-                <DatePicker
-                  onError={(newError) => setError(newError)}
-                  slotProps={{
-                    textField: {
-                      helperText: formik.errors.fechaNacimiento,
-                      fullWidth: true,
-                      required: true
-                    },
-                  }}
-                  label = 'Fecha de nacimiento'
-                  name = 'fechaNacimiento'
-                  id = 'fechaNacimiento'
-                  value={dayjs.locale()}
-                  onChange={handleDateChange}
-                  onBlur={formik.handleBlur('fechaNacimiento')}
-                />
-                </DemoContainer>
-                </LocalizationProvider>
-                </Grid>*/}
             <Grid item xs={12} sm={12}>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker

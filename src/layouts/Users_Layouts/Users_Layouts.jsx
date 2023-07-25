@@ -36,8 +36,6 @@ export function Users_Layouts(props) {
     setMobileOpen(!mobileOpen);
   };
 
-  const render_cliente = () => {};
-
   const drawer = (
     <div>
       <div className='image-container'>
@@ -182,6 +180,19 @@ export function Users_Layouts(props) {
                       href='/login'
                     >
                       INICIAR SESION
+                    </Button>
+                    <Button
+                      className='btn-login'
+                      variant='contained'
+                      style={{
+                        backgroundColor: '#ffffff',
+                        left: '3px',
+                        color: '#573874',
+                        fontWeight: 'bold',
+                      }}
+                      href='/register'
+                    >
+                      REGISTRARSE
                     </Button>
                   </div>
                 </Typography>

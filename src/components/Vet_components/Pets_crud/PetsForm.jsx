@@ -610,8 +610,7 @@ const PetsForm = (props) => {
 
   const createPetMutation = useMutation({
     mutationFn: async ({ idUser, formValue }) => {
-      const { accessToken } = useAuth();
-
+      const accessToken = authController.getAccessToken();
       return await petsController.createPets(accessToken, idUser, formValue);
     },
     onSuccess: () => {
@@ -625,7 +624,7 @@ const PetsForm = (props) => {
 
   const updatePetMuatation = useMutation({
     mutationFn: async ({ petId, formValue }) => {
-      const { accessToken } = useAuth();
+      const accessToken = authController.getAccessToken();
       return await petsController.updatePets(accessToken, petId, formValue);
     },
     onSuccess: () => {

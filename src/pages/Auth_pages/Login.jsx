@@ -13,8 +13,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
@@ -22,7 +20,6 @@ import Grid from '@mui/material/Grid';
 import PetsIcon from '@mui/icons-material/Pets';
 import { ArrowBackIos } from '@mui/icons-material';
 import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Divider } from '@mui/material';
 import { Google } from '@mui/icons-material';
 import { CircularProgress } from '@mui/material';
@@ -41,6 +38,7 @@ import { useAuth } from '../../hooks';
 
 // Google Authentication
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { useMutation } from '@tanstack/react-query';
 
 // API Object
 const authLoginController = new ApiAuth();
@@ -63,41 +61,41 @@ function Copyright(props) {
   );
 }
 
-const defaultTheme = createTheme();
-
 export function Login() {
   const { login } = useAuth();
-  const [error, setError] = useState('');
+  const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const navigate = useNavigate();
+
+  const loginMutation = useMutation({
+    mutationFn: async ({ formValue }) => {
+      setError(false);
+      return await authLoginController.login(formValue);
+    },
+    onSuccess: async (data) => {
+      authLoginController.setAccessToken(data.accessToken);
+      authLoginController.setRefreshToken(data.accessToken);
+      // Guarda logueo en contexto de la aplicación
+      await login(data.accessToken);
+
+      // Se obtiene el rol del usuario
+      const { role } = decoderToken(data.accessToken);
+
+      // Redirige en base al rol del usuario logueado.
+      navigate('/' + verifyRole(role));
+    },
+    onError: () => {
+      setError(true);
+    },
+  });
 
   const formik = useFormik({
     initialValues: initialData(),
     validationSchema: LoginFormvalidations(),
     validateOnChange: false,
     onSubmit: async (formValue) => {
-      try {
-        setError('');
-
-        // Ejecuta funcion asincrona con la peticion de logueo al BackEnd
-        const response = await authLoginController.login(formValue);
-
-        // Almacena los token en LocalStorage
-        authLoginController.setAccessToken(response.accessToken);
-        authLoginController.setRefreshToken(response.accessToken);
-
-        // Guarda logueo en contexto de la aplicación
-        await login(response.accessToken);
-
-        // Se obtiene el rol del usuario
-        const { role } = decoderToken(response.accessToken);
-
-        // Redirige en base al rol del usuario logueado.
-        navigate('/' + verifyRole(role));
-      } catch (error) {
-        setError('Error al enviar datos de registro');
-      }
+      loginMutation.mutate({ formValue });
     },
   });
 
@@ -277,8 +275,9 @@ export function Login() {
               fullWidth
               variant='contained'
               sx={{ mt: 3, mb: 2 }}
+              disabled={loginMutation.isLoading ? true : false}
             >
-              Inicia sesión
+              {loginMutation.isLoading ? <CircularProgress /> : 'Inicia sesión'}
             </Button>
 
             <Divider> O </Divider>

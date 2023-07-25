@@ -102,7 +102,7 @@ export function ListUsers() {
         </Typography>
       ) : undefined}
 
-      {users.length === 0 ? (
+      {users.length === 0 && !isFetching ? (
         <Typography style={{ textAlign: 'center', fontWeight: 500 }}>
           No hay usuarios {search ? 'con este filtro' : undefined}
         </Typography>

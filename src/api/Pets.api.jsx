@@ -23,9 +23,14 @@ export class Pets {
   }
 
   //ENCONTRAR TODAS LAS MASCOTAS
-  async getAllPets(accessToken) {
+  async getAllPets(accessToken, page = 1, search = null) {
     try {
-      const url = `${config.baseApi}/${configApiBackend.pets}`;
+      let url = `${config.baseApi}/${configApiBackend.pets}?page=${page}&limit=5`;
+
+      if (search) {
+        url = `${config.baseApi}/${configApiBackend.pets}?search=${search}&page=${page}&limit=5`;
+      }
+
       const params = {
         method: 'GET',
         headers: {
@@ -36,6 +41,7 @@ export class Pets {
       const result = await response.json();
 
       if (response.status !== 200) throw result;
+
       return result;
     } catch (error) {
       throw error;

@@ -6,7 +6,7 @@ export function Historia_pages() {
   return (
     <div className='container'>
       {/* LightWidget WIDGET */}
-      <script src='https://cdn.lightwidget.com/widgets/lightwidget.js'></script>
+      {/* <script src='https://cdn.lightwidget.com/widgets/lightwidget.js'></script>
       <iframe
         src='//lightwidget.com/widgets/f6fd46029b3253689639b2126424e352.html'
         allowtransparency='true'
@@ -17,7 +17,7 @@ export function Historia_pages() {
           border: '0',
           overflow: 'hidden',
         }}
-      ></iframe>
+      ></iframe> */}
 
       <h2>{titulo}</h2>
       {parrafos.map((parrafo, index) => (
@@ -28,7 +28,7 @@ export function Historia_pages() {
 
       <div>
         <img
-          src='../../../public/galeria/huella.png'
+          src='/galeria/huella.png'
           alt='Huella'
           style={{ width: '100%', height: 'auto' }}
         />
@@ -39,7 +39,7 @@ export function Historia_pages() {
 
       <div>
         <img
-          src='../../../public/galeria/huella.png'
+          src='/galeria/huella.png'
           alt='Huella'
           style={{ width: '100%', height: 'auto' }}
         />
@@ -50,7 +50,7 @@ export function Historia_pages() {
 
       <div>
         <img
-          src='../../../public/galeria/cat.gif'
+          src='/galeria/cat.gif'
           alt='cat'
           style={{ width: '400px', height: 'auto' }}
         />

@@ -1,19 +1,14 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { User } from '../api/User.api';
+import { Pets } from '../api/Pets.api';
 
-const userController = new User();
+const petsController = new Pets();
 
-export function useUser({ accessToken, search }) {
-  let totalUsers = 0;
+export function usePet({ accessToken, search }) {
+  let totalPets = 0;
   const result = useInfiniteQuery({
-    queryKey: ['users', search],
+    queryKey: ['pets', { search }],
     queryFn: async ({ pageParam = 1 }) => {
-      const data = await userController.getAllUsers(
-        accessToken,
-        pageParam,
-        search
-      );
-      return data;
+      return await petsController.getAllPets(accessToken, pageParam, search);
     },
     getNextPageParam: (lastPage) => {
       if (!lastPage.hasNextPage) return;
@@ -22,15 +17,15 @@ export function useUser({ accessToken, search }) {
     },
   });
 
-  const users =
+  const pets =
     result.data?.pages.reduce((prevUsers, page) => {
-      totalUsers = page.totalItems;
+      totalPets = page.totalItems;
       return prevUsers.concat(page.data);
     }, []) ?? [];
 
   return {
     ...result,
-    users,
-    totalUsers,
+    pets,
+    totalPets,
   };
 }

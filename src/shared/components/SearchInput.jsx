@@ -1,9 +1,4 @@
-import {
-  CircularProgress,
-  Grid,
-  InputAdornment,
-  TextField,
-} from '@mui/material';
+import { CircularProgress, InputAdornment, TextField } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useSearchParams } from 'react-router-dom';
 
@@ -19,8 +14,7 @@ export const SearchInput = ({ isFetching }) => {
     <form onSubmit={handleSubmit}>
       <TextField
         style={{
-          width: '500px',
-          alignItems: 'left',
+          width: '350px',
           borderWidth: '2px',
           borderRadius: '1px',
           borderColor: 'antiquewhite',
@@ -30,8 +24,8 @@ export const SearchInput = ({ isFetching }) => {
           const value = event.target.value;
           setQuery({ search: value });
         }}
-        label='Buscar...'
-        placeholder='Introduce cualquier dato...'
+        label='Buscar'
+        placeholder='Introduce cualquier dato'
         InputProps={{
           startAdornment: (
             <InputAdornment position='start'>

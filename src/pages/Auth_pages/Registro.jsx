@@ -18,38 +18,20 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import { FormHelperText } from '@mui/material';
+import { CircularProgress, FormHelperText } from '@mui/material';
 import PersonAddAltSharpIcon from '@mui/icons-material/PersonAddAltSharp';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 // Componentes y funciones personalizadas
 import { Alerta } from '../../shared/Alert';
 
 // API - Clase para autentificación
 import { ApiAuth } from '../../api/Auth.api';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+import { Copyright } from '../../shared/components/Copyright';
 
-function Copyright(props) {
-  return (
-    <Typography
-      variant='body2'
-      color='text.secondary'
-      align='center'
-      {...props}
-    >
-      {'Copyright © '}
-      <Link color='inherit' href='#'>
-        DSI Project
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
-const defaultTheme = createTheme();
 const authController = new ApiAuth();
 
 export function Registro() {
@@ -57,32 +39,37 @@ export function Registro() {
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
+  const createUserMutation = useMutation({
+    mutationFn: async ({ formValue }) => {
+      await authController.registerUser(formValue);
+    },
+    onSuccess: () => {
+      setError('');
+      setSuccess(true);
+      formik.resetForm();
+      setTimeout(() => {
+        navigate('/login');
+        setSuccess(false);
+      }, 2000);
+    },
+    onError: (error) => {
+      if (error.statusCode === 409) {
+        setError('El correo eletrónico ya se encuentra registrado');
+      } else {
+        setError('No ha podido completar su registro');
+      }
+      setTimeout(() => {
+        setError('');
+      }, 6000);
+    },
+  });
+
   const formik = useFormik({
     initialValues: initialData(),
     validationSchema: RegisterFormvalidations(),
     validateOnChange: false,
     onSubmit: async (formValue) => {
-      try {
-        setError('');
-
-        // Ejecuta funcion asincrona con la peticion de registro al BackEnd
-        await authController.registerUser(formValue);
-        setSuccess(true);
-        formik.resetForm();
-        setTimeout(() => {
-          navigate('/login');
-          setSuccess(false);
-        }, 2000);
-      } catch (error) {
-        if (error.statusCode === 409) {
-          setError('El correo eletrónico ya se encuentra registrado');
-        } else {
-          setError('No ha podido completar su registro');
-        }
-        setTimeout(() => {
-          setError('');
-        }, 6000);
-      }
+      createUserMutation.mutate({ formValue });
     },
   });
 
@@ -101,9 +88,11 @@ export function Registro() {
           alignItems: 'center',
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: '#8EC167' }}>
-          <PersonAddAltSharpIcon sx={{ color: '#FFF' }} />
-        </Avatar>
+        <NavLink to='/'>
+          <Avatar sx={{ m: 1, bgcolor: '#8EC167' }}>
+            <PersonAddAltSharpIcon sx={{ color: '#FFF' }} />
+          </Avatar>
+        </NavLink>
         <Typography component='h1' variant='h5'>
           Registrarme
         </Typography>
@@ -147,28 +136,6 @@ export function Registro() {
                 onChange={formik.handleChange}
               />
             </Grid>
-            {/*<Grid item xs={12}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['DatePicker']}>
-                <DatePicker
-                  onError={(newError) => setError(newError)}
-                  slotProps={{
-                    textField: {
-                      helperText: formik.errors.fechaNacimiento,
-                      fullWidth: true,
-                      required: true
-                    },
-                  }}
-                  label = 'Fecha de nacimiento'
-                  name = 'fechaNacimiento'
-                  id = 'fechaNacimiento'
-                  value={dayjs.locale()}
-                  onChange={handleDateChange}
-                  onBlur={formik.handleBlur('fechaNacimiento')}
-                />
-                </DemoContainer>
-                </LocalizationProvider>
-                </Grid>*/}
             <Grid item xs={12} sm={12}>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
@@ -256,8 +223,13 @@ export function Registro() {
             fullWidth
             variant='contained'
             sx={{ mt: 3, mb: 2 }}
+            disabled={createUserMutation.isLoading ? true : false}
           >
-            Registrarme
+            {createUserMutation.isLoading ? (
+              <CircularProgress />
+            ) : (
+              'Registrarme'
+            )}
           </Button>
           {success && (
             <Alerta

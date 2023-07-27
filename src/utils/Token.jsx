@@ -1,20 +1,19 @@
-import jwt_decode from "jwt-decode";
+import jwt_decode from 'jwt-decode';
 
 // Decodifica un token
-export function decoderToken(token){
-    return jwt_decode(token);
+export function decoderToken(token) {
+  return jwt_decode(token);
 }
 
 // Verifica expiración de token
-export function hasExpiredToken(token){
+export function hasExpiredToken(token) {
+  let { exp } = decoderToken(token);
 
-    const exp = decoderToken(token);
+  const currentData = new Date().getTime();
 
-    const currentData = new Date().getTime();
+  if (exp <= currentData) {
+    return true;
+  }
 
-    if (exp <= currentData) {
-        return true;
-    }
-
-    return false;
+  return false;
 }

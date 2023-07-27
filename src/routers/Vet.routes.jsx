@@ -5,8 +5,7 @@ import { Vet_Layouts } from '../layouts';
 import { useAuth } from '../hooks';
 import { ProtectedRoute } from '../components/Admin/Auth/ProtectedRoutes';
 import { PerfilUserAndPets } from '../pages';
-
-// const user = useAuth();
+import { Layout } from '../shared/components/Layout';
 
 export function Vet_routes() {
   const { user } = useAuth();
@@ -16,34 +15,25 @@ export function Vet_routes() {
       return role === 'admin';
     }
   }
-
-  const Layout = (Layout, Pages) => {
-    return (
-      <>
-        <Layout>
-          <Pages />
-        </Layout>
-      </>
-    );
-  };
   return (
     <Routes>
       <Route
+        path='/admin/'
         element={
           <ProtectedRoute isAllowed={!!user && isAdmin()} redirectTo='/login' />
         }
       >
+        <Route path='' element={Layout(Vet_Layouts, Auth_pages)}></Route>
         <Route
-          path='/admin/userAndPets'
+          path='userAndPets'
           element={Layout(Vet_Layouts, UserAndPets)}
         ></Route>
-        <Route path='/admin' element={Layout(Vet_Layouts, Auth_pages)}></Route>
-        <Route path='/admin/users' element={Layout(Vet_Layouts, Users)}></Route>
+        <Route path='users' element={Layout(Vet_Layouts, Users)}></Route>
         <Route
-          path='/admin/calendar'
+          path='calendar'
           element={Layout(Vet_Layouts, AgendarCita)}
         ></Route>
-        <Route path='/admin/users/:userId' element={<PerfilUserAndPets />} />
+        <Route path='users/:userId' element={<PerfilUserAndPets />} />
       </Route>
     </Routes>
   );

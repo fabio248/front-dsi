@@ -15,18 +15,17 @@ import { ApiAuth } from '../../../api/Auth.api';
 import { Grid, TextField, Button, Divider, Box } from '@mui/material';
 
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { FormHelperText } from '@mui/material';
-import { format } from 'date-fns';
 
 // Componentes y funciones personalizadas
 import { Alerta } from '../../../shared/Alert';
 
 // Estilos
 import './AgendarCita.css';
-import { set } from 'lodash';
+import { useQueryClient } from '@tanstack/react-query';
 
 const appointmentcontroller = new ApiCitas();
 const authController = new ApiAuth();
@@ -35,11 +34,11 @@ const authController = new ApiAuth();
 const googleErrorMessage =
   'Inicia sesión con Google para poder crear evento en Google Calendar';
 
-const AgendarCita = (props) => {
-  const { close, onReload, event } = props;
+const AgendarCita = ({ event }) => {
   const [eventError, setEventError] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const queryClient = useQueryClient();
 
   const formik = useFormik({
     initialValues: initialValues(event),
@@ -47,30 +46,35 @@ const AgendarCita = (props) => {
     validateOnChange: false,
 
     onSubmit: async (formValue) => {
-      const accessToken = authController.getAccessToken();
       try {
         if (!event) {
+          const accessToken = authController.getAccessToken();
+
           await appointmentcontroller.registerAppointment(
             accessToken,
             formValue
           );
+          queryClient.invalidateQueries(['appointments']);
           await createCalendarEvent();
         } else {
           //UPDATE
         }
         setSuccess(true);
         formik.resetForm();
+
         setTimeout(() => {
           setSuccess(false);
         }, 6000);
       } catch (err) {
         if (err.message == googleErrorMessage) {
           setEventError(err.message);
-        } else if (err.statusCode === 409) {
+        }
+        if (err.statusCode === 409) {
           setError('Ya existe cita en este horario');
         } else {
           setError(err.message);
         }
+
         setTimeout(() => {
           setError('');
           setEventError('');

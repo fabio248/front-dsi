@@ -14,7 +14,8 @@ const configApiBackend = {
   pets: import.meta.env.VITE_PETS,
   species: import.meta.env.VITE_SPECIES,
   appointments: import.meta.env.VITE_APPOINTMENTS,
-  files: import.meta.env.VITE_FILE,
+  supabaseUrl: import.meta.env.VITE_SUPABASEURL,
+  supabaseKey: import.meta.env.VITE_SUPABASEKEY,
 };
 
 const configJwt = {
@@ -23,4 +24,9 @@ const configJwt = {
   providerToken: import.meta.env.VITE_PROVIDERTOKEN,
 };
 
-export { config, configApiBackend, configJwt };
+const supabase = {
+  supabaseUrl: import.meta.env.VITE_SUPABASEURL,
+  supabaseKey: import.meta.env.VITE_SUPABASEKEY,
+};
+
+export { config, configApiBackend, configJwt, supabase };

@@ -43,16 +43,12 @@ export function Clients_Layouts(props) {
 
   const drawer = (
     <div className='main-container'>
-      <div className="image-container">
-        <img
-          src="../../../public/galeria/logo.png"
-          alt="logo"
-          className="imagen-appbar"
-        />
+      <div className='image-container'>
+        <img src='/galeria/logo.png' alt='logo' className='imagen-appbar' />
       </div>
-      <Divider sx = {{ mt: -3}}/>
+      <Divider sx={{ mt: -3 }} />
       <List>
-        <ListItem disablePadding >
+        <ListItem disablePadding>
           <NavLink
             to='/client/catalogo'
             style={{
@@ -77,7 +73,7 @@ export function Clients_Layouts(props) {
             color: 'black', // Color de texto deseado
           }}
         >
-          <ListItem disablePadding >
+          <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
                 <InfoIcon />

@@ -16,6 +16,7 @@ const configApiBackend = {
   appointments: import.meta.env.VITE_APPOINTMENTS,
   supabaseUrl: import.meta.env.VITE_SUPABASEURL,
   supabaseKey: import.meta.env.VITE_SUPABASEKEY,
+  files: import.meta.env.VITE_FILE,
 };
 
 const configJwt = {

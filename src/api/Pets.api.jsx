@@ -1,5 +1,6 @@
 import { config, configApiBackend } from '../config';
 import { format } from 'date-fns';
+import axios from 'axios';
 export class Pets {
   async getPetsForUsers(accessToken, userId) {
     try {
@@ -102,25 +103,45 @@ export class Pets {
     }
   }
 
-  async filePets(accessToken, petId, data) {
+  async filePets(accessToken, fileType, petId) {
     try {
-      const formData = new FormData();
-
-      Object.keys(data).forEach((key) => {
-        formData.append(key, data[key]);
-      });
-      if (data.file) {
-        formData.append('exam', data.file);
-      }
-
-      const url = `${config.baseApi}/${configApiBackend.pets}/${petId}`;
+      const url = `${config.baseApi}/${configApiBackend.files}/${petId}`;
       const params = {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
         },
-        body: formData,
+        body: JSON.stringify({
+          mimetype: fileType,
+        }),
       };
+      console.log(fileType);
+      const response = await fetch(url, params);
+      const result = await response.json();
+
+      if (response.status !== 201) throw result;
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async amazonQuery(urlComming, fileBuffer, fileOriginal) {
+    try {
+      if (!fileBuffer || !fileOriginal) {
+        return; // Salir de la función sin hacer nada
+      }
+      // Convert the ArrayBuffer to a Blob with the correct content type
+      const blob = new Blob([fileBuffer], { type: fileOriginal.type });
+
+      // Perform the request using Axios
+      const response = await axios.put(urlComming, blob, {
+        headers: {
+          'Content-Type': fileOriginal.type,
+        },
+      });
+      return response.data;
     } catch (error) {
       throw error;
     }

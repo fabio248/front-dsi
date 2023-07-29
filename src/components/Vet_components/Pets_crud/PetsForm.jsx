@@ -32,7 +32,6 @@ import { Alerta } from '../../../shared';
 
 //hooks accessToken
 import { useAuth } from '../../../hooks';
-
 // Validations and initialValues
 import {
   initialPetValues,
@@ -42,44 +41,55 @@ import {
 //estilos
 import './PetsFrom.css';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect } from 'react';
 
 const specieController = new Species();
 const authController = new ApiAuth();
 const petsController = new Pets();
 
-export function PetFormTextFields({ formik }) {
+export function PetFormTextFields({ formik, onBinaryStrChange, onDropFile }) {
   const [uploadedFile, setUploadedFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [isError, setIsError] = useState(false);
-  const [species, setSpecies] = useState([]);
   const [openSpecieList, setOpenSpeciesList] = useState(false);
-  const fetchSpeciesCatalog = openSpecieList && species === 0;
 
-  const { data: speciesCatalog = [], isLoading } = useQuery({
+  const { data: speciesCatalog = [] } = useQuery({
     queryKey: ['species'],
     queryFn: async () => {
       const accessToken = authController.getAccessToken();
       const data = await specieController.getAllspecies(accessToken);
-      setSpecies(data);
       return data;
     },
   });
 
-  const onDrop = useCallback((acceptedFiles) => {
-    const file = acceptedFiles[0];
-    if (file && isFileValid(file)) {
-      setUploadedFile(file);
-      setErrorMessage('');
-      setIsError(false);
-    } else {
-      setUploadedFile(null);
-      setErrorMessage(
-        'Formato de archivo no válido. Se aceptan archivos PDF, Word y imágenes (PNG, JPG, JPEG).'
-      );
-      setIsError(true);
-    }
-  }, []);
+  const onDrop = useCallback(
+    (acceptedFiles) => {
+      const file = acceptedFiles[0];
+      if (file && isFileValid(file)) {
+        const reader = new FileReader();
+
+        reader.onload = () => {
+          const binaryStr = reader.result;
+          // console.log('binaryStr in PetFormTextFields:', binaryStr);
+          // Call the parent component function to pass the binaryStr value.
+          onBinaryStrChange(binaryStr);
+        };
+        reader.readAsArrayBuffer(file);
+
+        setUploadedFile(file);
+        setErrorMessage('');
+        setIsError(false);
+
+        onDropFile(file);
+      } else {
+        setUploadedFile(null);
+        setErrorMessage(
+          'Formato de archivo no válido. Se aceptan archivos PDF y imágenes (PNG, JPG, JPEG).'
+        );
+        setIsError(true);
+      }
+    },
+    [onBinaryStrChange]
+  );
 
   const isFileValid = (file) => {
     const acceptedFormats = [
@@ -606,12 +616,38 @@ const PetsForm = (props) => {
   const { close, pet, idUser } = props;
   const [isError, setIsError] = useState(false);
   const [success, setSuccess] = useState(false);
-  const queryClient = useQueryClient();
 
+  //data for file amazon
+  const [uploadData, setUploadData] = useState(null);
+  const [fileOriginal, setFileOriginal] = useState(null);
+  const [fileCharged, setFileCharged] = useState(false);
+
+  const queryClient = useQueryClient();
   const createPetMutation = useMutation({
     mutationFn: async ({ idUser, formValue }) => {
       const accessToken = authController.getAccessToken();
-      return await petsController.createPets(accessToken, idUser, formValue);
+
+      // Ejecutar la creación de la mascota primero
+      const response = await petsController.createPets(
+        accessToken,
+        idUser,
+        formValue
+      );
+
+      if (fileCharged) {
+        try {
+          const { url } = await petsController.filePets(
+            accessToken,
+            fileOriginal.type,
+            response.id
+          );
+          // Después ejecutar la función amazonPeticionForFile
+          await amazonPeticionForFile(url, uploadData, fileOriginal);
+        } catch (error) {
+          console.error('Error al cargar el archivo en AWS S3:', error);
+          throw error; // Importante: propagar el error para que el onError de useMutation lo capture
+        }
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['pets']);
@@ -625,7 +661,20 @@ const PetsForm = (props) => {
   const updatePetMuatation = useMutation({
     mutationFn: async ({ petId, formValue }) => {
       const accessToken = authController.getAccessToken();
-      return await petsController.updatePets(accessToken, petId, formValue);
+      if (fileCharged) {
+        const { url } = await petsController.filePets(
+          accessToken,
+          fileOriginal.type,
+          pet.id
+        );
+        try {
+          amazonPeticionForFile(url, uploadData, fileOriginal);
+        } catch (error) {
+          console.error('Error al cargar el archivo en AWS S3:', error);
+        }
+
+        return await petsController.updatePets(accessToken, petId, formValue);
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['pets']);
@@ -636,6 +685,21 @@ const PetsForm = (props) => {
     },
   });
 
+  //funcion que gestiona la peticio de guardar un archivo en amazon query
+  const amazonPeticionForFile = async (url, uploadData, fileOriginal) => {
+    await petsController.amazonQuery(url, uploadData, fileOriginal);
+  };
+
+  // seteo para la validacion del archivo original en formato buffer
+  const handleBinaryStrChange = (binaryStr) => {
+    setFileCharged(true);
+    setUploadData(binaryStr);
+  };
+  // seteo para la validacion del formato original del documento
+  const handleDropFile = (fileOrigen) => {
+    setFileOriginal(fileOrigen);
+  };
+
   //manipulacion y validacion de los campos
   const formik = useFormik({
     initialValues: initialPetValues(pet),
@@ -645,7 +709,6 @@ const PetsForm = (props) => {
       if (!pet) {
         createPetMutation.mutate({ idUser, formValue });
       }
-
       //aqui ira la peticion donde se actualizaran los datos
       updatePetMuatation.mutate({ petId: pet.id, formValue });
 
@@ -659,7 +722,11 @@ const PetsForm = (props) => {
       <div className='hide-scrollbar'>
         <form onSubmit={formik.handleSubmit}>
           {/*Campos de llenado del fomrulario*/}
-          <PetFormTextFields formik={formik} />
+          <PetFormTextFields
+            formik={formik}
+            onBinaryStrChange={handleBinaryStrChange}
+            onDropFile={handleDropFile}
+          />
 
           <Grid
             sx={{

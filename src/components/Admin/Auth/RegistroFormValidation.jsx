@@ -20,7 +20,7 @@ export function RegisterFormvalidations() {
       .required('La fecha es requerida')
       .typeError('Ingrese una fecha válida'),
     email: yup
-      .string()
+      .string().trim()
       .email("El email no es válido")
       .required("Campo obligatorio"),
     password: yup.string().required("Campo obligatorio"),

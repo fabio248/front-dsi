@@ -26,7 +26,7 @@ export function validationSchemaRegister(user) {
     firstName: yup.string().required('El nombre es obligatorio'),
     lastName: yup.string().required('El apellido es obligatorio'),
     email: yup
-      .string()
+      .string().trim()
       .email('El email no es válido')
       .required('El email obligatorio'),
     birthday: yup

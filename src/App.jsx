@@ -13,9 +13,9 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Auth_routes />
-        <Users_routes />
         <Clients_routes />
         <Vet_routes />
+        <Users_routes />
       </BrowserRouter>
     </AuthProvider>
   );

@@ -8,6 +8,7 @@ import {
 } from '../pages';
 import { Users_Layouts } from '../layouts';
 import { Layout } from '../shared/components/Layout';
+import { NotFound } from '../pages/notFound.page'
 
 export function Users_routes() {
   return (
@@ -20,6 +21,7 @@ export function Users_routes() {
       />
       <Route path='/historia' element={Layout(Users_Layouts, Historia_pages)} />
       <Route path='/galeria' element={Layout(Users_Layouts, Galeria_pages)} />
+      <Route path='/*' element = { <NotFound /> } />
     </Routes>
   );
 }

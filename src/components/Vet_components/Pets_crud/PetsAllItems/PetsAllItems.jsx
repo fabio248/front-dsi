@@ -8,6 +8,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import PetsIcon from '@mui/icons-material/Pets';
+import { createTheme, ThemeProvider } from '@mui/material';
 
 //Iconos de Mui material
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -31,6 +32,7 @@ import { ApiAuth } from '../../../../api/Auth.api';
 //controladores api
 const petController = new Pets();
 const authController = new ApiAuth();
+const defaultTheme = createTheme();
 
 export function PetsAllItems({ pet }) {
   const Demo = styled('div')(({ theme }) => ({
@@ -90,11 +92,12 @@ export function PetsAllItems({ pet }) {
     onOpenClosePets();
   };
   return (
-    <div>
+    <>
+    <ThemeProvider theme={defaultTheme}>
       <Demo>
         <ListItem sx={{ display: 'flex', flexWrap: 'wrap' }}>
           <ListItemAvatar sx={{ margin: '0 auto' }}>
-            <Avatar sx={{ mx: 4, width: 60, height: 60 }}>
+            <Avatar sx={{ mx: 4, width: 60, height: 60, bgcolor: '#8EC167' }}>
               <PetsIcon sx={{ fontSize: 45 }} />
             </Avatar>
           </ListItemAvatar>
@@ -168,6 +171,7 @@ export function PetsAllItems({ pet }) {
           <PetsIcon color='action' style={{ width: '60px', height: '40px' }} />
         </Divider>
       </Demo>
+      </ThemeProvider>
       <Modal_delete
         onOpen={showConfirm}
         onCancel={onCloseConfirm}
@@ -183,6 +187,6 @@ export function PetsAllItems({ pet }) {
       >
         <PetsForm close={onOpenClosePets} pet={pet} />
       </Modal_create_pet>
-    </div>
+    </>
   );
 }

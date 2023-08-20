@@ -11,7 +11,7 @@ import {
 export function Catalogo_pages() {
   return (
     <div style={{ textAlign: 'center' }}>
-      <h1>Clínica Veterinaria MISTUM</h1>
+      <h1>Clínica Veterinaria MISTUN</h1>
       <h2>MVDr. Saul Antonio Medina Matus</h2>
       <Grid container spacing={2} justifyContent='center'>
         <Grid item xs={5}>

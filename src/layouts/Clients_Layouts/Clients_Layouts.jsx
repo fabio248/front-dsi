@@ -26,6 +26,7 @@ import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual
 import { Button } from '@mui/material';
 import { FaFacebook } from 'react-icons/fa';
 import { FaWhatsapp } from 'react-icons/fa';
+import { FaInstagram } from 'react-icons/fa';
 import { Logout } from '../../components/Admin/Auth/Logout';
 import { NavLink } from 'react-router-dom';
 import './Clients_Layouts.css';
@@ -123,6 +124,15 @@ export function Clients_Layouts(props) {
           target='_blank'
         >
           <FaWhatsapp />
+        </IconButton>
+        <IconButton
+          aria-label='Instagram'
+          component='a'
+          href='https://www.instagram.com/mistumcv/'
+          target='_blank'
+          style={{ fontSize: '2rem', color: '#573874' }}
+        >
+          <FaInstagram />
         </IconButton>
       </div>
     </div>

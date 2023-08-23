@@ -21,7 +21,7 @@ export function Users_routes() {
       />
       <Route path='/historia' element={Layout(Users_Layouts, Historia_pages)} />
       <Route path='/galeria' element={Layout(Users_Layouts, Galeria_pages)} />
-      <Route path='*' element={<NotFound />} />
+      {/* <Route path='/*' element={<NotFound />} /> */}
     </Routes>
   );
 }

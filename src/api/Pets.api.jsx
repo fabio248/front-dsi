@@ -1,6 +1,6 @@
 import { config, configApiBackend } from '../config';
-import axios from 'axios';
 import { format } from 'date-fns';
+import axios from 'axios';
 export class Pets {
   async getPetsForUsers(accessToken, userId) {
     try {
@@ -116,7 +116,7 @@ export class Pets {
           mimetype: fileType,
         }),
       };
-
+      console.log(fileType);
       const response = await fetch(url, params);
       const result = await response.json();
 
@@ -129,6 +129,9 @@ export class Pets {
 
   async amazonQuery(urlComming, fileBuffer, fileOriginal) {
     try {
+      if (!fileBuffer || !fileOriginal) {
+        return; // Salir de la función sin hacer nada
+      }
       // Convert the ArrayBuffer to a Blob with the correct content type
       const blob = new Blob([fileBuffer], { type: fileOriginal.type });
 

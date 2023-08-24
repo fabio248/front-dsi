@@ -3,11 +3,47 @@ import React from 'react';
 //mui material
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import { Divider, Avatar } from '@mui/material';
+import { Divider, Avatar, Button } from '@mui/material';
 
 import PetsIcon from '@mui/icons-material/Pets';
 
 export function HistoryAndAnneasis({ pet }) {
+  const renderDocuments = () => {
+    if (!pet.medicalHistory.files || pet.medicalHistory.files.length === 0) {
+      // Mostrar el mensaje si no hay documentos médicos
+      return (
+        <tr>
+          <td style={{ color: 'violet' }} colSpan={2}>
+            No se encontrarn documentos cargados!!
+          </td>
+        </tr>
+      );
+    }
+
+    return pet.medicalHistory.files.map((file, index) => (
+      <tr key={index}>
+        <td>Documento {index + 1}</td>
+        <td>
+          <Button
+            style={{
+              width: '150px',
+              color: 'blue',
+              backgroundColor: 'white',
+              border: '2px solid black',
+            }}
+            onClick={() => handleDocumentClick(file.url)}
+          >
+            Ver
+          </Button>
+        </td>
+      </tr>
+    ));
+  };
+
+  const handleDocumentClick = (url) => {
+    window.open(url, '_blank');
+  };
+
   return (
     <div className='container'>
       <ListItem sx={{ display: 'flex', flexWrap: 'wrap' }}>
@@ -127,10 +163,21 @@ export function HistoryAndAnneasis({ pet }) {
                 {pet.medicalHistory.physicalExam.palpitations}
               </span>
               <br />
-              <b>Documentos médicos: </b>
-              <span style={{ color: 'gray' }}>
-                <b>aqui ira la url del documento</b>
-              </span>
+              <br />
+              {pet.medicalHistory.files ? (
+                <table style={{ width: '100%', marginTop: '8px' }}>
+                  <thead>
+                    <tr>
+                      <th>Documentos médicos:</th>
+                      <th>Visitar Documento</th>
+                    </tr>
+                  </thead>
+                  <tbody>{renderDocuments()}</tbody>
+                </table>
+              ) : (
+                <b> </b>
+              )}
+
               <br />
             </>
           </b>

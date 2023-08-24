@@ -25,7 +25,6 @@ export function PerfilPets({ pet }) {
     setTitleSeeInfoClientAndPet(`Datos específicos de la mascota`);
     onOpenInfoClientAndPets();
   };
-
   return (
     <div>
       <ListItem

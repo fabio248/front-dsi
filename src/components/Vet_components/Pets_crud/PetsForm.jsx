@@ -325,7 +325,7 @@ export function PetFormTextFields({ formik, onBinaryStrChange, onDropFile }) {
         spacing={2}
         sx={{ maxWidth: '100%', margin: 0, marginBottom: '-20px' }}
       >
-        {'Annaesis '}
+        {'Anamnesis '}
       </Divider>
       <br />
       <Grid container spacing={2} sx={{ maxWidth: '100%', margin: '0' }}>

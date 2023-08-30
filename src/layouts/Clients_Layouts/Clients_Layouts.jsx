@@ -61,7 +61,7 @@ export function Clients_Layouts(props) {
               <ListItemIcon>
                 <SummarizeIcon />
               </ListItemIcon>
-              <ListItemText primary='Catalogo de Servicios Ofrecidos' />
+              <ListItemText primary='Servicios Ofrecidos' />
             </ListItemButton>
           </NavLink>
         </ListItem>
@@ -107,24 +107,25 @@ export function Clients_Layouts(props) {
 
       <div style={{ position: 'absolute', left: '10px', bottom: '10px' }}>
         <IconButton
-          color='inherit'
           aria-label='Facebook'
           component='a'
           href='https://www.facebook.com/profile.php?id=100069913175592'
           target='_blank'
+          style={{ fontSize: '2rem', color: '#573874' }}
         >
           <FaFacebook />
         </IconButton>
 
         <IconButton
-          color='inherit'
           aria-label='WhatsApp'
           component='a'
-          href='https://api.whatsapp.com/send?phone=%2B50361366565&data=AWAKexKfr19Ei0k8tjd-iK0MqevedmvVdYE2f4C5J_fnpUbQTg8rtOtYE1UAZ889EXB8QkEcEHt46vvAVfUANmu-ArdV3wKZ8XRZk2BAwXQMype-wM2MV8iq_hs9wrF9hT0n_pRLR2fi4Kg6czTxnfBz-Yg0etGzvodFugnXAlkY2CpdFgU0vjRc1GeQlI3zLP1Go9Pt7W8WgZjcSkw3SN1AcqMZq_7YJpC_NDbIZ0rx6v7AgDT8BNlli3DvuGnuXcUzIP6UxG_Jixr4eDmiLQsTlXtBVOfcRKCYJmKCcclykjJ2TGI&source=FB_Page&app=facebook&entry_point=page_cta&fbclid=IwAR0y1Dee-yJ7xN3RMDoDwwPNaBoAL9-wpz8FK33U7-sdCDxGafGzRn_9gaQ'
+          href='https://wa.me/50361366565'
           target='_blank'
+          style={{ fontSize: '2rem', color: '#573874' }}
         >
           <FaWhatsapp />
         </IconButton>
+
         <IconButton
           aria-label='Instagram'
           component='a'

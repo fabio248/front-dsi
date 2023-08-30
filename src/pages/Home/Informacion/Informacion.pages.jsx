@@ -154,9 +154,10 @@ export function Informacion_pages() {
                     <IconButton
                       aria-label='WhatsApp'
                       component='a'
+                      color='primary'
                       href='https://wa.me/50361366565'
                       target='_blank'
-                      style={{ color: '#25D366', fontSize: '3rem' }}
+                      style={{ fontSize: '3rem' }}
                     >
                       <FaWhatsapp />
                     </IconButton>

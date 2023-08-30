@@ -157,7 +157,7 @@ export function UserItem({ user, onReload }) {
               ) : null}
               {user.phone ? (
                 <>
-                  <b>Teléfono:</b>
+                  <b>Teléfono: </b>
                   {user.phone}
                 </>
               ) : null}

@@ -75,7 +75,7 @@ export function PetsAllItems({ pet }) {
 
   //funcion que ejecuta el boton correspondiente (Delete TrashIcon)
   const openDeletePet = () => {
-    setTitleDelete(` Eliminar macota: ${pet.name}`);
+    setTitleDelete(` Eliminar Mascota: ${pet.name}`);
     setConfirmMessage(`¿Está seguro de que desea eliminar mascota?`);
     onCloseConfirm();
   };
@@ -86,7 +86,7 @@ export function PetsAllItems({ pet }) {
   };
 
   const openUpdatePets = () => {
-    setTitleUpdatePet(`Actualizando Datos de la Mascota: ${pet.name}`);
+    setTitleUpdatePet(`Actualizando datos de la Mascota: ${pet.name}`);
     onOpenClosePets();
   };
   return (

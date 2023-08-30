@@ -12,7 +12,7 @@ export function Auth_pages(props) {
         component='h1'
         color='#69458C'
       >
-        ¡Bienvenido a Clínica Veterinaria MISTUM!
+        ¡Bienvenido a Clínica Veterinaria MISTUN!
       </Typography>
 
       <Grid

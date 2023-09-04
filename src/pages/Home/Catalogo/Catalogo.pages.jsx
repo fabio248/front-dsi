@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   Card,
   CardActionArea,
@@ -13,8 +14,8 @@ export function Catalogo_pages() {
     <div style={{ textAlign: 'center' }}>
       <h1>Clínica Veterinaria MISTUN</h1>
       <h2>MVDr. Saul Antonio Medina Matus</h2>
-      <Grid container spacing={2} justifyContent='center'>
-        <Grid item xs={5}>
+      <Grid container spacing={3} justifyContent='center'>
+        <Grid item xs={12} sm={5}>
           <Card sx={{ maxWidth: 445, height: '100%' }}>
             <CardActionArea>
               <CardMedia
@@ -37,7 +38,7 @@ export function Catalogo_pages() {
           </Card>
         </Grid>
 
-        <Grid item xs={5}>
+        <Grid item xs={12} sm={5}>
           <Card sx={{ maxWidth: 445, height: '100%' }}>
             <CardActionArea>
               <CardMedia
@@ -59,7 +60,7 @@ export function Catalogo_pages() {
           </Card>
         </Grid>
 
-        <Grid item xs={5}>
+        <Grid item xs={12} sm={5}>
           <Card sx={{ maxWidth: 445, height: '100%' }}>
             <CardActionArea>
               <CardMedia
@@ -82,7 +83,7 @@ export function Catalogo_pages() {
           </Card>
         </Grid>
 
-        <Grid item xs={5}>
+        <Grid item xs={12} sm={5}>
           <Card sx={{ maxWidth: 445, height: '100%' }}>
             <CardActionArea>
               <CardMedia
@@ -104,7 +105,7 @@ export function Catalogo_pages() {
           </Card>
         </Grid>
 
-        <Grid item xs={5}>
+        <Grid item xs={12} sm={5}>
           <Card sx={{ maxWidth: 445, height: '100%' }}>
             <CardActionArea>
               <CardMedia
@@ -126,7 +127,7 @@ export function Catalogo_pages() {
           </Card>
         </Grid>
 
-        <Grid item xs={5}>
+        <Grid item xs={12} sm={5} >
           <Card sx={{ maxWidth: 445, height: '100%' }}>
             <CardActionArea>
               <CardMedia
@@ -149,7 +150,7 @@ export function Catalogo_pages() {
           </Card>
         </Grid>
 
-        <Grid item xs={5}>
+        <Grid item xs={12} sm={5}>
           <Card sx={{ maxWidth: 445, height: '100%' }}>
             <CardActionArea>
               <CardMedia
@@ -172,7 +173,7 @@ export function Catalogo_pages() {
           </Card>
         </Grid>
 
-        <Grid item xs={5}>
+        <Grid item xs={12} sm={5}>
           <Card sx={{ maxWidth: 445, height: '100%' }}>
             <CardActionArea>
               <CardMedia

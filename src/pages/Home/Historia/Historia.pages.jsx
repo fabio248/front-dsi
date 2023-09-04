@@ -45,12 +45,12 @@ export function Historia_pages() {
       <div>
       <h2>Nuestros Valores</h2> <br />
       <Grid container spacing={3}>
-          <Grid item xs={6} sm={4} className="grid">
+          <Grid item xs={12} sm={4} className="grid">
             <br /><h1>Respeto</h1>
             <br /><h1>Atención</h1>          
           </Grid>
 
-          <Grid item xs={6} sm={4} className="grid">
+          <Grid item xs={12} sm={4} className="grid">
             <img
             src='/galeria/logofavico.png'
             alt='mistun'
@@ -59,7 +59,7 @@ export function Historia_pages() {
             <h1>Compromiso</h1>
           </Grid>
 
-          <Grid item xs={6} sm={4} className="grid">
+          <Grid item xs={12} sm={4} className="grid">
             <br /><h1>Equidad</h1>
             <br /><h1>Dignidad</h1>
           </Grid>

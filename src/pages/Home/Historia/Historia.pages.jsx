@@ -1,17 +1,19 @@
 import React from 'react';
 import './Historia.pages.css';
+import { Grid } from '@mui/material';
 
 export function Historia_pages() {
-  const { titulo, parrafos, mision, vision } = contenido;
+  const { titulo, parrafos } = contenido;
   return (
+    
     <div className='container'>
       <h2>{titulo}</h2>
       {parrafos.map((parrafo, index) => (
-        <p key={index} style={{ textAlign: 'justify' }}>
+        <p key={index} style={{ textAlign: 'justify'}}>
           {parrafo}
         </p>
       ))}
-
+    
       <div>
         <img
           src='/galeria/huella.png'
@@ -20,8 +22,17 @@ export function Historia_pages() {
         />
       </div>
 
-      <h2>Misión</h2>
-      <p>{mision}</p>
+        <Grid container spacing={3} >
+          <Grid item xs={12} sm={6} className='gridp'>
+            <h2>Misión</h2>
+            <p style={{ textAlign: 'center' }}>Ser un establecimiento veterinario que proporcione servicios de atención médico veterinarios a los propietarios dueños de mascotas que nos visitan.</p>
+          </Grid>
+
+          <Grid item xs={12} sm={6} className='gridp'>
+            <h2>Visión</h2>
+            <p style={{ textAlign: 'center' }}>Dar atención veterinaria a animales de compañía o mascotas, para que manteniendo su salud física o ayudar a recuperar la salud perdida, mantengamos así la salud pública veterinaria, y ayudemos proporcionar mejor la calidad de vida a nuestros pacientes.</p>
+          </Grid>
+        </Grid>
 
       <div>
         <img
@@ -30,16 +41,29 @@ export function Historia_pages() {
           style={{ width: '100%', height: 'auto' }}
         />
       </div>
-
-      <h2>Visión</h2>
-      <p>{vision}</p>
-
+  
       <div>
-        <img
-          src='/galeria/cat.gif'
-          alt='cat'
-          style={{ width: '400px', height: 'auto' }}
-        />
+      <h2>Nuestros Valores</h2> <br />
+      <Grid container spacing={3}>
+          <Grid item xs={6} sm={4} className="grid">
+            <br /><h1>Respeto</h1>
+            <br /><h1>Atención</h1>          
+          </Grid>
+
+          <Grid item xs={6} sm={4} className="grid">
+            <img
+            src='/galeria/logofavico.png'
+            alt='mistun'
+            style={{ width: '90%', height: 'auto' }}
+            />
+            <h1>Compromiso</h1>
+          </Grid>
+
+          <Grid item xs={6} sm={4} className="grid">
+            <br /><h1>Equidad</h1>
+            <br /><h1>Dignidad</h1>
+          </Grid>
+        </Grid> 
       </div>
     </div>
   );
@@ -55,10 +79,6 @@ const contenido = {
     'En MISTUN, no solo tratamos a los animales, sino que también nos preocupamos profundamente por ellos. Los consideramos parte de nuestras familias y nos esforzamos por brindarles el amor, el respeto y la atención que se merecen.',
     '¡Gracias por confiar en nosotros y ser parte de nuestra historia! Estamos ansiosos por servirles y ser su aliado confiable en el cuidado de veterinario sus adorables compañeros peludos.',
   ],
-  mision:
-    'Ser un establecimiento veterinario que proporcione servicios de atención Médico veterinarios a los propietarios dueños de mascotas que nos visitan.',
-  vision:
-    'Dar atención veterinaria a animales de compañía o mascotas, para que manteniendo su salud física o ayudar a recuperar la salud perdida, mantengamos así la salud pública veterinaria, y ayudemos proporcionar mejor la calidad de vida a nuestros pacientes.',
-};
+  };
 
 export default contenido;

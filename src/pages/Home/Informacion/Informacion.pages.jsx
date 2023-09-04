@@ -64,7 +64,7 @@ export function Informacion_pages() {
         <Grid item xs={5}>
           <div className='contenedor-imagen'>
             <img
-              src='/galeria/dog.gif'
+              src='/galeria/cat.gif'
               alt='dog'
               className='imagen'
               style={{ width: '100%', height: 'auto' }}

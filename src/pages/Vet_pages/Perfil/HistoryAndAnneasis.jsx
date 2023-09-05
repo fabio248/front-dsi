@@ -14,7 +14,7 @@ export function HistoryAndAnneasis({ pet }) {
       return (
         <tr>
           <td style={{ color: 'violet' }} colSpan={2}>
-            No se encontrarn documentos cargados!!
+            ¡No se encontraron documentos cargados!
           </td>
         </tr>
       );
@@ -73,7 +73,7 @@ export function HistoryAndAnneasis({ pet }) {
               {pet.isHaveTatto === true ? 'Si posee' : 'No posee'}
             </span>
             <br />
-            <b>Posee Todas sus vacunas?: </b>
+            <b>¿Posee Todas sus vacunas?: </b>
             <span style={{ color: 'gray' }}>
               {' '}
               {pet.medicalHistory.isHaveAllVaccine == true
@@ -81,7 +81,7 @@ export function HistoryAndAnneasis({ pet }) {
                 : 'Si posee'}
             </span>
             <br />
-            <b>Nacimiento de la mascota U adquisición: </b>
+            <b>Nacimiento de la mascota o Adquisición: </b>
             <span style={{ color: 'gray' }}>{pet.birthday}</span>
             <br />
             <b>Color del pelaje: </b>

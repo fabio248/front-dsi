@@ -116,7 +116,7 @@ export function PetsAllItems({ pet }) {
               <b>Género: </b>
               {pet.gender}
               <br />
-              <b>Nacimiento de la mascota U adquisición: </b>
+              <b>Nacimiento de la mascota o Adquisición: </b>
               {pet.birthday}
               <br />
               <b>Color del pelaje: </b>

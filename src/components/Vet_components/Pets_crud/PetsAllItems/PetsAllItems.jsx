@@ -94,7 +94,7 @@ export function PetsAllItems({ pet }) {
       <Demo>
         <ListItem sx={{ display: 'flex', flexWrap: 'wrap' }}>
           <ListItemAvatar sx={{ margin: '0 auto' }}>
-            <Avatar sx={{ mx: 4, width: 60, height: 60 }}>
+            <Avatar sx={{ mx: 4, width: 60, height: 60, bgcolor: '#F5F5F5' }}>
               <PetsIcon sx={{ fontSize: 45 }} />
             </Avatar>
           </ListItemAvatar>
@@ -149,7 +149,7 @@ export function PetsAllItems({ pet }) {
                 <Alerta
                   type={'info'}
                   title={'¡Mascota Eliminada!'}
-                  message={'Se ha elimnado correctamente la mascota'}
+                  message={'Se ha eliminado correctamente la mascota'}
                   strong={pet.name}
                 />
               )}

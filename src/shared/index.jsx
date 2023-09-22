@@ -5,3 +5,5 @@ export * from './modal_delete';
 export * from './Modal_create_pet';
 export * from './modal_visualizar_ClientAndPet';
 export * from './modal_visualizarClient';
+export * from './Modal_Register_Product';
+

@@ -319,6 +319,7 @@ export function PetFormTextFields({ formik, onBinaryStrChange, onDropFile }) {
           </Box>
         </Grid>
       </Grid>
+      {/*
       <br />
       <Divider
         container
@@ -607,7 +608,7 @@ export function PetFormTextFields({ formik, onBinaryStrChange, onDropFile }) {
             </Box>
           </Grid>
         </Grid>
-      </Grid>
+      </Grid> */}
     </>
   );
 }
@@ -642,7 +643,7 @@ const PetsForm = (props) => {
             response.id
           );
           // Después ejecutar la función amazonPeticionForFile
-          await amazonPeticionForFile(url, uploadData, fileOriginal);
+          // await amazonPeticionForFile(url, uploadData, fileOriginal);
         } catch (error) {
           console.error('Error al cargar el archivo en AWS S3:', error);
           throw error; // Importante: propagar el error para que el onError de useMutation lo capture
@@ -707,7 +708,8 @@ const PetsForm = (props) => {
     validateOnChange: false,
     onSubmit: async (formValue) => {
       if (!pet) {
-        createPetMutation.mutate({ idUser, formValue });
+        // createPetMutation.mutate({ idUser, formValue });
+        console.log(formValue);
       }
       //aqui ira la peticion donde se actualizaran los datos
       updatePetMuatation.mutate({ petId: pet.id, formValue });

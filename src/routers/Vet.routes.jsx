@@ -34,6 +34,7 @@ export function Vet_routes() {
           element={Layout(Vet_Layouts, AgendarCita)}
         ></Route>
         <Route path='users/:userId' element={<PerfilUserAndPets />} />
+        <Route path='pets/:petId' element={<PerfilPets />} />
       </Route>
     </Routes>
   );

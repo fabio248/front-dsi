@@ -5,7 +5,6 @@ import { styled } from '@mui/material/styles';
 //Mui material
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import CategoryIcon from '@mui/icons-material/Category';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';

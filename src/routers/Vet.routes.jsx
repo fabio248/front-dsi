@@ -6,6 +6,7 @@ import { useAuth } from '../hooks';
 import { ProtectedRoute } from '../components/Admin/Auth/ProtectedRoutes';
 import { PerfilUserAndPets } from '../pages';
 import { Layout } from '../shared/components/Layout';
+import { CompletePetPerfil } from '../pages/Vet_pages/PerfilPets/CompletePerfilPets';
 
 export function Vet_routes() {
   const { user } = useAuth();
@@ -34,7 +35,7 @@ export function Vet_routes() {
           element={Layout(Vet_Layouts, AgendarCita)}
         ></Route>
         <Route path='users/:userId' element={<PerfilUserAndPets />} />
-        <Route path='pets/:petId' element={<PerfilPets />} />
+        <Route path='pets/:petId' element={<CompletePetPerfil />} />
       </Route>
     </Routes>
   );

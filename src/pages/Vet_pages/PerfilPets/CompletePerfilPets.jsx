@@ -13,7 +13,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 //render of pets
-import { PerfilPets } from './PerfilPets';
+import { PetMedicalHistory } from './MedicalHistory';
 
 //Lodash for render info pets and user
 import { size, map } from 'lodash';
@@ -26,14 +26,14 @@ import { useQuery } from '@tanstack/react-query';
 const petsController = new Pets();
 const apiAuthController = new ApiAuth();
 
-export function PerfilUserAndPets() {
+export function CompletePetPerfil() {
   let params = useParams();
   const navigate = useNavigate();
   const { data: pet, isLoading } = useQuery({
     queryKey: ['pets', params.petId],
     queryFn: async () => {
       const accessToken = apiAuthController.getAccessToken();
-      const response = await petsController.getPetsForUsers(
+      const response = await petsController.getPetById(
         accessToken,
         params.petId
       );
@@ -43,7 +43,7 @@ export function PerfilUserAndPets() {
 
   return (
     <>
-      <AppBar position='static'>
+      <AppBar position='static' sx={{ m:-1, width: '101.2%' }}>
         <Toolbar>
           <Typography
             variant='h6'
@@ -103,38 +103,32 @@ export function PerfilUserAndPets() {
                   {pet.gender}
                   <br />
                   <br />
+                  <b>Especie: </b>
+                  {pet.specie.name}
+                  <br />
+                  <br />
                   <b>Raza: </b>
-                  {usePet.raza}
+                  {pet.raza}
                   <br />
                   <br />
-                  {userAndPet.direction ? (
-                    <>
-                      <b>Direccion: </b>
-                      {userAndPet.direction}
-                      <br />
-                      <br />
-                    </>
-                  ) : null}
-                  {userAndPet.dui ? (
-                    <>
-                      <b>DUI: </b>
-                      {userAndPet.dui}
-                      <br />
-                      <br />
-                    </>
-                  ) : null}
+                  <b>Color: </b>
+                  {pet.color}
+                  <br />
+                  <br />
+                  <b>Tatuajes: </b>
+                  {pet.isHaveTatto ? 'Sí posee':'No posee'}
+                  <br />
+                  <br />
+                  <b>Pedigree: </b>
+                  {pet.pedigree ? 'Sí posee':'No posee'}
+                  <br />
+                  <br />
                   {pet.birthday ? (
                     <>
                       <b>Fecha de nacimiento: </b>
                       {pet.birthday}
                       <br />
                       <br />
-                    </>
-                  ) : null}
-                  {userAndPet.phone ? (
-                    <>
-                      <b>Teléfono:</b>
-                      {userAndPet.phone}
                     </>
                   ) : null}
                 </>
@@ -155,9 +149,9 @@ export function PerfilUserAndPets() {
                   paddingBottom: '5px',
                 }}
               >
-                Hojas clínicas
+                Historial médico
               </h1>
-              {!isLoading && size(pet.medicalHistoryId) === 0 ? (
+              {!isLoading && size(pet.medicalHistories) === 0 ? (
                 <>
                   <Typography
                     variant='h5'
@@ -193,8 +187,8 @@ export function PerfilUserAndPets() {
                     flexDirection: 'column',
                   }}
                 >
-                  {map(userAndPet.pets, (pet) => (
-                    <PerfilPets key={pet.id} pet={pet} />
+                  {map(pet.medicalHistories, (hojaClinica) => (
+                    <PetMedicalHistory key={hojaClinica.id} medicalHistory={hojaClinica} />
                   ))}
                 </div>
               )}

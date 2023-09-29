@@ -50,13 +50,13 @@ export function PetMedicalHistory({ medicalHistory }) {
             <span style={{ color: 'gray' }}>{medicalHistory.createdAt}</span>
             <br />
             <b>Diagnostico: </b>
-            <span style={{ color: 'gray' }}>{medicalHistory.diagnostic.description}</span>
+            <span style={{ color: 'gray' }}>{medicalHistory?.diagnostic?.description}</span>
             <br />
             <b>Tratamiento: </b>
             <br/>
             <span style={{ color: 'gray' }}>
             <List dense={true} sx={{ m: 0, p:0 }}>
-            { map(medicalHistory.diagnostic.treatments, (medication) => (
+            { map(medicalHistory?.diagnostic?.treatments, (medication) => (
                 <ListItem key={medication.id} sx={{ m: 0, ml:2, p:0 }}>
                     <ListItemIcon>
                         <VaccinesIcon sx={{ color:'#8EC167' }} />
@@ -72,7 +72,7 @@ export function PetMedicalHistory({ medicalHistory }) {
             </span>
             <b>Intervención quirúrgica: </b>
             <span style={{ color: 'gray' }}>
-            {!medicalHistory.diagnostic.surgicalIntervations ? 'No ha tenido' 
+            {!medicalHistory?.diagnostic?.surgicalIntervations ? 'No ha tenido' 
             : map(medicalHistory.diagnostic.surgicalIntervations, (surgicalIntervation) => (
                 <ListItem key={surgicalIntervation.id} sx={{ m: 0, ml:2, p:0 }}>
                     <ListItemIcon>

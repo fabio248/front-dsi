@@ -3,18 +3,18 @@ import React from 'react';
 export function Galeria_pages() {
   return (
     <div>
-      {/* LightWidget WIDGET */}
-      <script src='https://cdn.lightwidget.com/widgets/lightwidget.js'></script>
+      {/* Snapwidget WIDGET */}
+      <script src="https://snapwidget.com/js/snapwidget.js"></script>
       <iframe
-        src='//lightwidget.com/widgets/992f8edcbd495aceb08b91bd6e808a19.html'
-        allowtransparency='true'
-        className='lightwidget-widget'
+        src="https://snapwidget.com/embed/1039072"
+        className="snapwidget-widget"
+        allowtransparency="true"
+        frameBorder="0"
         style={{
-          width: '100%',
-          height: '550px',
-          border: '0',
-          borderRadius: '5',
+          border: 'none',
           overflow: 'hidden',
+          width: '100%',
+          height: '450px',
         }}
       ></iframe>
     </div>

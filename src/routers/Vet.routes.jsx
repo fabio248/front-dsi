@@ -1,5 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
-import { Auth_pages, UserAndPets, Users, AgendarCita } from '../pages';
+import { Auth_pages, UserAndPets, Users, AgendarCita, ProductCatalog } from '../pages';
 import { Vet_Layouts } from '../layouts';
 
 import { useAuth } from '../hooks';
@@ -18,12 +18,12 @@ export function Vet_routes() {
   }
   return (
     <Routes>
-      <Route
+       <Route
         path='/admin/'
         element={
           <ProtectedRoute isAllowed={!!user && isAdmin()} redirectTo='/login' />
         }
-      >
+       >     
         <Route path='' element={Layout(Vet_Layouts, Auth_pages)}></Route>
         <Route
           path='userAndPets'
@@ -37,6 +37,10 @@ export function Vet_routes() {
         <Route path='users/:userId' element={<PerfilUserAndPets />} />
         <Route path='pets/:petId' element={<CompletePetPerfil />} />
       </Route>
+        <Route
+          path='products'
+          element={Layout(Vet_Layouts, ProductCatalog)}
+        ></Route>
     </Routes>
   );
 }

@@ -51,7 +51,7 @@ export function PerfilUserAndPets() {
             sx={{ flexGrow: 1 }}
             onClick={() => navigate('/admin')}
           >
-            Veterinaria Mistum
+            Clínica Veterinaria Mistun
           </Typography>
 
           <Button
@@ -65,7 +65,7 @@ export function PerfilUserAndPets() {
         </Toolbar>
       </AppBar>
       <br />
-
+        
       <Container maxWidth='xl' sx={{ mt: 4, mb: 4 }}>
         <Grid container spacing={2}>
           <Grid item xs={18} md={4} sx={{ height: '100%' }}>
@@ -133,7 +133,7 @@ export function PerfilUserAndPets() {
                   ) : null}
                   {userAndPet.phone ? (
                     <>
-                      <b>Teléfono:</b>
+                      <b>Teléfono: </b>
                       {userAndPet.phone}
                     </>
                   ) : null}

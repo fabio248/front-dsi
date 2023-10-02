@@ -759,7 +759,7 @@ const PetsForm = (props) => {
             <Alerta
               type={'success'}
               title={
-                pet ? 'Mascota actuallizado' : 'Usuario y mascota registrado'
+                pet ? 'Mascota actualizada' : 'Usuario y mascota registrados'
               }
               message={
                 pet

@@ -21,7 +21,7 @@ export function Informacion_pages() {
       <h1>Información del Establecimiento</h1>
       <h2>Horario de Atención</h2>
       <Grid container spacing={2} justifyContent='center'>
-        <Grid item xs={5}>
+        <Grid item xs={12} sm={5}>
           <Card sx={{ maxWidth: 445 }}>
             <CardActionArea>
               <CardMedia
@@ -61,10 +61,10 @@ export function Informacion_pages() {
           </Card>
         </Grid>
 
-        <Grid item xs={5}>
+        <Grid item xs={12} sm={5}>
           <div className='contenedor-imagen'>
             <img
-              src='/galeria/dog.gif'
+              src='/galeria/cat.gif'
               alt='dog'
               className='imagen'
               style={{ width: '100%', height: 'auto' }}
@@ -77,7 +77,7 @@ export function Informacion_pages() {
       <h4>Barrio Santa Lucia, Casa #23, sobre 1° Av. Norte, Zacatecoluca.</h4>
 
       <Grid container spacing={2} justifyContent='center'>
-        <Grid item xs={5}>
+        <Grid item xs={12} sm={5}>
           <iframe
             src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3879.4001806280176!2d-88.871063226807!3d13.511015586856209!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f7cadbe1e0ae625%3A0xf916477fc1f3c161!2sCl%C3%ADnica%20Veterinaria%20Mistun!5e0!3m2!1ses!2ssv!4v1684523698267!5m2!1ses!2ssv'
             style={{ border: 1 }}
@@ -89,7 +89,7 @@ export function Informacion_pages() {
           ></iframe>
         </Grid>
 
-        <Grid item xs={5}>
+        <Grid item xs={12} sm={5}>
           <Card sx={{ maxWidth: 445 }}>
             <CardActionArea>
               <CardMedia
@@ -107,7 +107,7 @@ export function Informacion_pages() {
         <h2>Contactanos</h2>
 
         <Grid container spacing={2} justifyContent='center'>
-          <Grid item xs={5}>
+          <Grid item xs={9} sm={5}>
             <div className='contenedor-imagen'>
               <img
                 src='/galeria/cats.gif'
@@ -118,7 +118,7 @@ export function Informacion_pages() {
             </div>
           </Grid>
 
-          <Grid item xs={7}>
+          <Grid item xs={12} sm={5}>
             <Grid container spacing={2} justifyContent='center'>
               <Grid item xs={12}>
                 <Grid container spacing={2} justifyContent='center'>
@@ -154,9 +154,10 @@ export function Informacion_pages() {
                     <IconButton
                       aria-label='WhatsApp'
                       component='a'
+                      color='primary'
                       href='https://wa.me/50361366565'
                       target='_blank'
-                      style={{ color: '#25D366', fontSize: '3rem' }}
+                      style={{ fontSize: '3rem' }}
                     >
                       <FaWhatsapp />
                     </IconButton>

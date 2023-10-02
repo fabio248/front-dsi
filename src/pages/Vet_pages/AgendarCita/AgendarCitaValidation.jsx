@@ -35,7 +35,25 @@ export function validationSchemaRegister(event) {
       })
       .required('La fecha es requerida')
       .typeError('Ingrese una fecha válida'),
-    name: yup.string().required('campo obligatorio'),
+    
+      endDate: yup
+      .date()
+      .min(new Date(), 'La fecha no puede ser anterior al día de hoy')
+      .transform((value, originalValue) => {
+        if (originalValue) {
+          const date = new Date(originalValue);
+          return isValid(date) ? date : new Date('invalid');
+        }
+        return null;
+      })
+      .required('La fecha es requerida')
+      .typeError('Ingrese una fecha válida'),
+
+    name: yup.string().required('El motivo de la Consulta es obligatorio')
+        .oneOf(     
+          ['Consulta General', 'Cirugía General', 'Esterilización', 'Vacunación',  'Limpieza Dental',  'Desparacitación' ], 
+          'El campo solo acepta los servicios veterinarios indicados'), 
+
     descripcion: yup.string().required('campo obligatorio'),
     firstName: yup.string().required('campo obligatorio'),
     lastName: yup.string().required('campo obligatorio'),

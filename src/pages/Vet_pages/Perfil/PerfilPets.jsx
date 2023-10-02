@@ -51,7 +51,7 @@ export function PerfilPets({ pet }) {
             <b>Género: </b>
             <span style={{ color: 'gray' }}>{pet.gender}</span>
             <br />
-            <b>Nacimiento de la mascota U adquisición: </b>
+            <b>Nacimiento de la mascota o Adquisición: </b>
             <span style={{ color: 'gray' }}>{pet.birthday}</span>
             <br />
           </b>

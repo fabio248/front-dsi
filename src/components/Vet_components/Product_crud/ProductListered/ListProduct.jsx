@@ -1,7 +1,13 @@
 import React, { useEffect } from 'react';
+
+//import petitions of back
 import { ApiAuth } from '../../../../api/Auth.api';
-import { map } from 'lodash';
-import { UserItem } from '../UserItem';
+
+//clases de renderizado
+import { ProductItem } from '../ProductItem';
+import CategoryIcon from '@mui/icons-material/Category';
+
+//mui material
 import {
   Typography,
   Tab,
@@ -10,17 +16,17 @@ import {
   CircularProgress,
   Grid,
   Button,
-  TextField,
 } from '@mui/material';
-import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
+import { map } from 'lodash';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { useDebounce, useUser } from '../../../../hooks';
+import { useDebounce } from '../../../../hooks';
+import { useProduct } from '../../../../hooks/UseProduct';
 import { SearchInput } from '../../../../shared/components/SearchInput';
 import { useSearchParams } from 'react-router-dom';
 
 const authController = new ApiAuth();
 
-export function ListUsers() {
+export function ListProduct() {
   const [query] = useSearchParams();
   const search = query.get('search');
 
@@ -30,13 +36,13 @@ export function ListUsers() {
 
   const {
     isLoading,
-    users,
+    products,
     hasNextPage,
     fetchNextPage,
     isFetching,
     refetch,
-    totalUsers,
-  } = useUser({
+   
+  } = useProduct({
     accessToken,
     search: deboncedQuery,
   });
@@ -52,8 +58,8 @@ export function ListUsers() {
           <Grid item>
             <Tabs value={0} aria-label='basic tabs example'>
               <Tab
-                icon={<PeopleOutlineIcon />}
-                label='Usuarios'
+                icon={<CategoryIcon />}
+                label='Productos'
                 {...a11yProps(0)}
               />
             </Tabs>
@@ -61,7 +67,6 @@ export function ListUsers() {
           <Grid item sx={{ flexGrow: 1 }}>
             {/* Espacio flexible */}
           </Grid>
-          <Grid item>Total usuarios registrados: {totalUsers}</Grid>
           <Grid item>
             <SearchInput isFetching={isFetching} />
           </Grid>
@@ -79,32 +84,32 @@ export function ListUsers() {
         }}
       >
         <InfiniteScroll
-          dataLength={users.length}
+          dataLength={products.length}
           hasMore={hasNextPage || isLoading}
           next={() => fetchNextPage()}
           scrollThreshold={0.5}
         >
-          {map(users, (user) => (
-            <UserItem key={user.id} user={user} />
+          {map(products, (product) => (
+            <ProductItem key={product.id} product={product} />
           ))}
         </InfiniteScroll>
       </div>
 
       {hasNextPage & !isFetching ? (
-        <Button onClick={() => fetchNextPage()}>Cargar más usuarios</Button>
+        <Button onClick={() => fetchNextPage()}>Cargar más productos</Button>
       ) : undefined}
 
       {isFetching ? <CircularProgress /> : undefined}
 
-      {!hasNextPage & (users.length !== 0) ? (
+      {!hasNextPage & (products.length !== 0) ? (
         <Typography style={{ textAlign: 'center', fontWeight: 500 }}>
-          Ya tienes todos los usuarios cargados
+          Ya tienes todos los productos cargados
         </Typography>
       ) : undefined}
 
-      {users.length === 0 && !isFetching ? (
+      {products.length === 0 && !isFetching ? (
         <Typography style={{ textAlign: 'center', fontWeight: 500 }}>
-          No hay usuarios {search ? 'con este filtro' : undefined}
+          No hay productos {search ? 'con este filtro' : undefined}
         </Typography>
       ) : undefined}
     </div>

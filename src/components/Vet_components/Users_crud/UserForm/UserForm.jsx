@@ -318,7 +318,7 @@ const UserForm = (props) => {
           {success && (
             <Alerta
               type={'success'}
-              title={user ? 'Usuario Actuallizado' : 'Usuario Regsitrado'}
+              title={user ? 'Usuario Actualizado' : 'Usuario Registrado'}
               message={
                 user
                   ? 'Se ha actualizado correctamente el usuario'

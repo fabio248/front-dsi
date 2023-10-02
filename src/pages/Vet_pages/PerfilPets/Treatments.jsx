@@ -10,7 +10,6 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemIcon from '@mui/material/ListItemAvatar';
 import List from '@mui/material/List';
-import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
 import VaccinesIcon from '@mui/icons-material/Vaccines';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import { createTheme, ThemeProvider } from '@mui/material';
@@ -18,12 +17,11 @@ import { size, map } from 'lodash';
 
 const defaultTheme = createTheme();
 
-export function PetMedicalHistory({ medicalHistory }) {
+export function PetMedicalHistoryTreatments({ treatment }) {
   //Modal informacion concreta
   const [showVisualizar, setShowVisualizar] = useState(false);
   const onOpenInfoClientAndPets = () =>
     setShowVisualizar((prevState) => !prevState);
-    //console.log(medicalHistory.diagnostics);
 
   const [titleSeeInfoClientAndPet, setTitleSeeInfoClientAndPet] = useState('');
 
@@ -39,7 +37,7 @@ export function PetMedicalHistory({ medicalHistory }) {
         sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}
       >
         <Avatar sx={{ mx: 4, width: 50, height: 50, bgcolor: '#8EC167' }}>
-          <HistoryEduIcon sx={{ fontSize: 40 }} />
+          <VaccinesIcon sx={{ fontSize: 40 }} />
         </Avatar>
         <ListItemText>
           <br />
@@ -47,55 +45,26 @@ export function PetMedicalHistory({ medicalHistory }) {
             className='estilos-pets'
             style={{ justifyContent: 'space-around' }}
           >
-            <b>ID: </b>
-            <span style={{ color: 'gray' }}>{medicalHistory.id}</span>
+            <b>Hoja clinica: </b>
+            <span style={{ color: 'gray' }}>{treatment?.medicalHistoryId}</span>
             <br />
-            <b>Fecha de registro: </b>
-            <span style={{ color: 'gray' }}>{medicalHistory.createdAt}</span>
+            <b>Nombre: </b>
+            <span style={{ color: 'gray' }}>{treatment?.name}</span>
             <br />
-            <b>Diagnostico: </b>
-            <span style={{ color: 'gray' }}>{medicalHistory?.diagnostics[0]?.description}</span>
+            <b>Cantidad: </b>
+            <span style={{ color: 'gray' }}>{treatment?.quantity}</span>
             <br />
-            <b>Tratamiento: </b>
-            <span style={{ color: 'gray' }}>
-            { map(medicalHistory.diagnostics[0]?.treatments, (medication) => (
-                <ListItem key={medication.id} sx={{ m: 0, ml:2, p:0 }}>
-                    <ListItemIcon>
-                        <VaccinesIcon sx={{ color:'#8EC167' }} />
-                    </ListItemIcon>
-                    <ListItemText
-                        sx={{ m:0, ml: -3, p:0 }}
-                        primary={medication.name}
-                        secondary={medication.frequency}
-                    />
-                </ListItem>
-            ))}
-            </span>
-            <b>Intervención quirúrgica: </b>
-            <span style={{ color: 'gray' }}>
-            {!medicalHistory?.diagnostics[0]?.surgicalIntervations ? 'No ha tenido' 
-            : map(medicalHistory.diagnostics[0].surgicalIntervations, (surgicalIntervation) => (
-                <ListItem key={surgicalIntervation.id} sx={{ m: 0, ml:2, p:0 }}>
-                    <ListItemIcon>
-                        <LocalHospitalIcon sx={{ color:'#8EC167' }} />
-                    </ListItemIcon>
-                    <ListItemText
-                        sx={{ m:0, ml: -3, p:0 }}
-                        primary={surgicalIntervation.description}
-                        secondary={surgicalIntervation.intervationDate}
-                    />
-                </ListItem>
-            ))
-            }</span>
+            <b>Frecuencia: </b>
+            <span style={{ color: 'gray' }}>{treatment?.frequency}</span>
+            <br />
+            <b>Durante: </b>
+            <span style={{ color: 'gray' }}>{treatment?.days + ' días' } </span>
             <br />
           </b>
         </ListItemText>
         <ListItemAvatar>
           <Grid container justifyContent='flex-end'>
             <Grid item>
-                <IconButton color='info'>
-                  <VisibilityIcon sx={{ fontSize: 30 }} />
-                </IconButton>
               <IconButton color='warning' >
                 <ModeEditIcon sx={{ fontSize: 30 }} />
               </IconButton>

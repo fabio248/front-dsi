@@ -132,7 +132,7 @@ export function PetsAllItems({ pet }) {
           <ListItemAvatar
             sx={{ display: 'flex', flexDirection: 'row', margin: '0 auto' }}
           >
-            <NavLink to={`/admin/users/${pet.user.id}`}>
+            <NavLink to={`/admin/pets/${pet.id}`}>
               <Grid item>
                 <IconButton color='info'>
                   <VisibilityIcon sx={{ fontSize: 30 }} />

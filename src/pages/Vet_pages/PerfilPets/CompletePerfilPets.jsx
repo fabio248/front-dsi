@@ -166,6 +166,13 @@ export function CompletePetPerfil() {
             </Paper>
           </Grid>
           <Grid item xs={17} md={8}>
+          <Button
+            //className='user-page_add'
+            variant='contained'
+            //onClick={onOpenCloseModal}
+          >
+            Registrar hoja clinica
+          </Button>
             {/*<Paper
               style={{
                 padding: '20px',

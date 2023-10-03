@@ -43,7 +43,7 @@ export function PerfilUserAndPets() {
 
   return (
     <>
-      <AppBar position='static'>
+      <AppBar position='static' sx={{ m:-1, width: '101.2%' }}>
         <Toolbar>
           <Typography
             variant='h6'

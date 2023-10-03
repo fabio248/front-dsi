@@ -30,7 +30,8 @@ import { size, map } from 'lodash';
 import { Pets } from '../../../api/Pets.api';
 import { ApiAuth } from '../../../api/Auth.api';
 import { useQuery } from '@tanstack/react-query';
-import './CompletePerfilPets.css';
+import { Modal_medicalHistory } from '../../../shared/Modal_MedicalHistory/Modal_medicalHistory';
+import { MedicalHistoryForm } from '../../../components/Vet_components/MedicalHistory/MedicalHistoryForm/MedicalHistoryForm';
 
 const petsController = new Pets();
 const apiAuthController = new ApiAuth();
@@ -38,9 +39,16 @@ const apiAuthController = new ApiAuth();
 export function CompletePetPerfil() {
   const allTreatments = [];
   const allIntervations = [];
+
   let params = useParams();
   const navigate = useNavigate();
+
   const [selectedTab, setSelectedTab] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+
+  const onOpenCloseModal = () => setShowModal((prevState) => !prevState);
+  const onReload = () => setReload((prevState) => !prevState);
+  console.log(showModal);
   const { data: pet, isLoading } = useQuery({
     queryKey: ['pets', params.petId],
     queryFn: async () => {
@@ -170,10 +178,19 @@ export function CompletePetPerfil() {
             <Button
               sx = {{ px: 4, py: 1.5, my: 2 }}
               variant='contained'
-              //onClick={onOpenCloseModal}
+              onClick={onOpenCloseModal}
             >
               Registrar hoja clinica
             </Button>
+            {showModal && (
+              <Modal_medicalHistory
+                show={showModal}
+                close={onOpenCloseModal}
+                title='Crear nueva hoja clinica'
+              >
+                <MedicalHistoryForm close={onOpenCloseModal} onReload={onReload} />
+              </Modal_medicalHistory>
+            )}
             {/*<Paper
               style={{
                 padding: '20px',
@@ -231,7 +248,7 @@ export function CompletePetPerfil() {
                 </div>
               )}
             </Paper>*/}
-            <Box sx={{  borderBottom: 1, borderColor: 'divider' }}>
+            <Box sx={{  borderBottom: 1, borderColor: 'divider', width: 'auto' }}>
               <Grid container spacing={3} alignItems='center'>
                 <Grid item>
                   <Tabs value={selectedTab} onChange={handleTabChange} aria-label='basic tabs example'>

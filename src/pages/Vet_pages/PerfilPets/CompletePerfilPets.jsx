@@ -30,6 +30,7 @@ import { size, map } from 'lodash';
 import { Pets } from '../../../api/Pets.api';
 import { ApiAuth } from '../../../api/Auth.api';
 import { useQuery } from '@tanstack/react-query';
+import './CompletePerfilPets.css';
 
 const petsController = new Pets();
 const apiAuthController = new ApiAuth();
@@ -166,13 +167,13 @@ export function CompletePetPerfil() {
             </Paper>
           </Grid>
           <Grid item xs={17} md={8}>
-          <Button
-            //className='user-page_add'
-            variant='contained'
-            //onClick={onOpenCloseModal}
-          >
-            Registrar hoja clinica
-          </Button>
+            <Button
+              sx = {{ px: 4, py: 1.5, my: 2 }}
+              variant='contained'
+              //onClick={onOpenCloseModal}
+            >
+              Registrar hoja clinica
+            </Button>
             {/*<Paper
               style={{
                 padding: '20px',
@@ -230,7 +231,7 @@ export function CompletePetPerfil() {
                 </div>
               )}
             </Paper>*/}
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Box sx={{  borderBottom: 1, borderColor: 'divider' }}>
               <Grid container spacing={3} alignItems='center'>
                 <Grid item>
                   <Tabs value={selectedTab} onChange={handleTabChange} aria-label='basic tabs example'>
@@ -277,21 +278,12 @@ export function CompletePetPerfil() {
                   <CircularProgress style={{ alignSelf: 'center' }} />
                 </div>
               ) : (
-                <div
-                  style={{
-                    minHeight: '250px',
-                    maxHeight: '670px',
-                    overflowY: 'scroll',
-                    scrollbarWidth: 'thin',
-                    scrollbarColor: 'transparent transparent', // Oculta el scrollbar en navegadores que soportan "scrollbar-color"
-                    msOverflowStyle: 'none', // Oculta el scrollbar en navegadores antiguos de Internet Explorer
-                    display: 'flex',
-                    flexDirection: 'column',
-                  }}
-                >
+                <div className='box-container'>
+                <Box sx={{ width: '100%' }}>
                   {map(pet.medicalHistories, (hojaClinica) => (
                     <PetMedicalHistory key={hojaClinica.id} medicalHistory={hojaClinica} />
                   ))}
+                </Box>
                 </div>
               )}
               </div>
@@ -299,7 +291,7 @@ export function CompletePetPerfil() {
 
             {/* PETS DOCUMENTATION */}
             {selectedTab === 1 && (
-              <div>
+              <div className='box-container'>
                 {!isLoading && size(pet.medicalHistories) === 0 ? (
                 <>
                   <Typography
@@ -324,22 +316,12 @@ export function CompletePetPerfil() {
                   <CircularProgress style={{ alignSelf: 'center' }} />
                 </div>
               ) : (
-                <div
-                  style={{
-                    minHeight: '250px',
-                    maxHeight: '670px',
-                    overflowY: 'scroll',
-                    scrollbarWidth: 'thin',
-                    scrollbarColor: 'transparent transparent', // Oculta el scrollbar en navegadores que soportan "scrollbar-color"
-                    msOverflowStyle: 'none', // Oculta el scrollbar en navegadores antiguos de Internet Explorer
-                    display: 'flex',
-                    flexDirection: 'column',
-                  }}
-                >
+                <div className='box-container'>
+                <Box sx={{ width: '100%' }}>
                   { map(allTreatments, (treatment) => (
                       <PetMedicalHistoryTreatments key={treatment.id} treatment={treatment}/>
                   ))}
-                    
+                </Box>
                 </div>
               )}
               </div>

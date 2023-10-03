@@ -62,7 +62,7 @@ export function PetMedicalHistoryTreatments({ treatment }) {
             <br />
           </b>
         </ListItemText>
-        <ListItemAvatar>
+        <ListItemAvatar sx={{ display: 'flex', flexDirection: 'row', margin: '0 auto' }}>
           <Grid container justifyContent='flex-end'>
             <Grid item>
               <IconButton color='warning' >

@@ -58,11 +58,11 @@ export function CompletePetPerfil() {
   if (!isLoading ){
     pet.medicalHistories?.map((medicalHistory) => {
       medicalHistoryId = medicalHistory.id;
-        if(medicalHistory.diagnostics[0] !== undefined){
-          medicalHistory.diagnostics[0].treatments.map((treatment) => {
+        if(medicalHistory?.diagnostic !== null){
+          medicalHistory.diagnostic.treatments.map((treatment) => {
             allTreatments.push({...treatment, medicalHistoryId});
           })
-          medicalHistory.diagnostics[0].surgicalIntervations.map((intervation) => {
+          medicalHistory?.diagnostic.surgicalIntervations.map((intervation) => {
             allIntervations.push({...intervation, medicalHistoryId});
           })
         }
@@ -81,7 +81,7 @@ export function CompletePetPerfil() {
             sx={{ flexGrow: 1 }}
             onClick={() => navigate('/admin')}
           >
-            Veterinaria Mistum
+            Clínica Veterinaria Mistun
           </Typography>
 
           <Button

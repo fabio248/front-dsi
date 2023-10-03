@@ -54,11 +54,11 @@ export function PetMedicalHistory({ medicalHistory }) {
             <span style={{ color: 'gray' }}>{medicalHistory.createdAt}</span>
             <br />
             <b>Diagnostico: </b>
-            <span style={{ color: 'gray' }}>{medicalHistory?.diagnostics[0]?.description}</span>
+            <span style={{ color: 'gray' }}>{medicalHistory?.diagnostic?.description}</span>
             <br />
             <b>Tratamiento: </b>
             <span style={{ color: 'gray' }}>
-            { map(medicalHistory.diagnostics[0]?.treatments, (medication) => (
+            { map(medicalHistory.diagnostic?.treatments, (medication) => (
                 <ListItem key={medication.id} sx={{ m: 0, ml:2, p:0 }}>
                     <ListItemIcon>
                         <VaccinesIcon sx={{ color:'#8EC167' }} />
@@ -73,15 +73,15 @@ export function PetMedicalHistory({ medicalHistory }) {
             </span>
             <b>Intervención quirúrgica: </b>
             <span style={{ color: 'gray' }}>
-            {!medicalHistory?.diagnostics[0]?.surgicalIntervations ? 'No ha tenido' 
-            : map(medicalHistory.diagnostics[0].surgicalIntervations, (surgicalIntervation) => (
+            {!medicalHistory?.diagnostic?.surgicalIntervations ? 'No ha tenido' 
+            : map(medicalHistory.diagnostic.surgicalIntervations, (surgicalIntervation) => (
                 <ListItem key={surgicalIntervation.id} sx={{ m: 0, ml:2, p:0 }}>
                     <ListItemIcon>
                         <LocalHospitalIcon sx={{ color:'#8EC167' }} />
                     </ListItemIcon>
                     <ListItemText
                         sx={{ m:0, ml: -3, p:0 }}
-                        primary={surgicalIntervation.description}
+                        primary={surgicalIntervation.name}
                         secondary={surgicalIntervation.intervationDate}
                     />
                 </ListItem>

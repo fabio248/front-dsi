@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 //esquemas de validaciones y manipulacion de datos
 import { useFormik } from 'formik';
@@ -7,19 +8,24 @@ import { useFormik } from 'formik';
 import { Species } from '../../../../api/specie.api';
 import { ApiAuth } from '../../../../api/Auth.api';
 import { Pets } from '../../../../api/Pets.api';
+import { size, map } from 'lodash';
 
 //MUI Material
 import Autocomplete from '@mui/material/Autocomplete';
 import {
   Grid,
   TextField,
-  FormHelperText,
   Button,
   Divider,
+  Stepper,
+  Step,
+  StepLabel,
   Box,
   Typography,
   Checkbox,
   FormControlLabel,
+  ListItemAvatar,
+  IconButton,
   CircularProgress,
 } from '@mui/material';
 import { RemoveCircle } from '@mui/icons-material';
@@ -36,7 +42,11 @@ import { useAuth } from '../../../../hooks';
 import {
   initialPetValues,
   validationSchemaPetRegister,
+  initialTreatmentsValues,
+  medicalHistoryTreatmentsSchema,
 } from './medicalHistoryFormSchema';
+
+import { Modal_medicalHistory } from '../../../../shared/Modal_MedicalHistory/Modal_medicalHistory';
 
 //estilos
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -45,113 +55,12 @@ const specieController = new Species();
 const authController = new ApiAuth();
 const petsController = new Pets();
 
-export function MedicalHistoryFormTextFields({ formik, onBinaryStrChange, onDropFile }) {
-  const [uploadedFile, setUploadedFile] = useState(null);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [isError, setIsError] = useState(false);
-  const [openSpecieList, setOpenSpeciesList] = useState(false);
+const steps = ['Anamnesis', 'Examen Físico', 'Diagnóstico'];
 
-  const { data: speciesCatalog = [] } = useQuery({
-    queryKey: ['species'],
-    queryFn: async () => {
-      const accessToken = authController.getAccessToken();
-      const data = await specieController.getAllspecies(accessToken);
-      return data;
-    },
-  });
-
-  const onDrop = useCallback(
-    (acceptedFiles) => {
-      const file = acceptedFiles[0];
-      if (file && isFileValid(file)) {
-        const reader = new FileReader();
-
-        reader.onload = () => {
-          const binaryStr = reader.result;
-          // console.log('binaryStr in PetFormTextFields:', binaryStr);
-          // Call the parent component function to pass the binaryStr value.
-          onBinaryStrChange(binaryStr);
-        };
-        reader.readAsArrayBuffer(file);
-
-        setUploadedFile(file);
-        setErrorMessage('');
-        setIsError(false);
-
-        onDropFile(file);
-      } else {
-        setUploadedFile(null);
-        setErrorMessage(
-          'Formato de archivo no válido. Se aceptan archivos PDF y imágenes (PNG, JPG, JPEG).'
-        );
-        setIsError(true);
-      }
-    },
-    [onBinaryStrChange]
-  );
-
-  const isFileValid = (file) => {
-    const acceptedFormats = [
-      'application/pdf',
-      'application/msword',
-      'image/png',
-      'image/jpeg',
-    ];
-    return acceptedFormats.includes(file.type);
-  };
-
-  // Eliminar el archivo cargado estableciendo el estado en null en el dropzone
-  const handleDelete = () => {
-    setUploadedFile(null);
-    setErrorMessage('');
-    setIsError(false);
-  };
-
-  //restriccion de los elementos obtenido en el dropzone
-  const { getRootProps, getInputProps, isDragActive, isDragReject } =
-    useDropzone({
-      onDrop,
-      accept: [
-        'application/pdf',
-        'application/msword',
-        'image/png',
-        'image/jpeg',
-      ],
-      multiple: false,
-    });
-
-  const dropzoneStyle = {
-    borderWidth: 2,
-    borderRadius: 2,
-    borderColor: isError ? 'red' : isDragReject ? 'red' : '#888',
-    borderStyle: 'dashed',
-    p: 4,
-    textAlign: 'center',
-    backgroundColor: 'background.paper',
-    cursor: 'pointer',
-    height: '100%',
-    ml: 0,
-  };
-
-  const gender = [
-    { label: 'macho', key: 'M', value: 'macho' },
-    { label: 'hembra', key: 'F', value: 'hembra' },
-  ];
-
-  const handleDateChange = (date) => {
-    formik.setFieldValue('birthday', date);
-  };
-
+export function MedicalHistoryFormAnamnesisTextFields({ formik }) {
   return (
-    <Box sx={{ height:'90%'}}>
-      <Divider
-            container
-            spacing={2}
-            sx={{ maxWidth: '100%', margin: 0 }}
-        >
-        {'Annannesis'}
-      </Divider>
-      <Grid container spacing={2} sx={{ maxWidth: '100%', margin: '0' }}>
+    <Box sx={{ height:'97%'}}>
+      <Grid container spacing={2} sx={{ maxWidth: '97%', margin: '0' }}>
         <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
@@ -282,6 +191,7 @@ export function MedicalHistoryFormTextFields({ formik, onBinaryStrChange, onDrop
             label='Si convive con otras mascotas, ¿Cuáles mascotas?'
             variant='outlined'
             size='small'
+            disabled={!formik.values.convivencia}
             value={formik.values.whichPets}
             onChange={formik.handleChange}
             error={formik.touched.whichPets && Boolean(formik.errors.whichPets)}
@@ -340,16 +250,92 @@ export function MedicalHistoryFormTextFields({ formik, onBinaryStrChange, onDrop
           />
         </Grid>
       </Grid>
-      <br />
-      <Divider
-        container
-        spacing={2}
-        sx={{ maxWidth: '100%', margin: 0, marginBottom: '-20px' }}
-      >
-        {'Examen Físico '}
-      </Divider>
-      <br />
-      <Grid container spacing={2} sx={{ maxWidth: '100%', margin: '0' }}>
+    </Box>
+  );
+}
+
+
+export function MedicalHistoryPhysicalExamTextFields({ formik, onBinaryStrChange, onDropFile }) {
+  const [uploadedFile, setUploadedFile] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isError, setIsError] = useState(false);
+
+  const onDrop = useCallback(
+    (acceptedFiles) => {
+      const file = acceptedFiles[0];
+      if (file && isFileValid(file)) {
+        const reader = new FileReader();
+
+        reader.onload = () => {
+          const binaryStr = reader.result;
+          // console.log('binaryStr in PetFormTextFields:', binaryStr);
+          // Call the parent component function to pass the binaryStr value.
+          onBinaryStrChange(binaryStr);
+        };
+        reader.readAsArrayBuffer(file);
+
+        setUploadedFile(file);
+        setErrorMessage('');
+        setIsError(false);
+
+        onDropFile(file);
+      } else {
+        setUploadedFile(null);
+        setErrorMessage(
+          'Formato de archivo no válido. Se aceptan archivos PDF y imágenes (PNG, JPG, JPEG).'
+        );
+        setIsError(true);
+      }
+    },
+    [onBinaryStrChange]
+  );
+
+  const isFileValid = (file) => {
+    const acceptedFormats = [
+      'application/pdf',
+      'application/msword',
+      'image/png',
+      'image/jpeg',
+    ];
+    return acceptedFormats.includes(file.type);
+  };
+
+  // Eliminar el archivo cargado estableciendo el estado en null en el dropzone
+  const handleDelete = () => {
+    setUploadedFile(null);
+    setErrorMessage('');
+    setIsError(false);
+  };
+
+  //restriccion de los elementos obtenido en el dropzone
+  const { getRootProps, getInputProps, isDragActive, isDragReject } =
+    useDropzone({
+      onDrop,
+      accept: [
+        'application/pdf',
+        'application/msword',
+        'image/png',
+        'image/jpeg',
+      ],
+      multiple: false,
+    });
+
+  const dropzoneStyle = {
+    borderWidth: 2,
+    borderRadius: 2,
+    borderColor: isError ? 'red' : isDragReject ? 'red' : '#888',
+    borderStyle: 'dashed',
+    p: 4,
+    textAlign: 'center',
+    backgroundColor: 'background.paper',
+    cursor: 'pointer',
+    height: '100%',
+    ml: 0,
+  };
+
+  return (
+    <Box sx={{ height:'97%', mb: 10}}>
+      <Grid container spacing={2} sx={{ maxWidth: '97%', margin: '0' }}>
         <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
@@ -381,6 +367,91 @@ export function MedicalHistoryFormTextFields({ formik, onBinaryStrChange, onDrop
             helperText={
               formik.touched.palpitaciones && formik.errors.palpitaciones
             }
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            name='temperatura'
+            label='Temperatura de la mascota (°C)'
+            variant='outlined'
+            placeholder='Ejemplo: 34 °C'
+            size='small'
+            value={formik.values.temperatura}
+            onChange={formik.handleChange}
+            type='number'
+            error={formik.touched.weight && Boolean(formik.errors.weight)}
+            helperText={formik.touched.weight && formik.errors.weight}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+          name='frecuenciaRespiratoria'
+            label='Frecuencia respiratoria (res/min)'
+            variant='outlined'
+            placeholder='Ejemplo: 17 res/min'
+            size='small'
+            value={formik.values.frecuenciaRespiratoria}
+            onChange={formik.handleChange}
+            type='number'
+            error={formik.touched.weight && Boolean(formik.errors.weight)}
+            helperText={formik.touched.weight && formik.errors.weight}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            name='frecuenciaCardiaca'
+            label='Frecuencia respiratoria (lat/min)'
+            variant='outlined'
+            placeholder='Ejemplo: 92 lat/min'
+            size='small'
+            value={formik.values.frecuenciaCardiaca}
+            onChange={formik.handleChange}
+            type='number'
+            error={formik.touched.weight && Boolean(formik.errors.weight)}
+            helperText={formik.touched.weight && formik.errors.weight}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            name='examenLaboratorio'
+            label='Examen de laboratorio'
+            variant='outlined'
+            size='small'
+            value={formik.values.examenLaboratorio}
+            onChange={formik.handleChange}
+            error={formik.touched.weight && Boolean(formik.errors.weight)}
+            helperText={formik.touched.weight && formik.errors.weight}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            name='pulso'
+            label='Pulso'
+            variant='outlined'
+            placeholder='Ejemplo: 84 pulsos/min'
+            size='small'
+            value={formik.values.pulso}
+            onChange={formik.handleChange}
+            error={formik.touched.weight && Boolean(formik.errors.weight)}
+            helperText={formik.touched.weight && formik.errors.weight}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            name='mucus'
+            label='Mucus'
+            variant='outlined'
+            size='small'
+            value={formik.values.mucus}
+            onChange={formik.handleChange}
+            error={formik.touched.weight && Boolean(formik.errors.weight)}
+            helperText={formik.touched.weight && formik.errors.weight}
           />
         </Grid>
         <Grid container spacing={3} sx={{ margin: 0 }}>
@@ -435,6 +506,218 @@ export function MedicalHistoryFormTextFields({ formik, onBinaryStrChange, onDrop
   );
 }
 
+export function MedicalHistoryFormDiagnosticTreatmentsTextFields({ formik, index, medicalHistory, formikTreatments, key, treatment}) {
+
+  const temp = [...formik.values.tratamientos];
+  console.log(temp);
+  const nameHandleChange = (e) => {
+    console.log(e)
+    temp[index].name = e.target.value;
+    console.log(temp)
+    return formik.setFieldValue('tratamientos', temp)
+  }
+  const quantityTreatmentHandleChange = (e) => {
+    temp[index].quantityTreatment = e.target.value;
+    return formik.setFieldValue('tratamientos', temp)
+  }
+  const frequencyTreatmentHandleChange= (e) =>{
+    temp[index].frequencyTreatment = e.target.value;
+    return formik.setFieldValue('tratamientos', temp)
+  }
+  const daysHandleChange= (e) =>{
+    temp[index].days = e.target.value;
+    return formik.setFieldValue('tratamientos', temp)
+  }
+  return (
+    <>
+      <Grid item xs={12} sm={6}>
+        <TextField
+          fullWidth
+          id='name'
+          name='name'
+          label='Nombre del tratamiento'
+          variant='outlined'
+          size='small'
+          value={ medicalHistory || treatment ? formik.values.tratamientos[index].name : formikTreatments.values.name}
+          onChange={ medicalHistory ? formik.handleChange : treatment ?  nameHandleChange : formikTreatments.handleChange}
+          error={ formikTreatments.touched.name && Boolean(formikTreatments.errors.name) }
+          helperText={ formikTreatments.touched.name && formikTreatments.errors.name }
+        />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <TextField
+          fullWidth
+          id='quantityTreatment'
+          name='quantityTreatment'
+          label='Cantidad del tratamiento'
+          variant='outlined'
+          size='small'
+          value={  medicalHistory || treatment ? formik.values.tratamientos[index].quantityTreatment : formikTreatments.values.quantityTreatment}
+          onChange={ medicalHistory ? formik.handleChange : treatment ?  quantityTreatmentHandleChange : formikTreatments.handleChange }
+          error={ formikTreatments.touched.quantityTreatment && Boolean(formikTreatments.errors.quantityTreatment) }
+          helperText={ formikTreatments.touched.quantityTreatment && formikTreatments.errors.quantityTreatment }
+        />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <TextField
+          fullWidth
+          id='frequencyTreatment'
+          name='frequencyTreatment'
+          label='Frecuencia de aplicación'
+          variant='outlined'
+          size='small'
+          value={  medicalHistory || treatment ? formik.values.tratamientos[index].frequencyTreatment : formikTreatments.values.frequencyTreatment }
+          onChange={medicalHistory ? formik.handleChange : treatment ?  frequencyTreatmentHandleChange : formikTreatments.handleChange}
+          error={ formikTreatments.touched.frequencyTreatment && Boolean(formikTreatments.errors.frequencyTreatment) }
+          helperText={ formikTreatments.touched.frequencyTreatment && formikTreatments.errors.frequencyTreatment }
+        />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <TextField
+          fullWidth
+          id='days'
+          name='days'
+          type='number'
+          label='Días de aplicación'
+          variant='outlined'
+          size='small'
+          value={  medicalHistory || treatment ? formik.values.tratamientos[index].days :  formikTreatments.values.days}
+          onChange={medicalHistory ? formik.handleChange : treatment ?  daysHandleChange : formikTreatments.handleChange}
+          error={ formikTreatments.touched.days && Boolean(formikTreatments.errors.days) }
+          helperText={ formikTreatments.touched.days && formikTreatments.errors.days }
+        />
+      </Grid> 
+    </>
+  );
+}
+
+
+export function MedicalHistoryFormDiagnosticTreatmentsForm({ formik, formikTreatments, close, medicalHistory, key }) {
+
+  return (
+    <form onSubmit={formikTreatments.handleSubmit}>
+    <Grid container spacing={2} sx={{ maxWidth: '400px'}}>
+      <MedicalHistoryFormDiagnosticTreatmentsTextFields formikTreatments={formikTreatments} formik={formik} medicalHistory={medicalHistory} key={key}/> 
+    </Grid>
+    <Grid sx={{ display: 'flex', justifyItems: 'center',  justifyContent: 'space-around', mt:2}}>
+      <Button
+        onClick={close}
+        color='error'
+      >
+        Cancelar
+      </Button>
+      <Button type='submit'>
+        Agregar
+      </Button>
+    </Grid>
+    </form>
+  );
+}
+
+
+export function MedicalHistoryFormDiagnosticTextFields({ formik, medicalHistory }) {
+
+  const [showModalTreatment, setShowModalTreatment] = useState(false);
+
+  const onOpenCloseModalTreatment = () => setShowModalTreatment((prevState) => !prevState);
+  const onReload = () => setReload((prevState) => !prevState);
+
+  const formikTreatments = useFormik({
+    initialValues: initialTreatmentsValues(),
+    validationSchema: medicalHistoryTreatmentsSchema(),
+    validateOnChange: false,
+    onSubmit: async (formValue) => {
+      console.log(formValue);
+      formik.setFieldValue('tratamientos', [...formik.values.tratamientos, formValue]);
+      formikTreatments.resetForm();
+      close()
+    }
+  });
+
+  return (
+    <Box sx={{ height:'100%'}}>
+      <Grid container spacing={2} sx={{ maxWidth: '97%', margin: '0' }}>
+        <Grid item xs={12} sm={12}>
+          <TextField
+            fullWidth
+            id='diagnostico'
+            name='diagnostico'
+            label='Descripción del diagnóstico'
+            variant='outlined'
+            size='small'
+            value={formik.values.diagnostico}
+            onChange={formik.handleChange}
+            error={ formik.touched.diagnostic && Boolean(formik.errors.diagnostic) }
+            helperText={ formik.touched.diagnostic && formik.errors.diagnostic }
+          />
+        </Grid>
+      </Grid>
+      <br />
+      <Divider
+        container
+        spacing={2}
+        sx={{ maxWidth: '100%', margin: 0, marginBottom: '-20px' }}
+      >
+        {'Tratamientos'}
+      </Divider>
+      <br />
+      <Grid container spacing={2} sx={{ maxWidth: '97%', margin: '0' }}>
+        <Grid item xs={12} sm={6} sx={{ display: 'flex', justifyItems: 'center',  justifyContent: 'center'}}>
+          <Button variant='outlined' onClick={onOpenCloseModalTreatment}>
+            Agregar tratamiento
+          </Button>
+        </Grid>
+        {showModalTreatment && (
+          <Modal_medicalHistory
+            show={showModalTreatment}
+            title='Crear tratamiento'
+          >
+            <MedicalHistoryFormDiagnosticTreatmentsForm formik={formik} formikTreatments={formikTreatments} close={onOpenCloseModalTreatment} />
+          </Modal_medicalHistory>
+        )}
+        <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyItems: 'center',  justifyContent: 'center', margin: '0 auto'}}>
+          <TextField
+            fullWidth
+            id='cantidadTratamientos'
+            name='cantidadTratamientos'
+            label='Cantidad de tratamientos'
+            variant='outlined'
+            size='small'
+            type='number'
+            value={formik.values.tratamientos.length}
+            onChange={formik.handleChange}
+            disabled={true}
+            //error={ formik.touched.cantidadTratamientos && Boolean(formik.errors.cantidadTratamientos) }
+            //helperText={ formik.touched.cantidadTratamientos && formik.errors.cantidadTratamientos }
+          />
+        </Grid>
+        { map(formik.values.tratamientos, (treatment, index) => (
+          <>
+          <br/>
+          <br/>
+            <Divider>
+              { 'Tratamiento ' + (index + 1)}
+            </Divider>
+          <br/>
+          <br/>
+           <MedicalHistoryFormDiagnosticTreatmentsTextFields index = {index} formik={formik} formikTreatments={formik} medicalHistory={medicalHistory} treatment={treatment}/>
+            <ListItemAvatar sx={{ display: 'flex', flexDirection: 'row', margin: '0 auto' }}>
+              <Grid container justifyContent='flex-end'>
+                <Grid item>
+                  <IconButton color='warning' >
+                    <DeleteIcon sx={{ fontSize: 30 }} />
+                  </IconButton>
+                </Grid>
+              </Grid>
+            </ListItemAvatar>
+          </>
+      
+        ))}
+      </Grid> 
+    </Box>
+  );
+}
+
 const MedicalHistoryForm = (props) => {
   const { close, medicalHistory, idPet} = props;
   const [isError, setIsError] = useState(false);
@@ -444,6 +727,25 @@ const MedicalHistoryForm = (props) => {
   const [uploadData, setUploadData] = useState(null);
   const [fileOriginal, setFileOriginal] = useState(null);
   const [fileCharged, setFileCharged] = useState(false);
+
+
+  //Stepper
+  const [activeStep, setActiveStep] = React.useState(0);
+
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleReset = () => {
+    setActiveStep(0);
+  };
+
+  ///////////////////////////
+
 
   const queryClient = useQueryClient();
   const createPetMutation = useMutation({
@@ -526,62 +828,108 @@ const MedicalHistoryForm = (props) => {
   //manipulacion y validacion de los campos
   const formik = useFormik({
     initialValues: initialPetValues(medicalHistory),
-    validationSchema: validationSchemaPetRegister(medicalHistory),
+    validationSchema: validationSchemaPetRegister(medicalHistory, activeStep),
     validateOnChange: false,
     onSubmit: async (formValue) => {
-      if (!pet) {
-        // createPetMutation.mutate({ idUser, formValue });
-        console.log(formValue);
-        /*createPetMuatation.mutate({ medicalHistoryId: medicalHistoryId, formValue });
+      console.log(formValue);
+      if (activeStep === steps.length - 1 ){     
+        if (!pet) {
+          // createPetMutation.mutate({ idUser, formValue });
+          //console.log(formValue);
+          /*createPetMuatation.mutate({ medicalHistoryId: medicalHistoryId, formValue });
 
-      setTimeout(() => {
-        close();
-      }, 1500);*/
+        setTimeout(() => {
+          close();
+        }, 1500);*/
+        }
+        //aqui ira la peticion donde se actualizaran los datos
+        /*updatePetMuatation.mutate({ medicalHistoryId: medicalHistoryId, formValue });
+
+        setTimeout(() => {
+          close();
+        }, 1500);*/
+      } else {
+        handleNext();
+        console.log(formValue)
       }
-      //aqui ira la peticion donde se actualizaran los datos
-      /*updatePetMuatation.mutate({ medicalHistoryId: medicalHistoryId, formValue });
-
-      setTimeout(() => {
-        close();
-      }, 1500);*/
     },
   });
+  console.log(formik.values);
   return (
     <>
       <div className='hide-scrollbar'>
-        <form onSubmit={formik.handleSubmit}>
+      <Stepper activeStep={activeStep}>
+        {steps.map((label, index) => {
+          const stepProps = {};
+          const labelProps = {};
+          return (
+            <Step key={label} {...stepProps}>
+              <StepLabel {...labelProps}>{label}</StepLabel>
+            </Step>
+          );
+        })}
+      </Stepper>
+      <Box sx={{ display: 'flex', flexDirection: 'column', pt: 2 }} component='form' noValidate onSubmit={formik.handleSubmit}>
+      {activeStep === steps.length ? (
+        <>
+          <Typography sx={{ mt: 2, mb: 1 }}>
+            All steps completed - you&apos;re finished
+          </Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+            <Box sx={{ flex: '1 1 auto' }} />
+            <Button onClick={handleReset}>Reset</Button>
+          </Box>
+        </>
+      ) : (
+        activeStep === 0 ? (
+          <React.Fragment>
+            <Typography sx={{ mt: 0.5, mb: 0.5, textAlign: 'center' }}>Parte {activeStep + 1}</Typography>
+              <MedicalHistoryFormAnamnesisTextFields
+                formik={formik}
+              />
+          </React.Fragment>
+        ) : (
+          activeStep === 1 ? (
+          <React.Fragment>
+            <Typography sx={{ mt: 0.5, mb: 0.5, textAlign: 'center' }}>Parte {activeStep + 1}</Typography>
+              <MedicalHistoryPhysicalExamTextFields
+                formik={formik}
+                onBinaryStrChange={handleBinaryStrChange}
+                onDropFile={handleDropFile}
+              />
+          </React.Fragment>
+          ) : (
+          <React.Fragment>
+            <Typography sx={{ mt: 0.5, mb: 0.5, textAlign: 'center' }}>Parte {activeStep + 1}</Typography>
+              <MedicalHistoryFormDiagnosticTextFields
+                formik={formik}
+                medicalHistory={medicalHistory}
+              />
+          </React.Fragment>
+          )
+        )
+      )}
+        <Grid sx={{ display: 'flex', flexDirection: 'row', mt: 2, mb: 1 }}>
+          <Button
+            color="inherit"
+            disabled={activeStep === 0}
+            onClick={handleBack}
+          >
+            Back
+          </Button>
+          <Box sx={{ flex: '1 1 auto' }} />
+
+          <Button type='submit'>
+            {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+          </Button>
+        </Grid>
+      </Box>
           {/*Campos de llenado del fomrulario*/}
-          <MedicalHistoryFormTextFields
+          {/*<MedicalHistoryFormTextFields
             formik={formik}
             onBinaryStrChange={handleBinaryStrChange}
             onDropFile={handleDropFile}
-          />
-
-          <Grid
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'center',
-              margin: '0 auto',
-              mt: 10,
-            }}
-          >
-            <Button
-              type='submit'
-              size='medium'
-              sx={{ mx: 2, marginTop: '12px' }}
-            >
-              {medicalHistory ? 'Actualizar' : 'Registrar'}
-            </Button>
-            <Button
-              color='error'
-              onClick={close}
-              size='medium'
-              sx={{ mx: 2, marginTop: '12px' }}
-            >
-              Cancelar
-            </Button>
-          </Grid>
+          /> */}
           {success && (
             <Alerta
               type={'success'}
@@ -608,7 +956,6 @@ const MedicalHistoryForm = (props) => {
               strong={medicalHistory ? `${pet.name}` : 'Verifica la información ingresada'}
             />
           )}
-        </form>
       </div>
     </>
   );

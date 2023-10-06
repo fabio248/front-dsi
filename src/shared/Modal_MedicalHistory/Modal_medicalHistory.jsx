@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import { AddBoxOutlined } from '@mui/icons-material';
 
 const style = {
   position: 'absolute',
@@ -11,7 +12,6 @@ const style = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   maxWidth: 800,
-  minWidth: 400,
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 4,
@@ -33,13 +33,12 @@ export function Modal_medicalHistory({ show, close, title, children }) {
         <Typography id='modal-modal-title' variant='h6' component='h2'>
           {title}
         </Typography>
-        <Typography
+        <Box
           id='modal-modal-description'
-          sx={{ mt: 2 }}
-          component={'h3'}
+          sx={{ mt: 2, p:0, mx:0 }}
         >
           {children}
-        </Typography>
+        </Box>
       </Box>
     </Modal>
   );

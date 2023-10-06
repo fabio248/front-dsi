@@ -2,47 +2,129 @@ import * as yup from 'yup';
 import { format, parse } from 'date-fns';
 import { isValid } from 'date-fns';
 
-export function initialPetValues(pet) {
+export function initialPetValues(medicalHistory) {
   let dateObject;
-  if (pet) {
+  if (medicalHistory?.diagnostic?.surgicalIntervations) {
     dateObject = parse(pet.birthday, 'dd/MM/yyyy', new Date());
   }
   return {
-    name: pet?.name || '',
-    specie: pet?.specie || null,
-    raza: pet?.raza || '',
-    color: pet?.color || '',
-    isHaveTattoo: pet?.isHaveTatto || false,
-    birthday: pet ? dateObject : null,
-    gender: pet?.gender || '',
-    pedigree: pet?.pedigree || false,
-    //medicalHistory: {
+    //medicalHistory?: {
+    vacuna: medicalHistory?.isHaveAllVaccine || false,
+    reproduccion: medicalHistory?.isReproduced || false,
+    descendencia: medicalHistory?.descendants || '',
+    habitaculo: medicalHistory?.room || '',
+    enfermedad: medicalHistory?.diasesEvaluation || '',
+    observacion: medicalHistory?.observation || '',
     //  food: {
-    quantityFood: pet?.medicalHistory?.food?.quantity || '',
-    typeFood: pet?.medicalHistory?.food?.type || '',
+    quantityFood: medicalHistory?.food?.quantity || '',
+    typeFood: medicalHistory?.food?.type || '',
     //  },
-    descendencia: pet?.medicalHistory.descendants || '',
-    reproduccion: pet?.medicalHistory.isReproduced || false,
-    vacuna: pet?.medicalHistory?.isHaveAllVaccine || false,
     //  otherPet: {
-    convivencia: pet?.medicalHistory?.otherPet?.isLiveOtherPets || false,
-    whichPets: pet?.medicalHistory?.otherPet?.whichPets || '',
+    convivencia: medicalHistory?.otherPet?.isLiveOtherPets || false,
+    whichPets: medicalHistory?.otherPet?.whichPets || '',
     //  },
-    enfermedad: pet?.medicalHistory.diasesEvaluation || '',
-    observacion: pet?.medicalHistory?.observation || '',
-    habitaculo: pet?.medicalHistory.room || '',
     //  physicalExam: {
-    weight: pet?.medicalHistory?.physicalExam?.weight || undefined,
-    palpitaciones: pet?.medicalHistory?.physicalExam?.palpitations || '',
+    weight: medicalHistory?.physicalExam?.weight || undefined,
+    palpitaciones: medicalHistory?.physicalExam?.palpitations || '',
+    temperatura: medicalHistory?.physicalExam?.temperature || undefined,
+    frecuenciaRespiratoria: medicalHistory?.physicalExam?.respiratoryRate || undefined,
+    frecuenciaCardiaca: medicalHistory?.physicalExam?.cardiacRate || undefined,
+    examenLaboratorio: medicalHistory?.physicalExam?.laboratoryExam || '',
+    pulso: medicalHistory?.physicalExam?.pulse || '',
+    mucus: medicalHistory?.physicalExam?.mucous || '',
+    //  },
+    //  diagnostic: {
+    diagnostic: medicalHistory?.diagnostic?.description || '',
+    cantidadTratamientos: undefined,
+    tratamientos: medicalHistory?.diagnostic?.treatments || [],
+    intervenciones: medicalHistory?.diagnostic?.surgicalIntervations || [],
     //  },
     //},
     uploadedFile: null,
   };
 }
 
-export function validationSchemaPetRegister(pet) {
+export function validationSchemaPetRegister(pet, activeStep) {
+  // Anamnesis Schema
+  if(activeStep === 0){
+    return yup.object({
+      quantityFood: yup
+      .string()
+      .required('La cantidad de alimento es obligatoria'),
+      typeFood: yup.string().required('El tipo de alimento es obligatorio'),
+      descendencia: yup.string().required('La descendencia es obligatoria'),
+      reproduccion: yup.boolean(),
+      //.required('El campo de verificación de reproducción es obligatorio'),
+      vacuna: yup.boolean(),
+      //.required('El campo de verificación de vacunas es obligatorio'),
+      convivencia: yup.boolean(),
+      //.required('El campo de convivencia con otras mascotas es obligatorio'),
+      whichPets: yup.string().when('convivencia', {
+        is: true,
+        then: () =>
+          yup
+            .string()
+            .required(
+              'Se verificó que convive con otras mascotas, por lo tanto este campo ahora es requerido'
+            ),
+        otherwise: () => yup.string(),
+      }),
+      enfermedad: yup
+        .string()
+        .required('Los detalles de la enfermedad o falta de ella son requeridos'),
+      observacion: yup.string().required('Las observaciones son obligatorias'),
+      habitaculo: yup.string().required('El habitáculo es obligatorio'),
+    });
+  } else if ( activeStep === 1){
+    return yup.object({
+      weight: yup
+      .number()
+      .positive('El peso debe ser positivo para que sea válido')
+      .required('El peso de la mascota es obligatorio'),
+      palpitaciones: yup
+      .string()
+      .required('Las palpitaciones obligatorio'),
+      temperatura: yup
+      .number()
+      .positive('La temperatura debe ser positivo para que sea válido')
+      .required('La temperatura de la mascota es obligatorio'),
+      frecuenciaCardiaca: yup
+      .number()
+      .positive('La frecuencia cardiaca debe ser positivo para que sea válido')
+      .required('La frecuencia cardiaca de la mascota es obligatorio'),
+      frecuenciaRespiratoria: yup
+      .number()
+      .positive('La frecuencia respiratoria debe ser positivo para que sea válido')
+      .required('La frecuencia respiratoria de la mascota es obligatorio'),
+      palpitaciones: yup
+      .string()
+      .required('El examen de laboratorio obligatorio'),
+      pulso: yup
+      .string()
+      .required('El pulso obligatorio'),
+      mucus: yup
+      .string()
+      .required('El mucus de la mascota es obligatorio'),
+    });
+  } else {
+    return yup.object({
+      diagnostic: yup
+      .string()
+      .required('El diagnostico obligatorio'),
+      cantidadTratamientos: yup
+      .number()
+      .positive('La cantidad de tratamientos debe ser positivo para que sea válido')
+      .required('La cantidad de tratamientos es obligatorio')
+      /*tratamientos: yup
+      .string()
+      .required('El tratamiento obligatorio'),
+      intervenciones: yup
+      .string()
+      .required('La intervencion obligatoria'),*/
+    });
+  }
   return yup.object({
-    name: yup.string().required('El nombre es obligatorio'),
+    /*name: yup.string().required('El nombre es obligatorio'),
     specie: yup
       .object()
       .required('El campo de especie solo acepta las especies listadas'),
@@ -71,7 +153,7 @@ export function validationSchemaPetRegister(pet) {
       .required('El campo de género solo acepta macho o hembra'),
     pedigree: yup
       .boolean()
-      .required('El campo para verificar pedigree es obligatorio'),
+      .required('El campo para verificar pedigree es obligatorio'),*/
     quantityFood: yup
       .string()
       .required('La cantidad de alimento es obligatoria'),
@@ -98,10 +180,31 @@ export function validationSchemaPetRegister(pet) {
       .required('Los detalles de la enfermedad o falta de ella son requeridos'),
     observacion: yup.string().required('Las observaciones son obligatorias'),
     habitaculo: yup.string().required('El habitáculo es obligatorio'),
-    weight: yup
-      .number()
-      .positive('El peso debe ser positivo para que sea válido')
-      .required('El peso de la mascota es obligatorio'),
-    palpitaciones: yup.string().required('Las palpitaciones obligatorio'),
   });
+}
+
+export function initialTreatmentsValues() {
+  return {
+    name: '',
+    quantityTreatment: '',
+    frequencyTreatment: '',
+    days: '',
+  }
+}
+export function medicalHistoryTreatmentsSchema(){
+  return yup.object({
+    name: yup
+    .string()
+    .required('El nombre del tratamiento es obligatorio'),
+    quantityTreatment: yup
+    .string()
+    .required('La cantidad de tratamiento es obligatoria'),
+    frequencyTreatment: yup
+    .string()
+    .required('La frecuencia de aplicación del tratamiento obligatorio'),
+    days: yup
+      .number()
+      .positive('Los dias de aplicacion deben ser positivo para que sea válido')
+      .required('Los dias de aplicacion del tratamiento es obligatorio'),
+    });
 }

@@ -48,7 +48,6 @@ export function CompletePetPerfil() {
 
   const onOpenCloseModal = () => setShowModal((prevState) => !prevState);
   const onReload = () => setReload((prevState) => !prevState);
-  console.log(showModal);
   const { data: pet, isLoading } = useQuery({
     queryKey: ['pets', params.petId],
     queryFn: async () => {
@@ -78,7 +77,6 @@ export function CompletePetPerfil() {
       }
     );
   }
-  console.log(allIntervations);
 
   return (
     <>

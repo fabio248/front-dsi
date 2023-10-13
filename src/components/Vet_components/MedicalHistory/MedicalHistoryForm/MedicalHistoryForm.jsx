@@ -3,6 +3,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 //esquemas de validaciones y manipulacion de datos
 import { useFormik } from 'formik';
+import { parse } from 'date-fns';
 
 //Backend petitions
 import { Species } from '../../../../api/specie.api';
@@ -43,7 +44,9 @@ import {
   initialPetValues,
   validationSchemaPetRegister,
   initialTreatmentsValues,
+  initialIntervationsValues,
   medicalHistoryTreatmentsSchema,
+  medicalHistoryIntervationsSchema,
 } from './medicalHistoryFormSchema';
 
 import { Modal_medicalHistory } from '../../../../shared/Modal_MedicalHistory/Modal_medicalHistory';
@@ -360,13 +363,8 @@ export function MedicalHistoryPhysicalExamTextFields({ formik, onBinaryStrChange
             size='small'
             value={formik.values.palpitaciones}
             onChange={formik.handleChange}
-            error={
-              formik.touched.palpitaciones &&
-              Boolean(formik.errors.palpitaciones)
-            }
-            helperText={
-              formik.touched.palpitaciones && formik.errors.palpitaciones
-            }
+            error={ formik.touched.palpitaciones && Boolean(formik.errors.palpitaciones) }
+            helperText={ formik.touched.palpitaciones && formik.errors.palpitaciones }
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -380,8 +378,8 @@ export function MedicalHistoryPhysicalExamTextFields({ formik, onBinaryStrChange
             value={formik.values.temperatura}
             onChange={formik.handleChange}
             type='number'
-            error={formik.touched.weight && Boolean(formik.errors.weight)}
-            helperText={formik.touched.weight && formik.errors.weight}
+            error={formik.touched.temperatura && Boolean(formik.errors.temperatura)}
+            helperText={formik.touched.temperatura && formik.errors.temperatura}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -395,23 +393,23 @@ export function MedicalHistoryPhysicalExamTextFields({ formik, onBinaryStrChange
             value={formik.values.frecuenciaRespiratoria}
             onChange={formik.handleChange}
             type='number'
-            error={formik.touched.weight && Boolean(formik.errors.weight)}
-            helperText={formik.touched.weight && formik.errors.weight}
+            error={formik.touched.frecuenciaRespiratoria && Boolean(formik.errors.frecuenciaRespiratoria)}
+            helperText={formik.touched.frecuenciaRespiratoria && formik.errors.frecuenciaRespiratoria}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
             name='frecuenciaCardiaca'
-            label='Frecuencia respiratoria (lat/min)'
+            label='Frecuencia rcardiaca (lat/min)'
             variant='outlined'
             placeholder='Ejemplo: 92 lat/min'
             size='small'
             value={formik.values.frecuenciaCardiaca}
             onChange={formik.handleChange}
             type='number'
-            error={formik.touched.weight && Boolean(formik.errors.weight)}
-            helperText={formik.touched.weight && formik.errors.weight}
+            error={formik.touched.frecuenciaCardiaca && Boolean(formik.errors.frecuenciaCardiaca)}
+            helperText={formik.touched.frecuenciaCardiaca && formik.errors.frecuenciaCardiaca}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -423,8 +421,8 @@ export function MedicalHistoryPhysicalExamTextFields({ formik, onBinaryStrChange
             size='small'
             value={formik.values.examenLaboratorio}
             onChange={formik.handleChange}
-            error={formik.touched.weight && Boolean(formik.errors.weight)}
-            helperText={formik.touched.weight && formik.errors.weight}
+            error={formik.touched.examenLaboratorio && Boolean(formik.errors.examenLaboratorio)}
+            helperText={formik.touched.examenLaboratorio && formik.errors.examenLaboratorio}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -437,8 +435,8 @@ export function MedicalHistoryPhysicalExamTextFields({ formik, onBinaryStrChange
             size='small'
             value={formik.values.pulso}
             onChange={formik.handleChange}
-            error={formik.touched.weight && Boolean(formik.errors.weight)}
-            helperText={formik.touched.weight && formik.errors.weight}
+            error={formik.touched.pulso && Boolean(formik.errors.pulso)}
+            helperText={formik.touched.pulso && formik.errors.pulso }
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -450,8 +448,8 @@ export function MedicalHistoryPhysicalExamTextFields({ formik, onBinaryStrChange
             size='small'
             value={formik.values.mucus}
             onChange={formik.handleChange}
-            error={formik.touched.weight && Boolean(formik.errors.weight)}
-            helperText={formik.touched.weight && formik.errors.weight}
+            error={formik.touched.mucus && Boolean(formik.errors.mucus)}
+            helperText={formik.touched.mucus && formik.errors.mucus}
           />
         </Grid>
         <Grid container spacing={3} sx={{ margin: 0 }}>
@@ -509,11 +507,8 @@ export function MedicalHistoryPhysicalExamTextFields({ formik, onBinaryStrChange
 export function MedicalHistoryFormDiagnosticTreatmentsTextFields({ formik, index, medicalHistory, formikTreatments, key, treatment}) {
 
   const temp = [...formik.values.tratamientos];
-  console.log(temp);
   const nameHandleChange = (e) => {
-    console.log(e)
     temp[index].name = e.target.value;
-    console.log(temp)
     return formik.setFieldValue('tratamientos', temp)
   }
   const quantityTreatmentHandleChange = (e) => {
@@ -614,12 +609,115 @@ export function MedicalHistoryFormDiagnosticTreatmentsForm({ formik, formikTreat
   );
 }
 
+export function MedicalHistoryFormDiagnosticSurgicalInterventionsTextFields({ formik, index, medicalHistory, formikIntervations, key, intervation}) {
+
+  const temp = [...formik.values.intervenciones];
+  const nameHandleChange = (e) => {
+    temp[index].name = e.target.value;
+    return formik.setFieldValue('intervenciones', temp)
+  }
+  const dateInterventionHandleChange = (date) => {
+    temp[index].date = date;
+    return formik.setFieldValue('intervenciones', temp)
+  }
+  const descriptionHandleChange= (e) =>{
+    temp[index].description = e.target.value;
+    return formik.setFieldValue('intervenciones', temp)
+  }
+
+  const handleDateChange = (date) => {
+    formikIntervations.setFieldValue('date', date);
+  };
+
+  return (
+    <>
+      <Grid item xs={12} sm={6}>
+        <TextField
+          fullWidth
+          id='name'
+          name='name'
+          label='Nombre de intervención'
+          variant='outlined'
+          size='small'
+          value={ medicalHistory || intervation ? formik.values.intervenciones[index].name : formikIntervations.values.name}
+          onChange={ medicalHistory ? formik.handleChange : intervation ?  nameHandleChange : formikIntervations.handleChange}
+          error={ formikIntervations.touched.name && Boolean(formikIntervations.errors.name) }
+          helperText={ formikIntervations.touched.name && formikIntervations.errors.name }
+        />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <DatePicker
+            views={['year', 'month', 'day']}
+            slotProps={{ textField: { size: 'small' } }}
+            label='Fecha de intervención'
+            value={ medicalHistory || intervation ? formik.values.intervenciones[index].date : formikIntervations.values.date}
+            onChange={ medicalHistory ? formik.handleChange : intervation ?  dateInterventionHandleChange : handleDateChange}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                fullWidth
+                name='date'
+                id='date'
+                error={ formikIntervations.touched.date && Boolean(formikIntervations.errors.date) }
+                helperText={ formikIntervations.touched.date && formikIntervations.errors.date }
+              />
+            )}
+            disablePast // Deshabilitar fechas antes al día de hoy
+            clearable // Permitir borrar la fecha seleccionada
+            format="dd/MM/yyyy"
+          />
+        </LocalizationProvider>
+      </Grid>
+      <Grid item xs={12} sm={12}>
+        <TextField
+          fullWidth
+          id='description'
+          name='description'
+          label='Descripción'
+          variant='outlined'
+          size='small'
+          value={  medicalHistory || intervation ? formik.values.intervenciones[index].description : formikIntervations.values.description }
+          onChange={medicalHistory ? formik.handleChange : intervation ?  descriptionHandleChange : formikIntervations.handleChange}
+          error={ formikIntervations.touched.description && Boolean(formikIntervations.errors.description) }
+          helperText={ formikIntervations.touched.description && formikIntervations.errors.description }
+        />
+      </Grid>
+    </>
+  );
+}
+
+export function MedicalHistoryFormDiagnosticSurgicalIntervationsForm({ formik, formikIntervations, close, medicalHistory, key }) {
+
+  return (
+    <form onSubmit={formikIntervations.handleSubmit}>
+    <Grid container spacing={2} sx={{ maxWidth: '400px'}}>
+      <MedicalHistoryFormDiagnosticSurgicalInterventionsTextFields formikIntervations={formikIntervations} formik={formik} medicalHistory={medicalHistory} key={key}/> 
+    </Grid>
+    <Grid sx={{ display: 'flex', justifyItems: 'center',  justifyContent: 'space-around', mt:2}}>
+      <Button
+        onClick={close}
+        color='error'
+      >
+        Cancelar
+      </Button>
+      <Button type='submit'>
+        Agregar
+      </Button>
+    </Grid>
+    </form>
+  );
+}
+
 
 export function MedicalHistoryFormDiagnosticTextFields({ formik, medicalHistory }) {
 
   const [showModalTreatment, setShowModalTreatment] = useState(false);
+  const [showModalIntervation, setShowModalIntervation] = useState(false);
 
   const onOpenCloseModalTreatment = () => setShowModalTreatment((prevState) => !prevState);
+  const onOpenCloseModalIntervation = () => setShowModalIntervation((prevState) => !prevState);
+
   const onReload = () => setReload((prevState) => !prevState);
 
   const formikTreatments = useFormik({
@@ -627,12 +725,36 @@ export function MedicalHistoryFormDiagnosticTextFields({ formik, medicalHistory 
     validationSchema: medicalHistoryTreatmentsSchema(),
     validateOnChange: false,
     onSubmit: async (formValue) => {
-      console.log(formValue);
       formik.setFieldValue('tratamientos', [...formik.values.tratamientos, formValue]);
       formikTreatments.resetForm();
-      close()
+      onOpenCloseModalTreatment();
     }
   });
+
+  const formikIntervations = useFormik({
+    initialValues: initialIntervationsValues(),
+    validationSchema: medicalHistoryIntervationsSchema(),
+    validateOnChange: false,
+    onSubmit: async (formValue) => {
+      formik.setFieldValue('intervenciones', [...formik.values.intervenciones, formValue]);
+      formikIntervations.resetForm();
+      onOpenCloseModalIntervation();
+    }
+  });
+
+  const onDeleteTreatments = (index) =>{
+    const temp = [...formik.values.tratamientos]
+    temp.splice(index, 1);
+    formik.setFieldValue('tratamientos', [...temp]);
+  }
+
+  const onDeleteIntervations = (index) =>{
+    const temp = [...formik.values.intervenciones]
+    temp.splice(index, 1);
+    formik.setFieldValue('intervenciones', [...temp]);
+  }
+  
+  console.log(formikIntervations.isValid);
 
   return (
     <Box sx={{ height:'100%'}}>
@@ -640,12 +762,12 @@ export function MedicalHistoryFormDiagnosticTextFields({ formik, medicalHistory 
         <Grid item xs={12} sm={12}>
           <TextField
             fullWidth
-            id='diagnostico'
-            name='diagnostico'
+            id='diagnostic'
+            name='diagnostic'
             label='Descripción del diagnóstico'
             variant='outlined'
             size='small'
-            value={formik.values.diagnostico}
+            value={formik.values.diagnostic}
             onChange={formik.handleChange}
             error={ formik.touched.diagnostic && Boolean(formik.errors.diagnostic) }
             helperText={ formik.touched.diagnostic && formik.errors.diagnostic }
@@ -658,7 +780,7 @@ export function MedicalHistoryFormDiagnosticTextFields({ formik, medicalHistory 
         spacing={2}
         sx={{ maxWidth: '100%', margin: 0, marginBottom: '-20px' }}
       >
-        {'Tratamientos'}
+        <Typography fontWeight='bold'>{'Tratamientos'}</Typography>
       </Divider>
       <br />
       <Grid container spacing={2} sx={{ maxWidth: '97%', margin: '0' }}>
@@ -686,30 +808,87 @@ export function MedicalHistoryFormDiagnosticTextFields({ formik, medicalHistory 
             type='number'
             value={formik.values.tratamientos.length}
             onChange={formik.handleChange}
-            disabled={true}
-            //error={ formik.touched.cantidadTratamientos && Boolean(formik.errors.cantidadTratamientos) }
-            //helperText={ formik.touched.cantidadTratamientos && formik.errors.cantidadTratamientos }
+            error={ formik.touched.tratamientos && Boolean(formik.errors.tratamientos) }
+            helperText={ formik.touched.tratamientos && formik.errors.tratamientos }
           />
         </Grid>
         { map(formik.values.tratamientos, (treatment, index) => (
           <>
-          <br/>
-          <br/>
-            <Divider>
-              { 'Tratamiento ' + (index + 1)}
+            <Divider sx = {{ width: '100%', my:2 }}>
+              <Typography>{ 'Tratamiento ' + (index + 1)}</Typography>
             </Divider>
-          <br/>
-          <br/>
-           <MedicalHistoryFormDiagnosticTreatmentsTextFields index = {index} formik={formik} formikTreatments={formik} medicalHistory={medicalHistory} treatment={treatment}/>
-            <ListItemAvatar sx={{ display: 'flex', flexDirection: 'row', margin: '0 auto' }}>
-              <Grid container justifyContent='flex-end'>
-                <Grid item>
-                  <IconButton color='warning' >
-                    <DeleteIcon sx={{ fontSize: 30 }} />
+            <Grid container sx={{ display: 'flex', flexDirection: 'row' }} justifyContent='flex-end' spacing={2} >
+              <Grid container  sx={{ display: 'flex', flexDirection: 'row', mt:1 , ml:0.1 }} spacing={2} xs={10} md={10}>  
+                <MedicalHistoryFormDiagnosticTreatmentsTextFields index = {index} formik={formik} formikTreatments={formik} medicalHistory={medicalHistory} treatment={treatment}/>
+              </Grid>
+              <ListItemAvatar sx={{ display: 'flex', flexDirection: 'row', margin: '0 auto', alignItems: 'center', height:'100%' }}>
+                <Grid item xs={1} md={1}>
+                  <IconButton onClick={() => onDeleteTreatments(index)}>
+                    <DeleteIcon sx={{ fontSize: 30, color: '#f44336'}} />
                   </IconButton>
                 </Grid>
+              </ListItemAvatar>
+            </Grid>
+          </>
+      
+        ))}
+      </Grid>
+      <br />
+      <Divider
+        container
+        spacing={2}
+        sx={{ maxWidth: '100%', margin: 0, marginBottom: '-20px' }}
+      >
+        <Typography fontWeight='bold'>{'Intervenciones médicas'}</Typography>
+      </Divider>
+      <br />
+      <Grid container spacing={2} sx={{ maxWidth: '97%', margin: '0' }}>
+        <Grid item xs={12} sm={6} sx={{ display: 'flex', justifyItems: 'center',  justifyContent: 'center'}}>
+          <Button variant='outlined' onClick={onOpenCloseModalIntervation}>
+            Agregar Intervención
+          </Button>
+        </Grid>
+        {showModalIntervation && (
+          <Modal_medicalHistory
+            show={showModalIntervation}
+            title='Crear tratamiento'
+          >
+            <MedicalHistoryFormDiagnosticSurgicalIntervationsForm formik={formik} formikIntervations={formikIntervations} close={onOpenCloseModalIntervation} />
+          </Modal_medicalHistory>
+        )}
+        <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyItems: 'center',  justifyContent: 'center', margin: '0 auto'}}>
+          <TextField
+            fullWidth
+            id='cantidadIntervenciones'
+            name='cantidadIntervenciones'
+            label='Cantidad de intervenciones'
+            variant='outlined'
+            size='small'
+            type='number'
+            value={formik.values.intervenciones.length}
+            onChange={formik.handleChange}
+            disabled={true}
+            //error={ formik.touched.cantidadIntervenciones && Boolean(formik.errors.cantidadIntervenciones) }
+            //helperText={ formik.touched.cantidadIntervenciones && formik.errors.cantidadIntervenciones }
+          />
+        </Grid>
+        { map(formik.values.intervenciones, (intervation, index) => (
+          <>
+            <Divider sx = {{ width: '100%', my:2 }}>
+              <Typography>{ 'Intervención ' + (index + 1)}</Typography>
+            </Divider>
+            <Grid container sx={{ display: 'flex', flexDirection: 'row' }} justifyContent='flex-end' spacing={2} >
+              <Grid container  sx={{ display: 'flex', flexDirection: 'row', mt:1 , ml:0.1 }} spacing={2} xs={10} md={10}>  
+                <MedicalHistoryFormDiagnosticSurgicalInterventionsTextFields index = {index} formik={formik} formikIntervations={formik} medicalHistory={medicalHistory} intervation={intervation}/>
               </Grid>
-            </ListItemAvatar>
+              <ListItemAvatar sx={{ display: 'flex', flexDirection: 'row', margin: '0 auto', alignItems: 'center', height:'100%' }}>
+                <Grid item xs={1} md={1}>
+                  <IconButton onClick={() => onDeleteIntervations(index)}>
+                    <DeleteIcon sx={{ fontSize: 30, color: '#f44336'}} />
+                  </IconButton>
+                </Grid>
+              </ListItemAvatar>
+            </Grid>
           </>
       
         ))}
@@ -825,6 +1004,7 @@ const MedicalHistoryForm = (props) => {
     setFileOriginal(fileOrigen);
   };
 
+  console.log(validationSchemaPetRegister(medicalHistory, activeStep));
   //manipulacion y validacion de los campos
   const formik = useFormik({
     initialValues: initialPetValues(medicalHistory),
@@ -854,7 +1034,6 @@ const MedicalHistoryForm = (props) => {
       }
     },
   });
-  console.log(formik.values);
   return (
     <>
       <div className='hide-scrollbar'>
@@ -899,6 +1078,7 @@ const MedicalHistoryForm = (props) => {
               />
           </React.Fragment>
           ) : (
+            activeStep === 2 ? (
           <React.Fragment>
             <Typography sx={{ mt: 0.5, mb: 0.5, textAlign: 'center' }}>Parte {activeStep + 1}</Typography>
               <MedicalHistoryFormDiagnosticTextFields
@@ -906,6 +1086,7 @@ const MedicalHistoryForm = (props) => {
                 medicalHistory={medicalHistory}
               />
           </React.Fragment>
+            ) : (<></>)
           )
         )
       )}

@@ -648,21 +648,20 @@ export function MedicalHistoryFormDiagnosticSurgicalInterventionsTextFields({ fo
       <Grid item xs={12} sm={6}>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DatePicker
+            name='date'
+            id='date'
             views={['year', 'month', 'day']}
-            slotProps={{ textField: { size: 'small' } }}
+            slotProps={{ 
+              textField: { 
+                size: 'small', 
+                name: 'date', 
+                error: formikIntervations.touched.date && Boolean(formikIntervations.errors.date), 
+                helperText: formikIntervations.touched.date && formikIntervations.errors.date 
+              } 
+            }}
             label='Fecha de intervención'
             value={ medicalHistory || intervation ? formik.values.intervenciones[index].date : formikIntervations.values.date}
             onChange={ medicalHistory ? formik.handleChange : intervation ?  dateInterventionHandleChange : handleDateChange}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                fullWidth
-                name='date'
-                id='date'
-                error={ formikIntervations.touched.date && Boolean(formikIntervations.errors.date) }
-                helperText={ formikIntervations.touched.date && formikIntervations.errors.date }
-              />
-            )}
             disablePast // Deshabilitar fechas antes al día de hoy
             clearable // Permitir borrar la fecha seleccionada
             format="dd/MM/yyyy"
@@ -754,7 +753,7 @@ export function MedicalHistoryFormDiagnosticTextFields({ formik, medicalHistory 
     formik.setFieldValue('intervenciones', [...temp]);
   }
   
-  console.log(formikIntervations.isValid);
+  //console.log(formikIntervations.isValid);
 
   return (
     <Box sx={{ height:'100%'}}>
@@ -1034,6 +1033,8 @@ const MedicalHistoryForm = (props) => {
       }
     },
   });
+
+  console.log(formik.errors)
   return (
     <>
       <div className='hide-scrollbar'>

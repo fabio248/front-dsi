@@ -124,10 +124,12 @@ export function validationSchemaPetRegister(medicalHistory, activeStep) {
       .string()
       .required('La intervencion obligatoria'),*/
     });
-    const schema3 = schemaBase.when((value) => value.tratamientos.length > 0, schemaBase.concat(medicalHistoryTreatmentsSchema()));
-    mergedSchema = schema3.when((value) => value.intervenciones.length > 0, schema3.concat(medicalHistoryIntervationsSchema()));
+    const schema3 = schemaBase.concat(medicalHistoryTreatmentsSchema());
+    console.log(schema3);
+    mergedSchema = schema3.concat(medicalHistoryIntervationsSchema());
+    console.log(mergedSchema);
     
-    return mergedSchema;
+    return mergedSchema || schema3 || schemaBase;
   }
 }
 
@@ -173,16 +175,16 @@ export function medicalHistoryIntervationsSchema(){
     .string()
     .required('La descripcion de la intervención es obligatoria'),
     date: yup
-    .date()
-    .max(new Date(), 'La fecha no puede ser antes al día de hoy')
-    .transform((value, originalValue) => {
-      if (originalValue) {
-        const date = new Date(originalValue);
-        return isValid(date) ? date : new Date('invalid');
-      }
-      return null;
-    })
-    .required('La fecha es requerida')
-    .typeError('Ingrese una fecha válida'),
+      .date()
+      .min(new Date(), 'La fecha no puede ser anterior al día de hoy')
+      .transform((value, originalValue) => {
+        if (originalValue) {
+          const date = new Date(originalValue);
+          return isValid(date) ? date : new Date('invalid');
+        }
+        return null;
+      })
+      .required('La fecha es requerida')
+      .typeError('Ingrese una fecha válida'),
     });
 }

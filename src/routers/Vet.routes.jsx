@@ -34,13 +34,10 @@ export function Vet_routes() {
           path='calendar'
           element={Layout(Vet_Layouts, AgendarCita)}
         ></Route>
+        <Route path='products' element={Layout(Vet_Layouts, ProductCatalog)}></Route>
         <Route path='users/:userId' element={<PerfilUserAndPets />} />
         <Route path='pets/:petId' element={<CompletePetPerfil />} />
-      </Route>
-        <Route
-          path='products'
-          element={Layout(Vet_Layouts, ProductCatalog)}
-        ></Route>
+      </Route>    
     </Routes>
   );
 }

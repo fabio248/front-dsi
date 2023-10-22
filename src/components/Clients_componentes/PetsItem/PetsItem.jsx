@@ -21,8 +21,8 @@ export function PetsItem({ pet }) {
       <Demo>
         <ListItem sx={{ display: 'flex', flexWrap: 'wrap' }}>
           <ListItemAvatar sx={{ margin: '0 auto' }}>
-            <Avatar sx={{ mx: 4, width: 60, height: 60 }}>
-              <PetsIcon sx={{ fontSize: 45 }} />
+            <Avatar sx={{ mx: 4, width: 60, height: 60, bgcolor: '#8EC167' }}>
+              <PetsIcon sx={{ fontSize: 45, color: '#FFFFFF'}} />
             </Avatar>
           </ListItemAvatar>
           <ListItemText>
@@ -38,29 +38,27 @@ export function PetsItem({ pet }) {
               <b>Nombre de la mascota: </b>
               {pet.name}
               <br />
+              <b>Especie de la mascota: </b>
+              {pet.specie.name}
+              <br />
+              <b>Raza de la mascota: </b>
+              {pet.raza}
+              <br />
               <b>Genero: </b>
               {pet.gender}
               <br />
               <b>Nacimiento de la mascota: </b>
               {pet.birthday}
-
               <br />
-              {/* <b>{user.direction ? 'Direccion: ' : ''}</b> */}
-
               <b>Color del pelaje: </b>
               {pet.color}
               <br />
               <b>¿Tatuajes o marcas?: </b>
               {pet.isHaveTatto == false ? 'No posee' : 'Si posee'}
-              <br />
-              <b>Raza de la mascota: </b>
-              {pet.raza}
-              <br />
+              <br />  
               <b>¿Posee Pedigrí?: </b>
               {pet.pedigree == false ? 'No Posee' : 'Si posee'}
               <br />
-              <b>Especie de la mascota: </b>
-              {pet.specie.name}
             </p>
           </ListItemText>
         </ListItem>

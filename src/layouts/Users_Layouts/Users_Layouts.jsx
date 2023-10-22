@@ -116,7 +116,7 @@ export function Users_Layouts(props) {
       </NavLink>
       <Divider />
 
-      <div style={{ position: 'absolute', left: '10px', bottom: '10px' }}>
+      <div style={{ position: 'absolute', right: '10px', bottom: '10px' }}>
         <IconButton
           aria-label='Facebook'
           component='a'

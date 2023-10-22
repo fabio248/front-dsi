@@ -6,24 +6,18 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import PetsIcon from '@mui/icons-material/Pets';
 import ListItemText from '@mui/material/ListItemText';
-import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import StarBorder from '@mui/icons-material/StarBorder';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import InfoIcon from '@mui/icons-material/Info';
-import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
-import FingerprintIcon from '@mui/icons-material/Fingerprint';
-import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual';
-import { Button } from '@mui/material';
 import { FaFacebook } from 'react-icons/fa';
 import { FaWhatsapp } from 'react-icons/fa';
 import { FaInstagram } from 'react-icons/fa';
@@ -77,7 +71,7 @@ export function Clients_Layouts(props) {
           <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
-                <InfoIcon />
+                <PetsIcon />
               </ListItemIcon>
               <ListItemText primary='Mascotas' />
             </ListItemButton>
@@ -96,7 +90,7 @@ export function Clients_Layouts(props) {
           <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
-                <MenuBookIcon />
+              <CalendarMonthIcon />
               </ListItemIcon>
               <ListItemText primary='Visualizar Citas' />
             </ListItemButton>
@@ -105,7 +99,7 @@ export function Clients_Layouts(props) {
       </List>
       <Divider />
 
-      <div style={{ position: 'absolute', left: '10px', bottom: '10px' }}>
+      <div style={{ position: 'absolute', right: '10px', bottom: '10px' }}>
         <IconButton
           aria-label='Facebook'
           component='a'

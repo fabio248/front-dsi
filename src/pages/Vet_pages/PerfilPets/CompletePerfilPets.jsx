@@ -15,9 +15,7 @@ import {
   Button,
   CircularProgress,
 } from '@mui/material';
-import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
-import VaccinesIcon from '@mui/icons-material/Vaccines';
-import LocalHospitalIcon from '@mui/icons-material/LocalHospital'
+import { HistoryEdu, Vaccines, LocalHospital, FileCopy } from "@mui/icons-material";
 //render of pets
 import { PetMedicalHistory } from './MedicalHistory';
 import { PetMedicalHistoryTreatments } from './Treatments';
@@ -52,11 +50,10 @@ export function CompletePetPerfil() {
     queryKey: ['pets', params.petId],
     queryFn: async () => {
       const accessToken = apiAuthController.getAccessToken();
-      const response = await petsController.getPetById(
+      return await petsController.getPetById(
         accessToken,
         params.petId
       );
-      return response;
     },
   });
   const handleTabChange = (event, newValue) => {
@@ -250,9 +247,9 @@ export function CompletePetPerfil() {
               <Grid container spacing={3} alignItems='center'>
                 <Grid item>
                   <Tabs value={selectedTab} onChange={handleTabChange} aria-label='basic tabs example'>
-                    <Tab icon={<HistoryEduIcon />} label='Historial médico' {...a11yProps(0)} />
-                    <Tab icon={<VaccinesIcon />} label='Tratamientos' {...a11yProps(1)} />
-                    <Tab icon={<LocalHospitalIcon />} label='Intervenciones' {...a11yProps(2)} />
+                    <Tab icon={<HistoryEdu />} label='Historial médico' {...a11yProps(0)} />
+                    <Tab icon={<Vaccines />} label='Tratamientos' {...a11yProps(1)} />
+                    <Tab icon={<LocalHospital />} label='Intervenciones' {...a11yProps(2)} />
                   </Tabs>
                 </Grid>
 

@@ -2,7 +2,6 @@ import React, { useEffect ,useState} from 'react';
 import './ListeredAllPets.css';
 
 //import petitions of back
-import { Pets } from '../../../../api/Pets.api';
 import { ApiAuth } from '../../../../api/Auth.api';
 
 //clases de renderizado
@@ -87,6 +86,7 @@ export function ListeredAllPets() {
               hasMore={hasNextPage || isLoading}
               next={() => fetchNextPage()}
               scrollThreshold={0.5}
+              loader={<p>Loading...</p>}
             >
               {map(pets, (pet) => (
                 <PetsAllItems key={pet.id} pet={pet} />

@@ -1,19 +1,10 @@
 import React, { useState } from 'react';
 
 // mui material elements
-import ListItemText from '@mui/material/ListItemText';
 import { Divider, Avatar, Grid, IconButton } from '@mui/material';
 import ListItem from '@mui/material/ListItem';
-import PetsIcon from '@mui/icons-material/Pets';
-import ModeEditIcon from '@mui/icons-material/ModeEdit';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemIcon from '@mui/material/ListItemAvatar';
-import List from '@mui/material/List';
-import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
-import VaccinesIcon from '@mui/icons-material/Vaccines';
-import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
-import { createTheme, ThemeProvider } from '@mui/material';
+import {Pets, ModeEdit, Visibility, HistoryEdu, Vaccines, LocalHospital} from "@mui/icons-material";
+import { createTheme, ThemeProvider, ListItemAvatar, ListItemIcon, ListItemText, List} from '@mui/material';
 import { size, map } from 'lodash';
 
 const defaultTheme = createTheme();
@@ -27,7 +18,7 @@ export function PetMedicalHistory({ medicalHistory }) {
 
   const [titleSeeInfoClientAndPet, setTitleSeeInfoClientAndPet] = useState('');
 
-  //ejecuta la funcion de visualizacion de informacion de cliente y su mascota (VisibilityIcon)
+  //ejecuta la funcion de visualizacion de informacion de cliente y su mascota (Visibility)
   const openInfoClientAndPets = () => {
     setTitleSeeInfoClientAndPet(`Datos específicos de la mascota`);
     onOpenInfoClientAndPets();
@@ -39,7 +30,7 @@ export function PetMedicalHistory({ medicalHistory }) {
         sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}
       >
         <Avatar sx={{ mx: 4, width: 50, height: 50, bgcolor: '#8EC167' }}>
-          <HistoryEduIcon sx={{ fontSize: 40 }} />
+          <HistoryEdu sx={{ fontSize: 40 }} />
         </Avatar>
         <ListItemText>
           <br />
@@ -61,7 +52,7 @@ export function PetMedicalHistory({ medicalHistory }) {
             { map(medicalHistory.diagnostic?.treatments, (medication) => (
                 <ListItem key={medication.id} sx={{ m: 0, ml:2, p:0 }}>
                     <ListItemIcon>
-                        <VaccinesIcon sx={{ color:'#8EC167' }} />
+                        <Vaccines sx={{ color:'#8EC167' }} />
                     </ListItemIcon>
                     <ListItemText
                         sx={{ m:0, ml: -3, p:0 }}
@@ -77,7 +68,7 @@ export function PetMedicalHistory({ medicalHistory }) {
             : map(medicalHistory.diagnostic.surgicalIntervations, (surgicalIntervation) => (
                 <ListItem key={surgicalIntervation.id} sx={{ m: 0, ml:2, p:0 }}>
                     <ListItemIcon>
-                        <LocalHospitalIcon sx={{ color:'#8EC167' }} />
+                        <LocalHospital sx={{ color:'#8EC167' }} />
                     </ListItemIcon>
                     <ListItemText
                         sx={{ m:0, ml: -3, p:0 }}
@@ -94,17 +85,18 @@ export function PetMedicalHistory({ medicalHistory }) {
           <Grid container justifyContent='flex-end'>
             <Grid item>
                 <IconButton color='info'>
-                  <VisibilityIcon sx={{ fontSize: 30 }} />
+                  <Visibility sx={{ fontSize: 30 }} />
                 </IconButton>
               <IconButton color='warning' >
-                <ModeEditIcon sx={{ fontSize: 30 }} />
+                <ModeEdit sx={{ fontSize: 30 }} />
               </IconButton>
+              <IconButton color="primary"></IconButton>
             </Grid>
           </Grid>
         </ListItemAvatar>
       </ListItem>
       <Divider>
-        <PetsIcon color='disabled' />
+        <Pets color='disabled' />
       </Divider>
     </div>
     </ThemeProvider>

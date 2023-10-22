@@ -7,11 +7,7 @@ import { ApiAuth } from '../../../../api/Auth.api';
 
 //clases de renderizado
 import { PetsAllItems } from '../PetsAllItems';
-import { PetsItems } from '../PetsDocumentation';
-import SearchIcon from '@mui/icons-material/Search';
 import PetsIcon from '@mui/icons-material/Pets';
-import DescriptionIcon from '@mui/icons-material/Description';
-import InputAdornment from '@mui/material/InputAdornment';
 
 //mui material
 import {
@@ -69,7 +65,6 @@ export function ListeredAllPets() {
           <Grid item>
             <Tabs value={selectedTab} onChange={handleTabChange} aria-label='basic tabs example'>
               <Tab icon={<PetsIcon />} label='Mascotas' {...a11yProps(0)} />
-              <Tab icon={<DescriptionIcon />} label='Documentos' {...a11yProps(1)} />
             </Tabs>
           </Grid>
 
@@ -95,42 +90,6 @@ export function ListeredAllPets() {
             >
               {map(pets, (pet) => (
                 <PetsAllItems key={pet.id} pet={pet} />
-              ))}
-            </InfiniteScroll>
-          </div>
-
-          {hasNextPage && !isFetching ? (
-            <Button onClick={() => fetchNextPage()}>Cargar más mascotas</Button>
-          ) : undefined}
-
-          {isFetching ? <CircularProgress /> : undefined}
-
-          {!hasNextPage && pets.length !== 0 ? (
-            <Typography style={{ textAlign: 'center', fontWeight: 500 }}>
-              Ya tienes todas las mascotas cargadas
-            </Typography>
-          ) : undefined}
-
-          {pets.length === 0 && !isFetching ? (
-            <Typography style={{ textAlign: 'center', fontWeight: 500 }}>
-              No hay mascotas {search ? 'con este filtro' : undefined}
-            </Typography>
-          ) : undefined}
-        </div>
-      )}
-
-      {/* PETS DOCUMENTATION */}
-      {selectedTab === 1 && (
-        <div>
-          <div className='itemscontainer'>
-            <InfiniteScroll
-              dataLength={pets.length}
-              hasMore={hasNextPage || isLoading}
-              next={() => fetchNextPage()}
-              scrollThreshold={0.5}
-            >
-              {map(pets, (pet) => (
-                <PetsItems key={pet.id} pet={pet} />
               ))}
             </InfiniteScroll>
           </div>

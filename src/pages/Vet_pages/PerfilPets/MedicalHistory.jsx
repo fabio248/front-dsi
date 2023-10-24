@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 
 // mui material elements
-import { Divider, Avatar, Grid, IconButton } from '@mui/material';
-import ListItem from '@mui/material/ListItem';
-import {Pets, ModeEdit, Visibility, HistoryEdu, Vaccines, LocalHospital} from "@mui/icons-material";
-import { createTheme, ThemeProvider, ListItemAvatar, ListItemIcon, ListItemText, List} from '@mui/material';
+import { Divider, Avatar, Grid, IconButton, Tooltip } from '@mui/material';
+import { Pets, ModeEdit, Visibility, HistoryEdu, Vaccines, LocalHospital, FileCopy } from "@mui/icons-material";
+import { createTheme, ThemeProvider, ListItemAvatar, ListItemIcon, ListItemText, List, ListItem } from '@mui/material';
 import { size, map } from 'lodash';
 
 const defaultTheme = createTheme();
@@ -85,12 +84,20 @@ export function PetMedicalHistory({ medicalHistory }) {
           <Grid container justifyContent='flex-end'>
             <Grid item>
                 <IconButton color='info'>
-                  <Visibility sx={{ fontSize: 30 }} />
+                  <Tooltip title="Ver detalle" arrow={true}>
+                    <Visibility sx={{ fontSize: 30 }} />
+                  </Tooltip>
                 </IconButton>
               <IconButton color='warning' >
-                <ModeEdit sx={{ fontSize: 30 }} />
+                <Tooltip title="Editar Hoja Clinica" arrow={true}>
+                  <ModeEdit sx={{ fontSize: 30 }} />
+                </Tooltip>
               </IconButton>
-              <IconButton color="primary"></IconButton>
+                <IconButton color="success" >
+                  <Tooltip title="Generar PDF" arrow={true}>
+                    <FileCopy />
+                  </Tooltip>
+                </IconButton>
             </Grid>
           </Grid>
         </ListItemAvatar>

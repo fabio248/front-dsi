@@ -15,7 +15,7 @@ import {
   Button,
   CircularProgress,
 } from '@mui/material';
-import { HistoryEdu, Vaccines, LocalHospital, FileCopy } from "@mui/icons-material";
+import { HistoryEdu, Vaccines, LocalHospital } from "@mui/icons-material";
 //render of pets
 import { PetMedicalHistory } from './MedicalHistory';
 import { PetMedicalHistoryTreatments } from './Treatments';
@@ -28,7 +28,7 @@ import { size, map } from 'lodash';
 import { Pets } from '../../../api/Pets.api';
 import { ApiAuth } from '../../../api/Auth.api';
 import { useQuery } from '@tanstack/react-query';
-import { Modal_medicalHistory } from '../../../shared/Modal_MedicalHistory/Modal_medicalHistory';
+import { Modal_medicalHistory } from '../../../shared/Modal_MedicalHistory/index.jsx';
 import { MedicalHistoryForm } from '../../../components/Vet_components/MedicalHistory/MedicalHistoryForm/MedicalHistoryForm';
 
 const petsController = new Pets();

@@ -1002,15 +1002,13 @@ const MedicalHistoryForm = (props) => {
   const handleDropFile = (fileOrigen) => {
     setFileOriginal(fileOrigen);
   };
-
-  console.log(validationSchemaPetRegister(medicalHistory, activeStep));
   //manipulacion y validacion de los campos
   const formik = useFormik({
     initialValues: initialPetValues(medicalHistory),
-    validationSchema: validationSchemaPetRegister(medicalHistory, activeStep),
+    validationSchema: validationSchemaPetRegister(activeStep, medicalHistoryTreatmentsSchema, medicalHistoryIntervationsSchema),
     validateOnChange: false,
     onSubmit: async (formValue) => {
-      console.log(formValue);
+ 
       if (activeStep === steps.length - 1 ){     
         if (!pet) {
           // createPetMutation.mutate({ idUser, formValue });

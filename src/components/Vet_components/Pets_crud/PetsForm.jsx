@@ -634,21 +634,6 @@ const PetsForm = (props) => {
         idUser,
         formValue
       );
-
-      if (fileCharged) {
-        try {
-          const { url } = await petsController.filePets(
-            accessToken,
-            fileOriginal.type,
-            response.id
-          );
-          // Después ejecutar la función amazonPeticionForFile
-          // await amazonPeticionForFile(url, uploadData, fileOriginal);
-        } catch (error) {
-          console.error('Error al cargar el archivo en AWS S3:', error);
-          throw error; // Importante: propagar el error para que el onError de useMutation lo capture
-        }
-      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['pets']);
@@ -708,7 +693,7 @@ const PetsForm = (props) => {
     validateOnChange: false,
     onSubmit: async (formValue) => {
       if (!pet) {
-        // createPetMutation.mutate({ idUser, formValue });
+        createPetMutation.mutate({ idUser, formValue });
         console.log(formValue);
       }
       //aqui ira la peticion donde se actualizaran los datos

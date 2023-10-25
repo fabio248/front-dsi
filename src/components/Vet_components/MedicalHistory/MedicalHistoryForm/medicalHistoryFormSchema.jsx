@@ -43,7 +43,7 @@ export function initialPetValues(medicalHistory) {
   };
 }
 
-export function validationSchemaPetRegister(medicalHistory, activeStep) {
+export function validationSchemaPetRegister(activeStep, medicalHistoryTreatmentsSchema, medicalHistoryIntervationsSchema) {
   // Anamnesis Schema
   if(activeStep === 0){
     console.log('0');
@@ -108,7 +108,6 @@ export function validationSchemaPetRegister(medicalHistory, activeStep) {
       .required('El mucus de la mascota es obligatorio'),
     });
   } else if (activeStep === 2){
-    console.log('2');
     let mergedSchema = null;
     const schemaBase = yup.object({
       diagnostic: yup
@@ -124,12 +123,12 @@ export function validationSchemaPetRegister(medicalHistory, activeStep) {
       .string()
       .required('La intervencion obligatoria'),*/
     });
-    const schema3 = schemaBase.concat(medicalHistoryTreatmentsSchema());
+    const schema3 = schemaBase.when((value) => value.tratamientos.length > 1, schemaBase.concat(medicalHistoryTreatmentsSchema()));
     console.log(schema3);
-    mergedSchema = schema3.concat(medicalHistoryIntervationsSchema());
+    mergedSchema = schemaBase.when((value) => value.intervenciones.length > 1, schema3.concat(medicalHistoryIntervationsSchema()));
     console.log(mergedSchema);
     
-    return mergedSchema || schema3 || schemaBase;
+    return mergedSchema;
   }
 }
 

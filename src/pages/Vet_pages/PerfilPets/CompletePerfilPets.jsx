@@ -36,6 +36,9 @@ import { ApiAuth } from '../../../api/Auth.api';
 import { useQuery } from '@tanstack/react-query';
 import { Modal_medicalHistory } from '../../../shared/Modal_MedicalHistory/index.jsx';
 import { MedicalHistoryForm } from '../../../components/Vet_components/MedicalHistory/MedicalHistoryForm/MedicalHistoryForm';
+import {
+  ConsentSurgeryPdfForm
+} from "../../../components/Vet_components/MedicalHistory/GenerateConsentSurgeryPdf/ConsentSurgeryPdfForm.jsx";
 
 const petsController = new Pets();
 const apiAuthController = new ApiAuth();
@@ -49,6 +52,7 @@ export function CompletePetPerfil() {
 
   const [selectedTab, setSelectedTab] = useState(0);
   const [showModal, setShowModal] = useState(false);
+  const [showModalCirugia, setShowModalCirugia] = useState(false)
 
   const onOpenCloseModal = () => setShowModal((prevState) => !prevState);
   const onReload = () => setReload((prevState) => !prevState);
@@ -79,6 +83,10 @@ export function CompletePetPerfil() {
         }
       }
     );
+  }
+
+  const onOpenCloseModalCirugia = () => {
+    setShowModalCirugia((prevState) => !prevState);
   }
 
   return (
@@ -199,7 +207,7 @@ export function CompletePetPerfil() {
                     <Flight sx={{ fontSize: 55, color: '#2E7D32'}} />
                   </Tooltip>
                 </IconButton>
-                <IconButton>
+                <IconButton onClick={onOpenCloseModalCirugia}>
                   <Tooltip
                     arrow={true}
                     title={
@@ -438,6 +446,15 @@ export function CompletePetPerfil() {
           </Grid>
         </Grid>
         </Container>
+      {showModalCirugia ? (
+        <Modal_medicalHistory
+            show={showModalCirugia}
+            close={onOpenCloseModalCirugia}
+            title='Generar Consentimiento Cirugía'
+        >
+          <ConsentSurgeryPdfForm onClose={onOpenCloseModalCirugia} petId={pet.id} petName={pet.name}/>
+        </Modal_medicalHistory>)
+        : null}
     </>
   );
 }

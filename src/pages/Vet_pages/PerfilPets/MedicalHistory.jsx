@@ -5,12 +5,17 @@ import { Divider, Avatar, Grid, IconButton, Tooltip } from '@mui/material';
 import { Pets, ModeEdit, Visibility, HistoryEdu, Vaccines, LocalHospital, FileCopy } from "@mui/icons-material";
 import { createTheme, ThemeProvider, ListItemAvatar, ListItemIcon, ListItemText, List, ListItem } from '@mui/material';
 import { size, map } from 'lodash';
+import {Modal_medicalHistory} from "../../../shared/Modal_MedicalHistory/index.jsx";
+import {
+  MedicalHistoryForm
+} from "../../../components/Vet_components/MedicalHistory/MedicalHistoryForm/MedicalHistoryForm.jsx";
 
 const defaultTheme = createTheme();
 
 export function PetMedicalHistory({ medicalHistory }) {
   //Modal informacion concreta
   const [showVisualizar, setShowVisualizar] = useState(false);
+  const [showGenerateMedicalHistoryPdf, setShowGenerateMedicalHistoryPdf] = useState(false)
   const onOpenInfoClientAndPets = () =>
     setShowVisualizar((prevState) => !prevState);
     //console.log(medicalHistory.diagnostics);
@@ -22,6 +27,8 @@ export function PetMedicalHistory({ medicalHistory }) {
     setTitleSeeInfoClientAndPet(`Datos específicos de la mascota`);
     onOpenInfoClientAndPets();
   };
+
+  const onOpenCloseModal = () => setShowGenerateMedicalHistoryPdf((prevState) => !prevState);
   return (
     <ThemeProvider theme={defaultTheme}>
     <div>
@@ -93,7 +100,7 @@ export function PetMedicalHistory({ medicalHistory }) {
                   <ModeEdit sx={{ fontSize: 30 }} />
                 </Tooltip>
               </IconButton>
-                <IconButton color="success" >
+                <IconButton color="success" onClick={onOpenCloseModal}>
                   <Tooltip title="Generar PDF" arrow={true}>
                     <FileCopy />
                   </Tooltip>
@@ -101,6 +108,15 @@ export function PetMedicalHistory({ medicalHistory }) {
             </Grid>
           </Grid>
         </ListItemAvatar>
+        {showGenerateMedicalHistoryPdf && (
+            <Modal_medicalHistory
+                show={showGenerateMedicalHistoryPdf}
+                close={onOpenCloseModal}
+                title='Llenar información generar PDF'
+            >
+              <MedicalHistoryForm close={onOpenCloseModal} />
+            </Modal_medicalHistory>
+        )}
       </ListItem>
       <Divider>
         <Pets color='disabled' />

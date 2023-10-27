@@ -20,7 +20,6 @@ import {
   Vaccines,
   LocalHospital,
   Flight,
-  MedicalServices
 } from "@mui/icons-material";
 //render of pets
 import { PetMedicalHistory } from './MedicalHistory';
@@ -39,6 +38,8 @@ import { MedicalHistoryForm } from '../../../components/Vet_components/MedicalHi
 import {
   ConsentSurgeryPdfForm
 } from "../../../components/Vet_components/MedicalHistory/GenerateConsentSurgeryPdf/ConsentSurgeryPdfForm.jsx";
+import {SurgeryIcon} from "../../../shared/Icons/index.js";
+import {EuthanasiasIcon} from "../../../shared/Icons/euthanasias.icon.jsx";
 
 const petsController = new Pets();
 const apiAuthController = new ApiAuth();
@@ -195,42 +196,42 @@ export function CompletePetPerfil() {
                 >
                   Generación de archivos PDFs
                 </h1>
-                <IconButton >
-                  <Tooltip
-                    arrow={true}
-                    title={
-                      <Typography sx={{ fontSize: 14, color: 'white' }}>
-                        Constancia de Salud
-                      </Typography>
-                      }
-                  >
-                    <Flight sx={{ fontSize: 55, color: '#2E7D32'}} />
-                  </Tooltip>
-                </IconButton>
-                <IconButton onClick={onOpenCloseModalCirugia}>
-                  <Tooltip
+                <Tooltip
                     arrow={true}
                     title={
                       <Typography sx={{ fontSize: 14, color: 'white' }}>
                         Consentimiento Cirugía
                       </Typography>
                     }
-                  >
-                    <MedicalServices sx={{ fontSize: 55, color: '#2E7D32'}}/>
-                  </Tooltip>
-                </IconButton>
-                <IconButton>
+                >
+                  <IconButton onClick={onOpenCloseModalCirugia}>
+                      <SurgeryIcon color='#2E7D32'/>
+                  </IconButton>
+                </Tooltip>
+                <IconButton >
                   <Tooltip
                       arrow={true}
                       title={
                         <Typography sx={{ fontSize: 14, color: 'white' }}>
-                          Consentimiento Eutanasia
+                          Constancia de Salud
                         </Typography>
                       }
                   >
-                    <Vaccines sx={{ fontSize: 55, color: '#2E7D32'}} />
+                    <Flight sx={{ fontSize: 55, color: '#2E7D32'}} />
                   </Tooltip>
                 </IconButton>
+                <Tooltip
+                    arrow={true}
+                    title={
+                      <Typography sx={{ fontSize: 14, color: 'white' }}>
+                        Consentimiento Eutanasia
+                      </Typography>
+                    }
+                >
+                  <IconButton>
+                      <EuthanasiasIcon color='#2E7D32'/>
+                  </IconButton>
+                </Tooltip>
               </Paper>
             </Grid>
           </Grid>

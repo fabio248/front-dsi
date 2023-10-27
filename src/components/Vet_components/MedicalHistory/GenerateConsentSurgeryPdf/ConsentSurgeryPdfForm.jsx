@@ -61,19 +61,19 @@ export const ConsentSurgeryPdfForm = (props) => {
                 }}
             >
                 <Button
-                    type='submit'
-                    size='medium'
-                    sx={{ mx: 2, marginTop: '12px' }}
-                >
-                    Generar
-                </Button>
-                <Button
                     color='error'
                     onClick={onClose}
                     size='medium'
                     sx={{ mx: 2, marginTop: '12px' }}
                 >
                     Cancelar
+                </Button>
+                <Button
+                    type='submit'
+                    size='medium'
+                    sx={{ mx: 2, marginTop: '12px' }}
+                >
+                    Generar
                 </Button>
             </Grid>
         </form>

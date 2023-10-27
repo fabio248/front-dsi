@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 // MUI Material
@@ -40,9 +40,12 @@ import {
 } from "../../../components/Vet_components/MedicalHistory/GenerateConsentSurgeryPdf/ConsentSurgeryPdfForm.jsx";
 import {SurgeryIcon} from "../../../shared/Icons/index.js";
 import {EuthanasiasIcon} from "../../../shared/Icons/euthanasias.icon.jsx";
+import {GeneratePdfApi} from "../../../api/Generate-Pdf.api.js";
+import {useModal} from "../../../hooks";
 
 const petsController = new Pets();
 const apiAuthController = new ApiAuth();
+const generatePdfController = new GeneratePdfApi();
 
 export function CompletePetPerfil() {
   const allTreatments = [];
@@ -53,10 +56,12 @@ export function CompletePetPerfil() {
 
   const [selectedTab, setSelectedTab] = useState(0);
   const [showModal, setShowModal] = useState(false);
-  const [showModalCirugia, setShowModalCirugia] = useState(false)
+  const {showModal: showModalSurgery, onOpenCloseModal: onOpenCloseModalSurgery} = useModal();
+  const { showModal: showModalEuthanasia, onOpenCloseModal:onOpenCloseModalEuthanasia } = useModal()
 
   const onOpenCloseModal = () => setShowModal((prevState) => !prevState);
   const onReload = () => setReload((prevState) => !prevState);
+
   const { data: pet, isLoading } = useQuery({
     queryKey: ['pets', params.petId],
     queryFn: async () => {
@@ -84,10 +89,6 @@ export function CompletePetPerfil() {
         }
       }
     );
-  }
-
-  const onOpenCloseModalCirugia = () => {
-    setShowModalCirugia((prevState) => !prevState);
   }
 
   return (
@@ -204,7 +205,7 @@ export function CompletePetPerfil() {
                       </Typography>
                     }
                 >
-                  <IconButton onClick={onOpenCloseModalCirugia}>
+                  <IconButton onClick={onOpenCloseModalSurgery}>
                       <SurgeryIcon color='#2E7D32'/>
                   </IconButton>
                 </Tooltip>
@@ -228,7 +229,7 @@ export function CompletePetPerfil() {
                       </Typography>
                     }
                 >
-                  <IconButton>
+                  <IconButton onClick={onOpenCloseModalEuthanasia}>
                       <EuthanasiasIcon color='#2E7D32'/>
                   </IconButton>
                 </Tooltip>
@@ -447,15 +448,52 @@ export function CompletePetPerfil() {
           </Grid>
         </Grid>
         </Container>
-      {showModalCirugia ? (
+      {showModalSurgery ? (
         <Modal_medicalHistory
-            show={showModalCirugia}
-            close={onOpenCloseModalCirugia}
+            show={showModalSurgery}
+            close={onOpenCloseModalSurgery}
             title='Generar Consentimiento Cirugía'
         >
-          <ConsentSurgeryPdfForm onClose={onOpenCloseModalCirugia} petId={pet.id} petName={pet.name}/>
+          <ConsentSurgeryPdfForm onClose={onOpenCloseModalSurgery} petId={pet.id} petName={pet.name}/>
         </Modal_medicalHistory>)
         : null}
+
+      {showModalEuthanasia ? (
+            <Modal_medicalHistory
+                show={showModalEuthanasia}
+                close={onOpenCloseModalEuthanasia}
+                title='¿Desea generar consentimiento eutanasia?'
+              >
+              <Grid
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    margin: '0 auto',
+                  }}
+              >
+                <Button
+                    color='error'
+                    onClick={onOpenCloseModalEuthanasia}
+                    size='medium'
+                    sx={{ mx: 2, marginTop: '12px' }}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                    onClick={() => {
+                      generatePdfController.generateEutanaciaPdf({}, pet.id, pet.name)
+                      onOpenCloseModalEuthanasia()
+                    }}
+                    size='medium'
+                    sx={{ mx: 2, marginTop: '12px' }}
+                >
+                  Generar
+                </Button>
+              </Grid>
+
+            </Modal_medicalHistory>): null
+      }
     </>
   );
 }

@@ -15,7 +15,7 @@ export function Visualizar_pages() {
         component='h1'
         color='primary'
       >
-        ¡Bienvenido a Clínica Veterinaria MISTUM!
+        ¡Bienvenido a Clínica Veterinaria MISTUN!
         <br />
         <b
           style={{

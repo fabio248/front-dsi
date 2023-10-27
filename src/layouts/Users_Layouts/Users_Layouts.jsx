@@ -21,6 +21,7 @@ import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual
 import { Button } from '@mui/material';
 import { FaFacebook } from 'react-icons/fa';
 import { FaWhatsapp } from 'react-icons/fa';
+import { FaInstagram } from 'react-icons/fa';
 import { NavLink } from 'react-router-dom';
 
 import './Users_Layouts.css';
@@ -104,18 +105,18 @@ export function Users_Layouts(props) {
           color: 'black', // Color de texto deseado
         }}
       >
-        {/* <ListItem disablePadding>
+        <ListItem disablePadding>
           <ListItemButton>
             <ListItemIcon>
               <PhotoSizeSelectActualIcon />
             </ListItemIcon>
             <ListItemText primary='Galería de fotos' />
           </ListItemButton>
-        </ListItem> */}
+        </ListItem> 
       </NavLink>
       <Divider />
 
-      <div style={{ position: 'absolute', left: '10px', bottom: '10px' }}>
+      <div style={{ position: 'absolute', right: '10px', bottom: '10px' }}>
         <IconButton
           aria-label='Facebook'
           component='a'
@@ -134,6 +135,16 @@ export function Users_Layouts(props) {
           style={{ fontSize: '2rem', color: '#573874' }}
         >
           <FaWhatsapp />
+        </IconButton>
+
+        <IconButton
+          aria-label='Instagram'
+          component='a'
+          href='https://www.instagram.com/mistumcv/'
+          target='_blank'
+          style={{ fontSize: '2rem', color: '#573874' }}
+        >
+          <FaInstagram />
         </IconButton>
       </div>
     </div>

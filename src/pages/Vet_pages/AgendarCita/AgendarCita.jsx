@@ -13,6 +13,7 @@ import { ApiAuth } from '../../../api/Auth.api';
 
 // MUI Material
 import { Grid, TextField, Button, Divider, Box } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
@@ -44,7 +45,7 @@ const AgendarCita = ({ event }) => {
     initialValues: initialValues(event),
     validationSchema: validationSchemaRegister(event),
     validateOnChange: false,
-
+    
     onSubmit: async (formValue) => {
       try {
         if (!event) {
@@ -88,6 +89,20 @@ const AgendarCita = ({ event }) => {
     const endDate = new Date(date.getTime() + 45 * 60000); // Agregar 45 minutos en milisegundos
     formik.setFieldValue('endDate', endDate);
   };
+
+  const handleEndDateChange = (date) => {
+    formik.setFieldValue('endDate', endDate);
+  };
+
+  const service = [
+    { label: 'Consulta General', key: 'Consulta General', value: 'Consulta General' },
+    { label: 'Cirugía General', key: 'Cirugía General', value: 'Cirugía General' },
+    { label: 'Esterilización', key: 'Esterilización', value: 'Esterilización' },
+    { label: 'Vacunación', key: 'Vacunación', value: 'Vacunación' },
+    { label: 'Limpieza Dental', key: 'Limpieza Dental', value: 'Limpieza Dental' },
+    { label: 'Desparacitación', key: 'Desparacitación', value: 'Desparacitación' },
+  ];
+
 
   async function createCalendarEvent() {
     const {
@@ -157,10 +172,11 @@ const AgendarCita = ({ event }) => {
       <Box sx={{ px: 4 }}>
         <form onSubmit={formik.handleSubmit}>
           <h3>Agendar Cita</h3>
-
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <Grid container spacing={2} justifyContent='center'>
+            <Grid item xs={12} sm={6}>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
             <MobileDateTimePicker
-              label='Fecha Dia/Mes/Año HH:mm'
+              label='Inicio Dia/Mes/Año HH:mm'
               name='startDate'
               value={formik.values.startDate}
               onChange={handleDateChange}
@@ -182,22 +198,66 @@ const AgendarCita = ({ event }) => {
             {formik.touched.startDate && formik.errors.startDate && (
               <FormHelperText error>{formik.errors.startDate}</FormHelperText>
             )}
-          </LocalizationProvider>
+            </LocalizationProvider>
+            </Grid>
 
-          <TextField
-            style={{ marginBottom: '20px', marginTop: '20px' }}
-            fullWidth
+            <Grid item xs={12} sm={6}>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <MobileDateTimePicker
+              label='Finalización Dia/Mes/Año HH:mm'
+              name='endDate'
+              value={formik.values.endDate}
+              onChange={handleEndDateChange}
+              onBlur={formik.handleBlur}
+              slotProps={{ textField: { size: 'small', fullWidth: true } }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  error={
+                    formik.touched.endDate && Boolean(formik.errors.endDate)
+                  }
+                />
+              )}
+              disablePast // Deshabilitar fechas anteriores al día de hoy
+              showTodayButton // Mostrar botón para seleccionar la fecha actual
+              clearable // Permitir borrar la fecha seleccionada
+              format='dd/MM/yyyy hh:mm a'
+            />
+            {formik.touched.endDate && formik.errors.endDate && (
+              <FormHelperText error>{formik.errors.endDate}</FormHelperText>
+            )}
+            </LocalizationProvider>
+            </Grid>
+          </Grid>
+           
+            <Autocomplete
+            disablePortal
+            id='name'
             name='name'
-            label='Nombre del Evento'
-            variant='outlined'
             size='small'
-            onChange={formik.handleChange}
+            options={service}
+            onChange={(_, data) =>
+              formik.setFieldValue('name', data?.value || '')
+            }
             value={formik.values.name}
-            error={formik.touched.name && Boolean(formik.errors.name)}
-            helperText={formik.touched.name && formik.errors.name}
-          />
+            renderInput={(params) => (
+          
+              <TextField
+                {...params}
+                label='Motivo de Consulta'
+                InputProps={{
+                  ...params.InputProps,
+                  endAdornment: <>{params.InputProps.endAdornment}</>,
+                }}
+                error={formik.touched.name && Boolean(formik.errors.name)}
+                helperText={formik.touched.name && formik.errors.name}
+                style={{ marginBottom: '20px', marginTop:'20px'}}
+                />
+              )}
 
-          <TextField
+            />
+           
+            <TextField
             fullWidth
             style={{ marginBottom: '15px' }}
             name='descripcion'

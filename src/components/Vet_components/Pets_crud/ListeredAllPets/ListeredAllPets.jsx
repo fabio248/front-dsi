@@ -1,14 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect ,useState} from 'react';
+import './ListeredAllPets.css';
 
 //import petitions of back
-import { Pets } from '../../../../api/Pets.api';
 import { ApiAuth } from '../../../../api/Auth.api';
 
 //clases de renderizado
 import { PetsAllItems } from '../PetsAllItems';
-import SearchIcon from '@mui/icons-material/Search';
 import PetsIcon from '@mui/icons-material/Pets';
-import InputAdornment from '@mui/material/InputAdornment';
+
 //mui material
 import {
   Box,
@@ -17,7 +16,6 @@ import {
   Typography,
   CircularProgress,
   Grid,
-  TextField,
   Button,
 } from '@mui/material';
 import { map } from 'lodash';
@@ -27,10 +25,11 @@ import { useDebounce } from '../../../../hooks';
 import { usePet } from '../../../../hooks/UsePet';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-//clase Pets
+// Clase Pets
 const apiAuthController = new ApiAuth();
 
 export function ListeredAllPets() {
+  const [selectedTab, setSelectedTab] = useState(0);
   const [query] = useSearchParams();
   const search = query.get('search');
   const accessToken = apiAuthController.getAccessToken();
@@ -54,15 +53,20 @@ export function ListeredAllPets() {
     refetch();
   }, [deboncedQuery]);
 
+  const handleTabChange = (event, newValue) => {
+    setSelectedTab(newValue);
+  };
+
   return (
     <div>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Grid container spacing={3} alignItems='center'>
           <Grid item>
-            <Tabs value={0} aria-label='basic tabs example'>
+            <Tabs value={selectedTab} onChange={handleTabChange} aria-label='basic tabs example'>
               <Tab icon={<PetsIcon />} label='Mascotas' {...a11yProps(0)} />
             </Tabs>
           </Grid>
+
           <Grid item sx={{ flexGrow: 1 }}>
             {/* Espacio flexible */}
           </Grid>
@@ -72,45 +76,43 @@ export function ListeredAllPets() {
           </Grid>
         </Grid>
       </Box>
-      <div
-        style={{
-          margin: '16px',
-          backgroundColor: '#f0f0f0',
-          padding: '20px',
-          borderRadius: '10px',
-          boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-          overflow: 'hidden',
-        }}
-      >
-        <InfiniteScroll
-          dataLength={pets.length}
-          hasMore={hasNextPage || isLoading}
-          next={() => fetchNextPage()}
-          scrollThreshold={0.5}
-        >
-          {map(pets, (pet) => (
-            <PetsAllItems key={pet.id} pet={pet} />
-          ))}
-        </InfiniteScroll>
-      </div>
 
-      {hasNextPage & !isFetching ? (
-        <Button onClick={() => fetchNextPage()}>Cargar más mascotas</Button>
-      ) : undefined}
+      {/* PETS ALL ITEMS */}
+      {selectedTab === 0 && (
+        <div>
+          <div className='itemscontainer'>
+            <InfiniteScroll
+              dataLength={pets.length}
+              hasMore={hasNextPage || isLoading}
+              next={() => fetchNextPage()}
+              scrollThreshold={0.5}
+              loader={<p>Loading...</p>}
+            >
+              {map(pets, (pet) => (
+                <PetsAllItems key={pet.id} pet={pet} />
+              ))}
+            </InfiniteScroll>
+          </div>
 
-      {isFetching ? <CircularProgress /> : undefined}
+          {hasNextPage && !isFetching ? (
+            <Button onClick={() => fetchNextPage()}>Cargar más mascotas</Button>
+          ) : undefined}
 
-      {!hasNextPage & (pets.length !== 0) ? (
-        <Typography style={{ textAlign: 'center', fontWeight: 500 }}>
-          Ya tienes todos los mascotas cargados
-        </Typography>
-      ) : undefined}
+          {isFetching ? <CircularProgress /> : undefined}
 
-      {pets.length === 0 && !isFetching ? (
-        <Typography style={{ textAlign: 'center', fontWeight: 500 }}>
-          No hay mascotas {search ? 'con este filtro' : undefined}
-        </Typography>
-      ) : undefined}
+          {!hasNextPage && pets.length !== 0 ? (
+            <Typography style={{ textAlign: 'center', fontWeight: 500 }}>
+              Ya tienes todas las mascotas cargadas
+            </Typography>
+          ) : undefined}
+
+          {pets.length === 0 && !isFetching ? (
+            <Typography style={{ textAlign: 'center', fontWeight: 500 }}>
+              No hay mascotas {search ? 'con este filtro' : undefined}
+            </Typography>
+          ) : undefined}
+        </div>
+      )}
     </div>
   );
 }

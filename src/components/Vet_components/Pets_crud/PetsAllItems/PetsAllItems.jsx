@@ -8,6 +8,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import PetsIcon from '@mui/icons-material/Pets';
+import { createTheme, ThemeProvider } from '@mui/material';
 
 //Iconos de Mui material
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -31,6 +32,7 @@ import { ApiAuth } from '../../../../api/Auth.api';
 //controladores api
 const petController = new Pets();
 const authController = new ApiAuth();
+const defaultTheme = createTheme();
 
 export function PetsAllItems({ pet }) {
   const Demo = styled('div')(({ theme }) => ({
@@ -75,7 +77,7 @@ export function PetsAllItems({ pet }) {
 
   //funcion que ejecuta el boton correspondiente (Delete TrashIcon)
   const openDeletePet = () => {
-    setTitleDelete(` Eliminar macota: ${pet.name}`);
+    setTitleDelete(` Eliminar Mascota: ${pet.name}`);
     setConfirmMessage(`¿Está seguro de que desea eliminar mascota?`);
     onCloseConfirm();
   };
@@ -86,15 +88,16 @@ export function PetsAllItems({ pet }) {
   };
 
   const openUpdatePets = () => {
-    setTitleUpdatePet(`Actualizando Datos de la Mascota: ${pet.name}`);
+    setTitleUpdatePet(`Actualizando datos de la Mascota: ${pet.name}`);
     onOpenClosePets();
   };
   return (
-    <div>
+    <>
+    <ThemeProvider theme={defaultTheme}>
       <Demo>
         <ListItem sx={{ display: 'flex', flexWrap: 'wrap' }}>
           <ListItemAvatar sx={{ margin: '0 auto' }}>
-            <Avatar sx={{ mx: 4, width: 60, height: 60 }}>
+            <Avatar sx={{ mx: 4, width: 60, height: 60, bgcolor: '#8EC167' }}>
               <PetsIcon sx={{ fontSize: 45 }} />
             </Avatar>
           </ListItemAvatar>
@@ -116,7 +119,7 @@ export function PetsAllItems({ pet }) {
               <b>Género: </b>
               {pet.gender}
               <br />
-              <b>Nacimiento de la mascota U adquisición: </b>
+              <b>Nacimiento de la mascota o Adquisición: </b>
               {pet.birthday}
               <br />
               <b>Color del pelaje: </b>
@@ -129,7 +132,7 @@ export function PetsAllItems({ pet }) {
           <ListItemAvatar
             sx={{ display: 'flex', flexDirection: 'row', margin: '0 auto' }}
           >
-            <NavLink to={`/admin/users/${pet.user.id}`}>
+            <NavLink to={`/admin/pets/${pet.id}`}>
               <Grid item>
                 <IconButton color='info'>
                   <VisibilityIcon sx={{ fontSize: 30 }} />
@@ -149,7 +152,7 @@ export function PetsAllItems({ pet }) {
                 <Alerta
                   type={'info'}
                   title={'¡Mascota Eliminada!'}
-                  message={'Se ha elimnado correctamente la mascota'}
+                  message={'Se ha eliminado correctamente la mascota'}
                   strong={pet.name}
                 />
               )}
@@ -168,6 +171,7 @@ export function PetsAllItems({ pet }) {
           <PetsIcon color='action' style={{ width: '60px', height: '40px' }} />
         </Divider>
       </Demo>
+      </ThemeProvider>
       <Modal_delete
         onOpen={showConfirm}
         onCancel={onCloseConfirm}
@@ -183,6 +187,6 @@ export function PetsAllItems({ pet }) {
       >
         <PetsForm close={onOpenClosePets} pet={pet} />
       </Modal_create_pet>
-    </div>
+    </>
   );
 }

@@ -18,6 +18,7 @@ import Typography from '@mui/material/Typography';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+import CategoryIcon from '@mui/icons-material/Category';
 import EventIcon from '@mui/icons-material/Event';
 import { Logout } from '../../components/Admin/Auth/Logout';
 import { NavLink } from 'react-router-dom';
@@ -57,6 +58,7 @@ export function Vet_Layouts(props) {
           </ListItem>
         </NavLink>
         <Divider />
+
         <NavLink
           to='/admin/calendar'
           style={{
@@ -105,6 +107,25 @@ export function Vet_Layouts(props) {
           </ListItem>
         </NavLink>
         <Divider />
+
+        <Divider />
+        <NavLink
+          to='/admin/products'
+          style={{
+            textDecoration: 'none', // Quitar subrayado
+            color: 'black', // Color de texto deseado
+          }}
+        >
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <CategoryIcon/>
+              </ListItemIcon>
+              <ListItemText primary='Agregar Productos' />
+            </ListItemButton>
+          </ListItem>
+        </NavLink>
+        <Divider />    
       </List>
     </div>
   );

@@ -37,8 +37,6 @@ export const HealthCertificationPdfFields = ({ formik }) => {
        setVaccines(formik.initialValues.vaccines)
     },[])
 
-
-
     return (
     <Grid container spacing={1} justifyContent="space-between" textAlign="center" columns={{ xs: 4, sm: 8, md: 12 }}>
         <Grid item xs={4} sm={8} md>
@@ -208,6 +206,7 @@ export const HealthCertificationPdfFields = ({ formik }) => {
                                         formik.touched.vaccines[index].dayAplication) &&
                                         formik.errors.vaccines &&
                                         formik.errors.vaccines[index] &&
+                                        formik.errors.vaccines[index].dayAplication &&
                                         (
                                         <FormHelperText error>{formik.errors.vaccines[index].dayAplication}</FormHelperText>
                                     )}

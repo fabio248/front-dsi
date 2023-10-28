@@ -23,7 +23,6 @@ export const HealthCertificationPdfForm = (props) => {
         validateOnChange: false,
         onSubmit: async (formValues) => {
             await generatePdf.mutate({formValues});
-            console.log('formValues:', formValues)
         }
     })
 

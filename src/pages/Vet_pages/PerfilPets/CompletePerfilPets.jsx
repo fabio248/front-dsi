@@ -45,6 +45,7 @@ import {useModal} from "../../../hooks";
 import {
   HealthCertificationPdfForm
 } from "../../../components/Vet_components/MedicalHistory/GenerateHealthCertificatePdf/HealthCertificatePdfForm.jsx";
+import {Header} from "../../../shared/components/Header.jsx";
 
 const petsController = new Pets();
 const apiAuthController = new ApiAuth();
@@ -97,27 +98,7 @@ export function CompletePetPerfil() {
 
   return (
     <>
-      <AppBar position='static' sx={{ m:-1, width: '102%' }}>
-        <Toolbar>
-          <Typography
-            variant='h6'
-            component='div'
-            sx={{ flexGrow: 1 }}
-            onClick={() => navigate('/admin')}
-          >
-            Clínica Veterinaria Mistun
-          </Typography>
-
-          <Button
-            variant='contained'
-            color='success'
-            style={{ color: 'white' }}
-            onClick={() => navigate(-1)}
-          >
-            Regresar
-          </Button>
-        </Toolbar>
-      </AppBar>
+      <Header />
 
       <Container maxWidth='xl' sx={{ mt: 4, mb: 4 }}>
         <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }}>
@@ -356,7 +337,7 @@ export function CompletePetPerfil() {
                 <div className='box-container'>
                 <Box sx={{ width: '100%' }}>
                   {map(pet.medicalHistories, (hojaClinica) => (
-                    <PetMedicalHistory key={hojaClinica.id} medicalHistory={hojaClinica} />
+                    <PetMedicalHistory key={hojaClinica.id} medicalHistory={hojaClinica} petId={params.petId} />
                   ))}
                 </Box>
                 </div>

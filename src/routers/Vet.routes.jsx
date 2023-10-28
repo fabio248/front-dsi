@@ -7,6 +7,7 @@ import { ProtectedRoute } from '../components/Admin/Auth/ProtectedRoutes';
 import { PerfilUserAndPets } from '../pages';
 import { Layout } from '../shared/components/Layout';
 import { CompletePetPerfil } from '../pages/Vet_pages/PerfilPets/CompletePerfilPets';
+import {GenerateMedicalHistory} from "../pages/Vet_pages/PerfilPets/GenerateMedicalHistory.jsx";
 
 export function Vet_routes() {
   const { user } = useAuth();
@@ -37,6 +38,7 @@ export function Vet_routes() {
         <Route path='products' element={Layout(Vet_Layouts, ProductCatalog)}></Route>
         <Route path='users/:userId' element={<PerfilUserAndPets />} />
         <Route path='pets/:petId' element={<CompletePetPerfil />} />
+        <Route path='pets/:petId/medical-history/:medicalHistoryId' element={<GenerateMedicalHistory />} />
       </Route>    
     </Routes>
   );

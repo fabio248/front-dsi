@@ -9,13 +9,14 @@ import {Modal_medicalHistory} from "../../../shared/Modal_MedicalHistory/index.j
 import {
   MedicalHistoryForm
 } from "../../../components/Vet_components/MedicalHistory/MedicalHistoryForm/MedicalHistoryForm.jsx";
+import {useNavigate} from "react-router-dom";
 
 const defaultTheme = createTheme();
 
-export function PetMedicalHistory({ medicalHistory }) {
+export function PetMedicalHistory({ medicalHistory, petId }) {
+  const navigate = useNavigate();
   //Modal informacion concreta
   const [showVisualizar, setShowVisualizar] = useState(false);
-  const [showGenerateMedicalHistoryPdf, setShowGenerateMedicalHistoryPdf] = useState(false)
   const onOpenInfoClientAndPets = () =>
     setShowVisualizar((prevState) => !prevState);
     //console.log(medicalHistory.diagnostics);
@@ -28,7 +29,6 @@ export function PetMedicalHistory({ medicalHistory }) {
     onOpenInfoClientAndPets();
   };
 
-  const onOpenCloseModal = () => setShowGenerateMedicalHistoryPdf((prevState) => !prevState);
   return (
     <ThemeProvider theme={defaultTheme}>
     <div>
@@ -100,7 +100,7 @@ export function PetMedicalHistory({ medicalHistory }) {
                   <ModeEdit sx={{ fontSize: 30 }} />
                 </Tooltip>
               </IconButton>
-                <IconButton color="success" onClick={onOpenCloseModal}>
+                <IconButton color="success" onClick={()=>navigate(`medical-history/${medicalHistory.id}`)}>
                   <Tooltip title="Generar PDF" arrow={true}>
                     <FileCopy />
                   </Tooltip>
@@ -108,15 +108,6 @@ export function PetMedicalHistory({ medicalHistory }) {
             </Grid>
           </Grid>
         </ListItemAvatar>
-        {showGenerateMedicalHistoryPdf && (
-            <Modal_medicalHistory
-                show={showGenerateMedicalHistoryPdf}
-                close={onOpenCloseModal}
-                title='Llenar información generar PDF'
-            >
-              <MedicalHistoryForm close={onOpenCloseModal} />
-            </Modal_medicalHistory>
-        )}
       </ListItem>
       <Divider>
         <Pets color='disabled' />

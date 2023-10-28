@@ -7,11 +7,21 @@ export class PetsMedicalHistories {
   accessToken = this.auth.getAccessToken();
 
   // CREAR HOJA CLINICA
-  async create(accessToken, idPet, medicalHistory) {
+  async create(accessToken, idPet, medicalHistoryData) {
     try {
-      if (!medicalHistory.whichPets) {
-        delete medicalHistory.whichPets;
+      if (!medicalHistoryData.whichPets) {
+        delete medicalHistoryData.whichPets;
       }
+       
+        const medicalHistory = {
+            ...medicalHistoryData,
+            intervenciones: medicalHistoryData.intervenciones.map(intervation => {
+                return {
+                    ...intervation,
+                    intervationDate: format(intervation.intervationDate, 'dd/MM/yyyy')
+                }
+            })
+        }
       const url = `${config.baseApi}/${configApiBackend.pets}/${idPet}/${configApiBackend.medicalHistories}`;
       const params = {
         method: 'POST',

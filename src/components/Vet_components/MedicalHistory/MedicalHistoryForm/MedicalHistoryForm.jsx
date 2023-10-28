@@ -522,11 +522,11 @@ export function MedicalHistoryFormDiagnosticTextFields({ formik, medicalHistory 
   };
 
   const handleDateIntervationChange = (date, index) => {
-      formik.setFieldValue(`intervenciones[${index}].dayAplication`, date);
+      formik.setFieldValue(`intervenciones[${index}].intervationDate`, date);
   }
 
   const addIntervation = () => {
-      const newIntervenciones = [...formik.values.intervenciones, { dayAplication: null, name: '', description: '' }];
+      const newIntervenciones = [...formik.values.intervenciones, { intervationDate: null, name: '', description: '' }];
       setIntervenciones(newIntervenciones);
       formik.setFieldValue('intervenciones', newIntervenciones);
 
@@ -821,8 +821,8 @@ export function MedicalHistoryFormDiagnosticTextFields({ formik, medicalHistory 
                                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                                       <DatePicker
                                           label='Dia de intervención'
-                                          name={`intervenciones[${index}].dayAplication`}
-                                          value={formik.values.intervenciones[index].dayAplication}
+                                          name={`intervenciones[${index}].intervationDate`}
+                                          value={formik.values.intervenciones[index].intervationDate}
                                           onBlur={formik.handleBlur}
                                           onChange={(date)=> handleDateIntervationChange(date, index)}
                                           slotProps={{ 
@@ -831,18 +831,19 @@ export function MedicalHistoryFormDiagnosticTextFields({ formik, medicalHistory 
                                               fullWidth: true,
                                               error: (formik.touched.intervenciones &&
                                                 formik.touched?.intervenciones[index] &&
-                                                formik.touched.intervenciones[index]?.dayAplication &&
+                                                formik.touched.intervenciones[index]?.intervationDate &&
                                                 formik.errors.intervenciones &&
                                                 formik.errors.intervenciones[index] &&
-                                                Boolean(formik.errors.intervenciones[index].dayAplication)) ?? false,
+                                                Boolean(formik.errors.intervenciones[index].intervationDate)) ?? false,
                                               helperText: (formik.touched.intervenciones &&
                                                   formik.touched.intervenciones[index] &&
                                                   formik.errors.intervenciones &&
                                                   formik.errors.intervenciones[index] &&
-                                                  formik.errors.intervenciones[index]?.dayAplication)
+                                                  formik.errors.intervenciones[index]?.intervationDate)
                                             } 
                                           }}
                                           showTodayButton
+                                          disablePast
                                           format='dd/MM/yyyy'
                                           ref={index === intervenciones.length - 1 ? lastIntervationCardRef : null}
                                       />
@@ -1025,9 +1026,9 @@ const MedicalHistoryForm = (props) => {
       if (activeStep === steps.length - 1 ){     
         if (!medicalHistory) {
           createMedicalHistoryMutation.mutate({ petId, formValue });
-        setTimeout(() => { 
-          close(); 
-        }, 2500);
+          setTimeout(() => { 
+            close(); 
+          }, 2500);
         }
         //aqui ira la peticion donde se actualizaran los datos
         /*updatePetMuatation.mutate({ medicalHistoryId: medicalHistoryId, formValue });

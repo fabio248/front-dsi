@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Card, CardContent, FormHelperText, Grid, TextField, Typography } from "@mui/material";
+import { Button, Card, CardContent, Grid, TextField, Typography } from "@mui/material";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { DeleteButton } from "../../../../shared/components/DeleteButton.jsx";
@@ -22,6 +22,11 @@ export function VaccinesFields({ formik }) {
         const newErrorsVaccines = formik.errors.vaccines.filter((_, i) => i !== index)
         formik.setFieldError('vaccines', newErrorsVaccines);
         formik.setFieldValue('vaccines', newVaccines);
+
+        if(formik.touched.vaccines.length > 0){
+            const newTouchedVaccines = formik.touched.vaccines.filter((_, i) => i !== index)
+            formik.setFieldTouched('vaccines', newTouchedVaccines);
+        }
         setVaccines(newVaccines);
     }
 
@@ -55,14 +60,11 @@ export function VaccinesFields({ formik }) {
                                        error={
                                            (formik.touched.vaccines &&
                                                formik.touched.vaccines[index] &&
-                                               formik.touched.vaccines[index]?.vaccineName &&
                                                formik.errors.vaccines &&
-                                               formik.errors.vaccines[index] &&
                                                Boolean(formik.errors.vaccines[index]?.vaccineName)) ?? false
                                        }
                                        helperText={
                                            formik.touched.vaccines &&
-                                           formik.touched.vaccines[index] &&
                                            formik.errors.vaccines &&
                                            formik.errors.vaccines[index] &&
                                            formik.errors.vaccines[index]?.vaccineName
@@ -77,31 +79,23 @@ export function VaccinesFields({ formik }) {
                                        value={formik.values.vaccines[index].dayAplication}
                                        onBlur={formik.handleBlur}
                                        onChange={(date)=>handleDateVaccinesChange(date, index, 'dayAplicationInit')}
-                                       slotProps={{ textField: { size: 'small', fullWidth: true } }}
-                                       renderInput={(params) => (
-                                           <TextField
-                                               {...params}
-                                               error={
-                                                   (formik.touched.vaccines &&
-                                                       formik.touched.vaccines[index] &&
-                                                       formik.touched.vaccines[index]?.dayAplicationInit &&
-                                                       formik.errors.vaccines &&
-                                                       formik.errors.vaccines[index] &&
-                                                       Boolean(formik.errors.vaccines[index]?.dayAplicationInit)) ?? false}
-                                           />
-                                       )}
+                                       slotProps={{
+                                           textField: {
+                                               size: 'small',
+                                               fullWidth: true,
+                                               error: ((formik.touched.vaccines &&
+                                                   formik.touched.vaccines[index] &&
+                                                   formik.errors.vaccines &&
+                                                   Boolean(formik.errors.vaccines[index]?.dayAplicationInit)) ?? false),
+                                               helperText: (formik.touched.vaccines &&
+                                                   formik.errors.vaccines &&
+                                                   formik.errors.vaccines[index] &&
+                                                   formik.errors.vaccines[index]?.dayAplicationInit)
+                                           }
+                                        }}
                                        showTodayButton
                                        format='dd/MM/yyyy'
                                    />
-                                   {(formik.touched.vaccines &&
-                                           formik.touched.vaccines[index] &&
-                                           formik.touched.vaccines[index].dayAplicationInit) &&
-                                       formik.errors.vaccines &&
-                                       formik.errors.vaccines[index] &&
-                                       formik.errors.vaccines[index].dayAplicationInit &&
-                                       (
-                                           <FormHelperText error>{formik.errors.vaccines[index].dayAplicationInit}</FormHelperText>
-                                       )}
                                </LocalizationProvider>
                                </Grid>
                                <Grid item xs={12} sm={6} md={6}>
@@ -112,31 +106,23 @@ export function VaccinesFields({ formik }) {
                                        value={formik.values.vaccines[index].dayAplicationfinal}
                                        onBlur={formik.handleBlur}
                                        onChange={(date)=>handleDateVaccinesChange(date, index, 'dayAplicationfinal')}
-                                       slotProps={{ textField: { size: 'small', fullWidth: true } }}
-                                       renderInput={(params) => (
-                                           <TextField
-                                               {...params}
-                                               error={
-                                                   (formik.touched.vaccines &&
-                                                       formik.touched.vaccines[index] &&
-                                                       formik.touched.vaccines[index]?.dayAplicationfinal &&
-                                                       formik.errors.vaccines &&
-                                                       formik.errors.vaccines[index] &&
-                                                       Boolean(formik.errors.vaccines[index]?.dayAplicationfinal)) ?? false}
-                                           />
-                                       )}
+                                       slotProps={{
+                                           textField: {
+                                               size: 'small',
+                                               fullWidth: true,
+                                               error: ((formik.touched.vaccines &&
+                                                   formik.touched.vaccines[index] &&
+                                                   formik.errors.vaccines &&
+                                                   Boolean(formik.errors.vaccines[index]?.dayAplicationfinal)) ?? false),
+                                               helperText: (formik.touched.vaccines &&
+                                                   formik.errors.vaccines &&
+                                                   formik.errors.vaccines[index] &&
+                                                   formik.errors.vaccines[index]?.dayAplicationfinal)
+                                           }
+                                        }}
                                        showTodayButton
                                        format='dd/MM/yyyy'
                                    />
-                                   {(formik.touched.vaccines &&
-                                           formik.touched.vaccines[index] &&
-                                           formik.touched.vaccines[index].dayAplicationfinal) &&
-                                       formik.errors.vaccines &&
-                                       formik.errors.vaccines[index] &&
-                                       formik.errors.vaccines[index].dayAplicationfinal &&
-                                       (
-                                           <FormHelperText error>{formik.errors.vaccines[index].dayAplicationfinal}</FormHelperText>
-                                       )}
                                </LocalizationProvider>
                                </Grid>
                            </Grid>

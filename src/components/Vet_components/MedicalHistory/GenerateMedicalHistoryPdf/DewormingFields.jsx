@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {Button, Card, CardContent, FormHelperText, Grid, TextField, Typography} from "@mui/material";
+import {Button, Card, CardContent, Grid, TextField, Typography} from "@mui/material";
 import {DeleteButton} from "../../../../shared/components/DeleteButton.jsx";
 import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
@@ -7,7 +7,7 @@ import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 export function DewormingFields({ formik }) {
     const [deworming, setDeworming] = useState([])
 
-    const handleDateVaccinesChange = (date, index, type) => {
+    const handleDateDewormingChange = (date, index, type) => {
         formik.setFieldValue(`deworming[${index}].${type}`, date);
     }
 
@@ -31,17 +31,12 @@ export function DewormingFields({ formik }) {
         formik.setFieldError('deworming', newErrorsDeworming);
         formik.setFieldValue('deworming', newDeworming);
         setDeworming(newDeworming);
-    }
 
-    useEffect(() => {
-        const x =(formik.touched.deworming &&
-            formik.touched.deworming[0] &&
-            formik.touched.deworming[0]?.dayAplicationFinalDeworming &&
-            formik.errors.deworming &&
-            formik.errors.deworming[0] &&
-            Boolean(formik.errors.deworming[0]?.dayAplicationFinalDeworming))
-        console.log({x})
-    }, [formik])
+        if(formik.touched.deworming.length > 0) {
+            const newTouchedDeworming = formik.touched.deworming.filter((_, i) => i !== index)
+            formik.setFieldTouched('deworming', newTouchedDeworming);
+        }
+    }
 
     useEffect(() => {
         setDeworming(formik.initialValues.deworming)
@@ -121,32 +116,28 @@ export function DewormingFields({ formik }) {
                                             name={`deworming[${index}].dayAplicationInit`}
                                             value={formik.values.deworming[index].dayAplicationInitDeworming}
                                             onBlur={formik.handleBlur}
-                                            onChange={(date)=>handleDateVaccinesChange(date, index, 'dayAplicationInitDeworming')}
-                                            slotProps={{ textField: { size: 'small', fullWidth: true } }}
-                                            renderInput={(params) => (
-                                                <TextField
-                                                    {...params}
-                                                    error={
-                                                        (formik.touched.deworming &&
-                                                            formik.touched.deworming[index] &&
-                                                            formik.touched.deworming[index]?.dayAplicationInitDeworming &&
-                                                            formik.errors.deworming &&
-                                                            formik.errors.deworming[index] &&
-                                                            Boolean(formik.errors.deworming[index]?.dayAplicationInitDeworming)) ?? false}
-                                                />
-                                            )}
+                                            onChange={(date)=>handleDateDewormingChange(date, index, 'dayAplicationInitDeworming')}
+                                            slotProps={{
+                                                textField: {
+                                                    size: 'small',
+                                                    fullWidth: true,
+                                                    error: (formik.touched.deworming &&
+                                                        formik.touched.deworming[index] &&
+                                                        formik.touched.deworming[index]?.dayAplicationInitDeworming &&
+                                                        formik.errors.deworming &&
+                                                        formik.errors.deworming[index] &&
+                                                        Boolean(formik.errors.deworming[index]?.dayAplicationInitDeworming)) ?? false,
+                                                    helperText: (formik.touched.deworming &&
+                                                        formik.touched.deworming[index] &&
+                                                        formik.touched.deworming[index].dayAplicationInitDeworming &&
+                                                        formik.errors.deworming &&
+                                                        formik.errors.deworming[index] &&
+                                                        formik.errors.deworming[index]?.dayAplicationInitDeworming)
+                                                }
+                                            }}
                                             showTodayButton
                                             format='dd/MM/yyyy'
                                         />
-                                        {(formik.touched.deworming &&
-                                                formik.touched.deworming[index] &&
-                                                formik.touched.deworming[index].dayAplicationInitDeworming) &&
-                                            formik.errors.deworming &&
-                                            formik.errors.deworming[index] &&
-                                            formik.errors.deworming[index].dayAplicationInitDeworming &&
-                                            (
-                                                <FormHelperText error>{formik.errors.deworming[index].dayAplicationInitDeworming}</FormHelperText>
-                                            )}
                                     </LocalizationProvider>
                                 </Grid>
                                 <Grid item xs={12} sm={6} md={6}>
@@ -156,32 +147,28 @@ export function DewormingFields({ formik }) {
                                             name={`deworming[${index}].dayAplicationFinalDeworming`}
                                             value={formik.values.deworming[index].dayAplicationFinalDeworming}
                                             onBlur={formik.handleBlur}
-                                            onChange={(date)=>handleDateVaccinesChange(date, index, 'dayAplicationFinalDeworming')}
-                                            slotProps={{ textField: { size: 'small', fullWidth: true } }}
-                                            renderInput={(params) => (
-                                                <TextField
-                                                    {...params}
-                                                    error={
-                                                        (formik.touched.deworming &&
+                                            onChange={(date)=>handleDateDewormingChange(date, index, 'dayAplicationFinalDeworming')}
+                                            slotProps={{
+                                                textField: {
+                                                    size: 'small',
+                                                    fullWidth: true,
+                                                    error: ((formik.touched.deworming &&
+                                                        formik.touched.deworming[index] &&
+                                                        formik.touched.deworming[index]?.dayAplicationFinalDeworming &&
+                                                        formik.errors.deworming &&
+                                                        formik.errors.deworming[index] &&
+                                                        Boolean(formik.errors.deworming[index]?.dayAplicationFinalDeworming)) ?? false),
+                                                    helperText: (formik.touched.deworming &&
                                                             formik.touched.deworming[index] &&
-                                                            formik.touched.deworming[index]?.dayAplicationFinalDeworming &&
+                                                            formik.touched.deworming[index].dayAplicationFinalDeworming &&
                                                             formik.errors.deworming &&
                                                             formik.errors.deworming[index] &&
-                                                            Boolean(formik.errors.deworming[index]?.dayAplicationFinalDeworming)) ?? false}
-                                                />
-                                            )}
+                                                            formik.errors.deworming[index]?.dayAplicationFinalDeworming)
+                                                    }
+                                            }}
                                             showTodayButton
                                             format='dd/MM/yyyy'
                                         />
-                                        {(formik.touched.deworming &&
-                                                formik.touched.deworming[index] &&
-                                                formik.touched.deworming[index].dayAplicationFinalDeworming) &&
-                                            formik.errors.deworming &&
-                                            formik.errors.deworming[index] &&
-                                            formik.errors.deworming[index].dayAplicationFinalDeworming &&
-                                            (
-                                                <FormHelperText error>{formik.errors.deworming[index].dayAplicationFinalDeworming}</FormHelperText>
-                                            )}
                                     </LocalizationProvider>
                                 </Grid>
                             </Grid>

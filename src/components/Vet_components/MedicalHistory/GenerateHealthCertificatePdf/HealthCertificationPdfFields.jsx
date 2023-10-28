@@ -9,9 +9,11 @@ export const HealthCertificationPdfFields = ({ formik }) => {
     const lastVaccineCardRef = useRef(null);
     const handleDateChange = (date) => {
         formik.setFieldValue('dateJourney', date);
+        formik.setFieldTouched('dateJourney', false);
     };
 
     const handleDateVaccinesChange = (date, index) => {
+        formik.setFieldTouched(`vaccines[${index}].dayAplication`, false);
         formik.setFieldValue(`vaccines[${index}].dayAplication`, date);
     }
 
@@ -36,6 +38,10 @@ export const HealthCertificationPdfFields = ({ formik }) => {
     useEffect(() => {
        setVaccines(formik.initialValues.vaccines)
     },[])
+
+    useEffect(() => {
+        console.log({touched: formik.touched, values: formik.values, errors: formik.errors, formik: formik})
+    }, [formik]);
 
     return (
     <Grid container spacing={1} justifyContent="space-between" textAlign="center" columns={{ xs: 4, sm: 8, md: 12 }}>
@@ -79,22 +85,18 @@ export const HealthCertificationPdfFields = ({ formik }) => {
                     value={formik.values.dateJourney}
                     onBlur={formik.handleBlur}
                     onChange={handleDateChange}
-                    slotProps={{ textField: { size: 'small', fullWidth: true } }}
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            error={
-                                formik.touched.dateJourney && Boolean(formik.errors.dateJourney)
-                            }
-                        />
-                    )}
+                    slotProps={{
+                        textField: {
+                            size: 'small',
+                            fullWidth: true,
+                            error: (formik.touched.dateJourney && Boolean(formik.errors.dateJourney)),
+                            helperText: formik.touched.dateJourney && formik.errors.dateJourney
+                        }
+                    }}
                     showTodayButton
                     format='dd/MM/yyyy'
                     disablePast
                 />
-                {formik.touched.dateJourney && formik.errors.dateJourney && (
-                    <FormHelperText error>{formik.errors.dateJourney}</FormHelperText>
-                )}
             </LocalizationProvider>
         </Grid>
         <Grid item xs={4} sm={8} md={12}>
@@ -184,32 +186,28 @@ export const HealthCertificationPdfFields = ({ formik }) => {
                                         value={formik.values.vaccines[index].dayAplication}
                                         onBlur={formik.handleBlur}
                                         onChange={(date)=>handleDateVaccinesChange(date, index)}
-                                        slotProps={{ textField: { size: 'small', fullWidth: true } }}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                error={
-                                                (formik.touched.vaccines &&
-                                                formik.touched.vaccines[index] &&
-                                                formik.touched.vaccines[index]?.dayAplication &&
-                                                formik.errors.vaccines &&
-                                                formik.errors.vaccines[index] &&
-                                                Boolean(formik.errors.vaccines[index]?.dayAplication)) ?? false}
-                                            />
-                                        )}
+                                        slotProps={{
+                                            textField: {
+                                                size: 'small',
+                                                fullWidth: true,
+                                                error: (formik.touched.vaccines &&
+                                                    formik.touched.vaccines[index] &&
+                                                    formik.touched.vaccines[index]?.dayAplication &&
+                                                    formik.errors.vaccines &&
+                                                    formik.errors.vaccines[index] &&
+                                                    Boolean(formik.errors.vaccines[index]?.dayAplication)) ?? false,
+                                                helperText: (formik.touched.vaccines &&
+                                                        formik.touched.vaccines[index] &&
+                                                    formik.touched.vaccines[index].dayAplication &&
+                                                    formik.errors.vaccines &&
+                                                    formik.errors.vaccines[index] &&
+                                                    formik.errors.vaccines[index]?.dayAplication)
+                                            }
+                                        }}
                                         showTodayButton
                                         format='dd/MM/yyyy'
                                         ref={index === vaccines.length - 1 ? lastVaccineCardRef : null}
                                     />
-                                    {(formik.touched.vaccines &&
-                                        formik.touched.vaccines[index] &&
-                                        formik.touched.vaccines[index].dayAplication) &&
-                                        formik.errors.vaccines &&
-                                        formik.errors.vaccines[index] &&
-                                        formik.errors.vaccines[index].dayAplication &&
-                                        (
-                                        <FormHelperText error>{formik.errors.vaccines[index].dayAplication}</FormHelperText>
-                                    )}
                                 </LocalizationProvider>
                             </CardContent>
                         </Card>

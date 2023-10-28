@@ -50,7 +50,7 @@ export function initialPetValues(medicalHistory) {
   };
 }
 
-export function validationSchemaPetRegister(activeStep, medicalHistoryTreatmentsSchema, medicalHistoryIntervationsSchema) {
+export function validationSchemaPetRegister(medicalHistory, activeStep) {
   // Anamnesis Schema
   if(activeStep === 0){
     console.log('0');

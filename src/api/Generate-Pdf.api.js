@@ -7,27 +7,21 @@ export class GeneratePdfApi {
     apiAuth = new ApiAuth();
     accessToken = this.apiAuth.getAccessToken();
     url = `${config.baseApi}/generate-pdf`;
+    params = {
+        headers: {
+            Authorization: `Bearer ${this.accessToken}`,
+        },
+        responseType: 'blob',
+    };
 
     async generateConsentPdf(data, petId, petName) {
         try {
-            const params = {
-                headers: {
-                    Authorization: `Bearer ${this.accessToken}`,
-                },
-                responseType: 'blob',
-            };
-
             const response = await
                 axios
                     .post(
                         `${this.url}/consent-surgeries/${petId}`,
                         data,
-                        {
-                            headers: {
-                                Authorization: `Bearer ${this.accessToken}`,
-                            },
-                            responseType: 'blob',
-                        })
+                        this.params)
 
             return this.redirectDownloadPdf(response.data, petName, 'consentimiento-cirugía');
         } catch (e) {
@@ -37,24 +31,12 @@ export class GeneratePdfApi {
 
     async generateEuthanasiaPdf(data, petId, petName) {
         try {
-            const params = {
-                headers: {
-                    Authorization: `Bearer ${this.accessToken}`,
-                },
-                responseType: 'blob',
-            };
-
             const response = await
                 axios
                     .post(
                         `${this.url}/euthanasias/${petId}`,
                         data,
-                        {
-                            headers: {
-                                Authorization: `Bearer ${this.accessToken}`,
-                            },
-                            responseType: 'blob',
-                        })
+                        this.params)
 
             return this.redirectDownloadPdf(response.data, petName, 'consentimiento-eutanasia');
         } catch (e) {
@@ -75,24 +57,14 @@ export class GeneratePdfApi {
                     }
                 })
             }
-            const params = {
-                headers: {
-                    Authorization: `Bearer ${this.accessToken}`,
-                },
-                responseType: 'blob',
-            };
 
             const response = await
                 axios
                     .post(
                         `${this.url}/health-certificates/${petId}`,
                         input,
-                        {
-                            headers: {
-                                Authorization: `Bearer ${this.accessToken}`,
-                            },
-                            responseType: 'blob',
-                        })
+                        this.params
+                    )
 
             return this.redirectDownloadPdf(response.data, petName, 'certificado-salud');
         } catch (e) {

@@ -3,7 +3,6 @@ import Box from '@mui/material/Box';
 
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { AddBoxOutlined } from '@mui/icons-material';
 
 export const modalStyle = {
   position: 'absolute',

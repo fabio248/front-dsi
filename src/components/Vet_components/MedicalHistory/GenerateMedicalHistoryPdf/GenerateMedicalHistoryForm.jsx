@@ -19,9 +19,7 @@ export function GenerateMedicalHistoryForm(){
     return (
         <div className="medical-history-pdf-form">
             <form onSubmit={formik.handleSubmit}>
-                <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }}>
-                    <GenerateMedicalHistoryFields formik={formik}/>
-                </Grid>
+                <GenerateMedicalHistoryFields formik={formik}/>
                 <Grid
                     sx={{
                         display: 'flex',

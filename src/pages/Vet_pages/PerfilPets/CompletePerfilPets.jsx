@@ -9,8 +9,6 @@ import {
   Tabs,
   Grid,
   Paper,
-  AppBar,
-  Toolbar,
   Typography,
   Button,
   CircularProgress, IconButton, Tooltip,

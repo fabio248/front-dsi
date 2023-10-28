@@ -32,6 +32,8 @@ export const validateMedicalHistoryPdfSchema = yup.object({
     deworming: yup.array().of(yup.object().shape({
         dayAplicationInitDeworming: yup.string().required('Dia de aplicación es requerido'),
         dayAplicationFinalDeworming: yup.string().required('Dia de próximo refuerzo es requerido'),
+        dewormingName: yup.string().required('Desparasitante es requerido'),
+        dose: yup.string().required('Dosis es requerido'),
     })),
     vaccines: yup.array().of(yup.object().shape({
         dayAplicationInit: yup.string().required('Dia de aplicación es requerido'),

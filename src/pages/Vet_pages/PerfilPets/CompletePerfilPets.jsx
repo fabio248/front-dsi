@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 // MUI Material
@@ -9,8 +9,6 @@ import {
   Tabs,
   Grid,
   Paper,
-  AppBar,
-  Toolbar,
   Typography,
   Button,
   CircularProgress, IconButton, Tooltip,
@@ -20,7 +18,6 @@ import {
   Vaccines,
   LocalHospital,
   Flight,
-  MedicalServices
 } from "@mui/icons-material";
 //render of pets
 import { PetMedicalHistory } from './MedicalHistory';
@@ -36,9 +33,21 @@ import { ApiAuth } from '../../../api/Auth.api';
 import { useQuery } from '@tanstack/react-query';
 import { Modal_medicalHistory } from '../../../shared/Modal_MedicalHistory/index.jsx';
 import { MedicalHistoryForm } from '../../../components/Vet_components/MedicalHistory/MedicalHistoryForm/MedicalHistoryForm';
+import {
+  ConsentSurgeryPdfForm
+} from "../../../components/Vet_components/MedicalHistory/GenerateConsentSurgeryPdf/ConsentSurgeryPdfForm.jsx";
+import {SurgeryIcon} from "../../../shared/Icons/index.js";
+import {EuthanasiasIcon} from "../../../shared/Icons/euthanasias.icon.jsx";
+import {GeneratePdfApi} from "../../../api/Generate-Pdf.api.js";
+import {useModal} from "../../../hooks";
+import {
+  HealthCertificationPdfForm
+} from "../../../components/Vet_components/MedicalHistory/GenerateHealthCertificatePdf/HealthCertificatePdfForm.jsx";
+import {Header} from "../../../shared/components/Header.jsx";
 
 const petsController = new Pets();
 const apiAuthController = new ApiAuth();
+const generatePdfController = new GeneratePdfApi();
 
 export function CompletePetPerfil() {
   const allTreatments = [];
@@ -49,9 +58,13 @@ export function CompletePetPerfil() {
 
   const [selectedTab, setSelectedTab] = useState(0);
   const [showModal, setShowModal] = useState(false);
+  const {showModal: showModalSurgery, onOpenCloseModal: onOpenCloseModalSurgery} = useModal();
+  const { showModal: showModalEuthanasia, onOpenCloseModal:onOpenCloseModalEuthanasia } = useModal()
+  const { showModal: showModalHealthCertificate, onOpenCloseModal: onOpenCloseModalHealthCertificate } = useModal()
 
   const onOpenCloseModal = () => setShowModal((prevState) => !prevState);
   const onReload = () => setReload((prevState) => !prevState);
+
   const { data: pet, isLoading } = useQuery({
     queryKey: ['pets', params.petId],
     queryFn: async () => {
@@ -83,27 +96,7 @@ export function CompletePetPerfil() {
 
   return (
     <>
-      <AppBar position='static' sx={{ m:-1, width: '102%' }}>
-        <Toolbar>
-          <Typography
-            variant='h6'
-            component='div'
-            sx={{ flexGrow: 1 }}
-            onClick={() => navigate('/admin')}
-          >
-            Clínica Veterinaria Mistun
-          </Typography>
-
-          <Button
-            variant='contained'
-            color='success'
-            style={{ color: 'white' }}
-            onClick={() => navigate(-1)}
-          >
-            Regresar
-          </Button>
-        </Toolbar>
-      </AppBar>
+      <Header />
 
       <Container maxWidth='xl' sx={{ mt: 4, mb: 4 }}>
         <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }}>
@@ -187,42 +180,42 @@ export function CompletePetPerfil() {
                 >
                   Generación de archivos PDFs
                 </h1>
-                <IconButton >
-                  <Tooltip
-                    arrow={true}
-                    title={
-                      <Typography sx={{ fontSize: 14, color: 'white' }}>
-                        Constancia de Salud
-                      </Typography>
-                      }
-                  >
-                    <Flight sx={{ fontSize: 55, color: '#2E7D32'}} />
-                  </Tooltip>
-                </IconButton>
-                <IconButton>
-                  <Tooltip
+                <Tooltip
                     arrow={true}
                     title={
                       <Typography sx={{ fontSize: 14, color: 'white' }}>
                         Consentimiento Cirugía
                       </Typography>
                     }
-                  >
-                    <MedicalServices sx={{ fontSize: 55, color: '#2E7D32'}}/>
-                  </Tooltip>
-                </IconButton>
-                <IconButton>
+                >
+                  <IconButton onClick={onOpenCloseModalSurgery}>
+                      <SurgeryIcon color='#2E7D32'/>
+                  </IconButton>
+                </Tooltip>
+                <IconButton onClick={onOpenCloseModalHealthCertificate}>
                   <Tooltip
                       arrow={true}
                       title={
                         <Typography sx={{ fontSize: 14, color: 'white' }}>
-                          Consentimiento Eutanasia
+                          Constancia de Salud
                         </Typography>
                       }
                   >
-                    <Vaccines sx={{ fontSize: 55, color: '#2E7D32'}} />
+                    <Flight sx={{ fontSize: 55, color: '#2E7D32'}} />
                   </Tooltip>
                 </IconButton>
+                <Tooltip
+                    arrow={true}
+                    title={
+                      <Typography sx={{ fontSize: 14, color: 'white' }}>
+                        Consentimiento Eutanasia
+                      </Typography>
+                    }
+                >
+                  <IconButton onClick={onOpenCloseModalEuthanasia}>
+                      <EuthanasiasIcon color='#2E7D32'/>
+                  </IconButton>
+                </Tooltip>
               </Paper>
             </Grid>
           </Grid>
@@ -240,7 +233,7 @@ export function CompletePetPerfil() {
                 close={onOpenCloseModal}
                 title='Crear nueva hoja clinica'
               >
-                <MedicalHistoryForm close={onOpenCloseModal} onReload={onReload} />
+                <MedicalHistoryForm close={onOpenCloseModal} onReload={onReload}  petId={params.petId} />
               </Modal_medicalHistory>
             )}
             {/*<Paper
@@ -342,7 +335,7 @@ export function CompletePetPerfil() {
                 <div className='box-container'>
                 <Box sx={{ width: '100%' }}>
                   {map(pet.medicalHistories, (hojaClinica) => (
-                    <PetMedicalHistory key={hojaClinica.id} medicalHistory={hojaClinica} />
+                    <PetMedicalHistory key={hojaClinica.id} medicalHistory={hojaClinica} petId={params.petId} />
                   ))}
                 </Box>
                 </div>
@@ -438,6 +431,64 @@ export function CompletePetPerfil() {
           </Grid>
         </Grid>
         </Container>
+
+      {showModalSurgery ? (
+        <Modal_medicalHistory
+            show={showModalSurgery}
+            close={onOpenCloseModalSurgery}
+            title='Generar Consentimiento Cirugía'
+        >
+          <ConsentSurgeryPdfForm onClose={onOpenCloseModalSurgery} petId={pet.id} petName={pet.name}/>
+        </Modal_medicalHistory>)
+        : null}
+
+      {showModalEuthanasia ? (
+            <Modal_medicalHistory
+                show={showModalEuthanasia}
+                close={onOpenCloseModalEuthanasia}
+                title='¿Desea generar consentimiento eutanasia?'
+              >
+              <Grid
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    margin: '0 auto',
+                  }}
+              >
+                <Button
+                    color='error'
+                    onClick={onOpenCloseModalEuthanasia}
+                    size='medium'
+                    sx={{ mx: 2, marginTop: '12px' }}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                    onClick={() => {
+                      generatePdfController.generateEuthanasiaPdf({}, pet.id, pet.name)
+                      onOpenCloseModalEuthanasia()
+                    }}
+                    size='medium'
+                    sx={{ mx: 2, marginTop: '12px' }}
+                >
+                  Generar
+                </Button>
+              </Grid>
+
+            </Modal_medicalHistory>): null
+      }
+      {showModalHealthCertificate
+          ? (
+              <Modal_medicalHistory
+                  show={showModalHealthCertificate}
+                  close={onOpenCloseModalHealthCertificate}
+                  title='¿Desea generar consentimiento eutanasia?'
+              >
+                <HealthCertificationPdfForm onClose={onOpenCloseModalHealthCertificate} petId={pet.id} petName={pet.name}/>
+              </Modal_medicalHistory>)
+          : null
+      }
     </>
   );
 }

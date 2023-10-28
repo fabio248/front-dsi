@@ -122,7 +122,7 @@ useEffect(() => {
                         <TableCell>Action</TableCell>
                       </TableRow>
                     </TableHead>
-                    <TableBody>
+                    <TableBody> 
                       <TableRow>
                         <TableCell>{bill.quantity}</TableCell>
                         <TableCell>{bill.productId}</TableCell>

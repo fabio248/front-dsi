@@ -18,7 +18,7 @@ export function FactureSeeData({ facture }) {
              </div> ) : null}</Typography>
         <Typography>{facture.client.email ? (
                   <div>
-                 <b>Email: </b>
+                 <b>Correo Electrónico: </b>
                 {facture.client.email}
              </div> ) : null}</Typography>
         <Typography>{facture.client.dui ? (
@@ -33,7 +33,7 @@ export function FactureSeeData({ facture }) {
              </div> ) : null}</Typography>
         <Typography>{facture.client.phone ? (
                   <div>
-                 <b>Phone: </b>
+                 <b>Teléfono: </b>
                 {facture.client?.phone}
              </div> ) : null}</Typography>
       </Paper>

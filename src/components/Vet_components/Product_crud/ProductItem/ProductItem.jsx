@@ -105,6 +105,7 @@ export function ProductItem({ product, onReload }) {
           <ListItemAvatar sx={{ margin: '0 auto' }}>
             <Avatar sx={{ mx: 4, width: 60, height: 60, bgcolor: '#8EC167' }}>
               <CategoryIcon sx={{ fontSize: 45 }} />
+              
             </Avatar>
           </ListItemAvatar>
           <ListItemText>

@@ -57,7 +57,7 @@ export function PetsItems({ pet }) {
       <Demo>
         <ListItem sx={{ display: 'flex', flexWrap: 'wrap' }}>
           <ListItemAvatar sx={{ margin: '0 auto' }}>
-            <Avatar sx={{ mx: 4, width: 60, height: 60, bgcolor: '#F5F5F5' }}>
+            <Avatar sx={{ mx: 4, width: 60, height: 60, bgcolor: '#FFFFFF' }}>
               <PetsIcon sx={{ fontSize: 45 }} />
             </Avatar>
           </ListItemAvatar>
@@ -83,17 +83,17 @@ export function PetsItems({ pet }) {
           >
               <Grid item>
                 <IconButton>
-                  <FlightIcon sx={{ fontSize: 35 }} />
+                  <FlightIcon sx={{ fontSize: 35, color: '#2E7D32'}} />
                 </IconButton>
               </Grid>
             <Grid item>
               <IconButton>
-                <VaccinesIcon sx={{ fontSize: 35 }} />
+                <VaccinesIcon sx={{ fontSize: 35, color: '#2E7D32'}} />
               </IconButton>
             </Grid>
             <Grid item>
               <IconButton>
-                <VolunteerActivismIcon sx={{ fontSize: 35 }} />
+                <VolunteerActivismIcon sx={{ fontSize: 35, color: '#2E7D32'}} />
               </IconButton>
             </Grid>
           </ListItemAvatar>

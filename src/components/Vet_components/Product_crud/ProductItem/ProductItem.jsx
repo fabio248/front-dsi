@@ -105,6 +105,7 @@ export function ProductItem({ product, onReload }) {
           <ListItemAvatar sx={{ margin: '0 auto' }}>
             <Avatar sx={{ mx: 4, width: 60, height: 60, bgcolor: '#8EC167' }}>
               <CategoryIcon sx={{ fontSize: 45 }} />
+              
             </Avatar>
           </ListItemAvatar>
           <ListItemText>
@@ -130,12 +131,12 @@ export function ProductItem({ product, onReload }) {
             sx={{ display: 'flex', flexDirection: 'row', margin: '0 auto' }}
           >
             <Grid item>
-              <IconButton style={{ color: '#8EC167' }} onClick={openUpdateProduct}>
+              <IconButton color='warning' onClick={openUpdateProduct}>
                 <ModeEditIcon sx={{ fontSize: 30 }} />
               </IconButton>
             </Grid>
             <Grid item>
-              <IconButton style={{ color: '#8EC167' }} onClick={openDeleteProduct}>
+              <IconButton color='error' onClick={openDeleteProduct}>
                 <DeleteIcon sx={{ fontSize: 30 }} />
               </IconButton>
               {success && (

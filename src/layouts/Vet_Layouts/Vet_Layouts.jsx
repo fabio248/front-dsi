@@ -19,6 +19,7 @@ import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import CategoryIcon from '@mui/icons-material/Category';
+import DescriptionIcon from '@mui/icons-material/Description';
 import EventIcon from '@mui/icons-material/Event';
 import { Logout } from '../../components/Admin/Auth/Logout';
 import { NavLink } from 'react-router-dom';
@@ -122,6 +123,23 @@ export function Vet_Layouts(props) {
                 <CategoryIcon/>
               </ListItemIcon>
               <ListItemText primary='Agregar Productos' />
+            </ListItemButton>
+          </ListItem>
+        </NavLink>
+        <Divider/>
+        <NavLink
+          to='/admin/facturations'
+          style={{
+            textDecoration: 'none', // Quitar subrayado
+            color: 'black', // Color de texto deseado
+          }}
+        >
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <DescriptionIcon/>
+              </ListItemIcon>
+              <ListItemText primary='Facturación' />
             </ListItemButton>
           </ListItem>
         </NavLink>

@@ -13,11 +13,15 @@ import {
   Toolbar,
   Typography,
   Button,
-  CircularProgress,
+  CircularProgress, IconButton, Tooltip,
 } from '@mui/material';
-import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
-import VaccinesIcon from '@mui/icons-material/Vaccines';
-import LocalHospitalIcon from '@mui/icons-material/LocalHospital'
+import {
+  HistoryEdu,
+  Vaccines,
+  LocalHospital,
+  Flight,
+  MedicalServices
+} from "@mui/icons-material";
 //render of pets
 import { PetMedicalHistory } from './MedicalHistory';
 import { PetMedicalHistoryTreatments } from './Treatments';
@@ -30,7 +34,7 @@ import { size, map } from 'lodash';
 import { Pets } from '../../../api/Pets.api';
 import { ApiAuth } from '../../../api/Auth.api';
 import { useQuery } from '@tanstack/react-query';
-import { Modal_medicalHistory } from '../../../shared/Modal_MedicalHistory/Modal_medicalHistory';
+import { Modal_medicalHistory } from '../../../shared/Modal_MedicalHistory/index.jsx';
 import { MedicalHistoryForm } from '../../../components/Vet_components/MedicalHistory/MedicalHistoryForm/MedicalHistoryForm';
 
 const petsController = new Pets();
@@ -52,11 +56,10 @@ export function CompletePetPerfil() {
     queryKey: ['pets', params.petId],
     queryFn: async () => {
       const accessToken = apiAuthController.getAccessToken();
-      const response = await petsController.getPetById(
+      return await petsController.getPetById(
         accessToken,
         params.petId
       );
-      return response;
     },
   });
   const handleTabChange = (event, newValue) => {
@@ -80,7 +83,7 @@ export function CompletePetPerfil() {
 
   return (
     <>
-      <AppBar position='static' sx={{ m:-1, width: '101.2%' }}>
+      <AppBar position='static' sx={{ m:-1, width: '102%' }}>
         <Toolbar>
           <Typography
             variant='h6'
@@ -101,78 +104,129 @@ export function CompletePetPerfil() {
           </Button>
         </Toolbar>
       </AppBar>
-      <br />
 
       <Container maxWidth='xl' sx={{ mt: 4, mb: 4 }}>
-        <Grid container spacing={2}>
-          <Grid item xs={18} md={4} sx={{ height: '100%' }}>
-            <Paper style={{ padding: '20px', fontSize: '18px' }}>
-              <h1
-                style={{
-                  textAlign: 'center',
-                  fontSize: '24px',
-                  borderBottom: '1px solid #ccc',
-                  paddingBottom: '5px',
-                }}
-              >
-                Datos generales de la mascota
-              </h1>
-              <br />
-              {isLoading ? (
-                <div
-                  style={{
-                    minHeight: '250px',
-                    maxHeight: '670px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
+        <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }}>
+          <Grid item xs={4} sm={8} md={4}>
+            <Grid item>
+              <Paper style={{ padding: '20px', fontSize: '18px' }}>
+                <h1
+                    style={{
+                      textAlign: 'center',
+                      fontSize: '24px',
+                      borderBottom: '1px solid #ccc',
+                      paddingBottom: '5px',
+                    }}
                 >
-                  <CircularProgress style={{ alignSelf: 'center' }} />
-                </div>
-              ) : (
-                <>
-                  <b>Nombre: </b>
-                  {pet.name}
-                  <br />
-                  <br />
-                  <b>Género: </b>
-                  {pet.gender}
-                  <br />
-                  <br />
-                  <b>Especie: </b>
-                  {pet.specie.name}
-                  <br />
-                  <br />
-                  <b>Raza: </b>
-                  {pet.raza}
-                  <br />
-                  <br />
-                  <b>Color: </b>
-                  {pet.color}
-                  <br />
-                  <br />
-                  <b>Tatuajes: </b>
-                  {pet.isHaveTatto ? 'Sí posee':'No posee'}
-                  <br />
-                  <br />
-                  <b>Pedigree: </b>
-                  {pet.pedigree ? 'Sí posee':'No posee'}
-                  <br />
-                  <br />
-                  {pet.birthday ? (
+                  Datos generales de la mascota
+                </h1>
+                <br />
+                {isLoading ? (
+                    <div
+                        style={{
+                          minHeight: '250px',
+                          maxHeight: '670px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                    >
+                      <CircularProgress style={{ alignSelf: 'center' }} />
+                    </div>
+                ) : (
                     <>
-                      <b>Fecha de nacimiento: </b>
-                      {pet.birthday}
+                      <b>Nombre: </b>
+                      {pet.name}
                       <br />
                       <br />
+                      <b>Género: </b>
+                      {pet.gender}
+                      <br />
+                      <br />
+                      <b>Especie: </b>
+                      {pet.specie.name}
+                      <br />
+                      <br />
+                      <b>Raza: </b>
+                      {pet.raza}
+                      <br />
+                      <br />
+                      <b>Color: </b>
+                      {pet.color}
+                      <br />
+                      <br />
+                      <b>Tatuajes: </b>
+                      {pet.isHaveTatto ? 'Sí posee':'No posee'}
+                      <br />
+                      <br />
+                      <b>Pedigree: </b>
+                      {pet.pedigree ? 'Sí posee':'No posee'}
+                      <br />
+                      <br />
+                      {pet.birthday ? (
+                          <>
+                            <b>Fecha de nacimiento: </b>
+                            {pet.birthday}
+                            <br />
+                            <br />
+                          </>
+                      ) : null}
                     </>
-                  ) : null}
-                </>
-              )}
-            </Paper>
+                )}
+              </Paper>
+            </Grid>
+            <Grid item sx={{mt: 2, textAlign:'center'}}>
+              <Paper style={{ padding: '20px', fontSize: '18px' }}>
+                <h1
+                    style={{
+                      textAlign: 'center',
+                      fontSize: '24px',
+                      borderBottom: '1px solid #ccc',
+                      paddingBottom: '5px',
+                    }}
+                >
+                  Generación de archivos PDFs
+                </h1>
+                <IconButton >
+                  <Tooltip
+                    arrow={true}
+                    title={
+                      <Typography sx={{ fontSize: 14, color: 'white' }}>
+                        Constancia de Salud
+                      </Typography>
+                      }
+                  >
+                    <Flight sx={{ fontSize: 55, color: '#2E7D32'}} />
+                  </Tooltip>
+                </IconButton>
+                <IconButton>
+                  <Tooltip
+                    arrow={true}
+                    title={
+                      <Typography sx={{ fontSize: 14, color: 'white' }}>
+                        Consentimiento Cirugía
+                      </Typography>
+                    }
+                  >
+                    <MedicalServices sx={{ fontSize: 55, color: '#2E7D32'}}/>
+                  </Tooltip>
+                </IconButton>
+                <IconButton>
+                  <Tooltip
+                      arrow={true}
+                      title={
+                        <Typography sx={{ fontSize: 14, color: 'white' }}>
+                          Consentimiento Eutanasia
+                        </Typography>
+                      }
+                  >
+                    <Vaccines sx={{ fontSize: 55, color: '#2E7D32'}} />
+                  </Tooltip>
+                </IconButton>
+              </Paper>
+            </Grid>
           </Grid>
-          <Grid item xs={17} md={8}>
+          <Grid item xs={4} sm={8} md={8}>
             <Button
               sx = {{ px: 4, py: 1.5, my: 2 }}
               variant='contained'
@@ -250,19 +304,11 @@ export function CompletePetPerfil() {
               <Grid container spacing={3} alignItems='center'>
                 <Grid item>
                   <Tabs value={selectedTab} onChange={handleTabChange} aria-label='basic tabs example'>
-                    <Tab icon={<HistoryEduIcon />} label='Historial médico' {...a11yProps(0)} />
-                    <Tab icon={<VaccinesIcon />} label='Tratamientos' {...a11yProps(1)} />
-                    <Tab icon={<LocalHospitalIcon />} label='Intervenciones' {...a11yProps(2)} />
+                    <Tab icon={<HistoryEdu />} label='Historial médico' {...a11yProps(0)} />
+                    <Tab icon={<Vaccines />} label='Tratamientos' {...a11yProps(1)} />
+                    <Tab icon={<LocalHospital />} label='Intervenciones' {...a11yProps(2)} />
                   </Tabs>
                 </Grid>
-
-                <Grid item sx={{ flexGrow: 1 }}>
-                  {/* Espacio flexible */}
-                </Grid>
-                {/*<Grid item>Total mascotas registradas: {totalPets}</Grid>
-                <Grid item>
-                  <SearchInput isFetching={isFetching} />
-                </Grid>*/}
               </Grid>
             </Box>
 
@@ -391,7 +437,7 @@ export function CompletePetPerfil() {
             )}
           </Grid>
         </Grid>
-      </Container>
+        </Container>
     </>
   );
 }

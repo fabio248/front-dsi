@@ -16,7 +16,7 @@ export function UserAndPetItem({ pet }) {
   return (
     <div className='container'>
       <ListItem sx={{ display: 'flex', flexWrap: 'wrap' }}>
-        <Avatar sx={{ mx: 4, width: 60, height: 60 }}>
+        <Avatar sx={{ mx: 4, width: 60, height: 60}}>
           <PetsIcon sx={{ fontSize: 45 }} />
         </Avatar>
         <ListItemText>
@@ -50,7 +50,7 @@ export function UserAndPetItem({ pet }) {
                 : 'Si posee'}
             </span>
             <br />
-            <b>Nacimiento de la mascota U adquisición: </b>
+            <b>Nacimiento de la mascota o Adquisición: </b>
             <span style={{ color: 'gray' }}>{pet.birthday}</span>
             <br />
             <b>Color del pelaje: </b>

@@ -18,6 +18,7 @@ const configApiBackend = {
   supabaseUrl: import.meta.env.VITE_SUPABASEURL,
   supabaseKey: import.meta.env.VITE_SUPABASEKEY,
   files: import.meta.env.VITE_FILE,
+  bills: import.meta.env.VITE_BILLS
 };
 
 const configJwt = {

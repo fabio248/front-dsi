@@ -42,6 +42,9 @@ import {SurgeryIcon} from "../../../shared/Icons/index.js";
 import {EuthanasiasIcon} from "../../../shared/Icons/euthanasias.icon.jsx";
 import {GeneratePdfApi} from "../../../api/Generate-Pdf.api.js";
 import {useModal} from "../../../hooks";
+import {
+  HealthCertificationPdfForm
+} from "../../../components/Vet_components/MedicalHistory/GenerateHealthCertificatePdf/HealthCertificatePdfForm.jsx";
 
 const petsController = new Pets();
 const apiAuthController = new ApiAuth();
@@ -58,6 +61,7 @@ export function CompletePetPerfil() {
   const [showModal, setShowModal] = useState(false);
   const {showModal: showModalSurgery, onOpenCloseModal: onOpenCloseModalSurgery} = useModal();
   const { showModal: showModalEuthanasia, onOpenCloseModal:onOpenCloseModalEuthanasia } = useModal()
+  const { showModal: showModalHealthCertificate, onOpenCloseModal: onOpenCloseModalHealthCertificate } = useModal()
 
   const onOpenCloseModal = () => setShowModal((prevState) => !prevState);
   const onReload = () => setReload((prevState) => !prevState);
@@ -209,7 +213,7 @@ export function CompletePetPerfil() {
                       <SurgeryIcon color='#2E7D32'/>
                   </IconButton>
                 </Tooltip>
-                <IconButton >
+                <IconButton onClick={onOpenCloseModalHealthCertificate}>
                   <Tooltip
                       arrow={true}
                       title={
@@ -448,6 +452,7 @@ export function CompletePetPerfil() {
           </Grid>
         </Grid>
         </Container>
+
       {showModalSurgery ? (
         <Modal_medicalHistory
             show={showModalSurgery}
@@ -482,7 +487,7 @@ export function CompletePetPerfil() {
                 </Button>
                 <Button
                     onClick={() => {
-                      generatePdfController.generateEutanaciaPdf({}, pet.id, pet.name)
+                      generatePdfController.generateEuthanasiaPdf({}, pet.id, pet.name)
                       onOpenCloseModalEuthanasia()
                     }}
                     size='medium'
@@ -493,6 +498,17 @@ export function CompletePetPerfil() {
               </Grid>
 
             </Modal_medicalHistory>): null
+      }
+      {showModalHealthCertificate
+          ? (
+              <Modal_medicalHistory
+                  show={showModalHealthCertificate}
+                  close={onOpenCloseModalHealthCertificate}
+                  title='¿Desea generar consentimiento eutanasia?'
+              >
+                <HealthCertificationPdfForm onClose={onOpenCloseModalHealthCertificate} petId={pet.id} petName={pet.name}/>
+              </Modal_medicalHistory>)
+          : null
       }
     </>
   );

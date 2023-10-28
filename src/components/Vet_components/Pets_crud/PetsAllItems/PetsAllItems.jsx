@@ -65,10 +65,12 @@ export function PetsAllItems({ pet }) {
       const accessToken = authController.getAccessToken();
       return await petController.deletePet(accessToken, pet.id);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries(['pets']);
+    onSuccess: async () => {
       setSuccess(true);
       onCloseConfirm();
+      setTimeout(() => {
+        queryClient.invalidateQueries(['pets']);
+      }, 3000);
     },
     onError: () => {
       setError(true);

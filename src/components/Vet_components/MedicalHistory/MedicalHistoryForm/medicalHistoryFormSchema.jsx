@@ -35,7 +35,14 @@ export function initialPetValues(medicalHistory) {
     //  },
     //  diagnostic: {
     diagnostic: medicalHistory?.diagnostic?.description || '',
-    tratamientos: medicalHistory?.diagnostic?.treatments || [],
+    tratamientos: medicalHistory?.diagnostic?.treatments || [
+      {
+        'name' : '',
+        quantity: '',
+        frequency: '',
+        days: undefined,
+      }
+    ],
     intervenciones: medicalHistory?.diagnostic?.surgicalIntervations || [],
     //  },
     //},
@@ -76,7 +83,6 @@ export function validationSchemaPetRegister(medicalHistory, activeStep) {
       habitaculo: yup.string().required('El habitáculo es obligatorio'),
     });
   } else if ( activeStep === 1){
-    console.log('1');
     return yup.object({
       weight: yup
       .number()
@@ -108,34 +114,56 @@ export function validationSchemaPetRegister(medicalHistory, activeStep) {
       .required('El mucus de la mascota es obligatorio'),
     });
   } else if (activeStep === 2){
-    console.log('2');
     let mergedSchema = null;
     const schemaBase = yup.object({
       diagnostic: yup
       .string()
       .required('El diagnostico obligatorio'),
-      tratamientos: yup
-      .array()
+      tratamientos:  yup.array().of(yup.object().shape({
+        name: yup
+        .string()
+        .required('El nombre del tratamiento es obligatorio'),
+        quantity: yup
+        .string()
+        .required('La cantidad de tratamiento es obligatoria'),
+        frequency: yup
+        .string()
+        .required('La frecuencia de aplicación del tratamiento obligatorio'),
+        days: yup
+          .number()
+          .positive('Los dias de aplicacion deben ser positivo para que sea válido')
+          .required('Los dias de aplicacion del tratamiento es obligatorio'),
+      }))
       .min(1, 'Se requiere que ingrese al menos un tratamiento'),
-      intervenciones: yup
-      .array(),
-      
-      /*intervenciones: yup
-      .string()
-      .required('La intervencion obligatoria'),*/
+      intervenciones:  yup.array().of(yup.object().shape({
+        name: yup
+        .string()
+        .required('El nombre de la intervención es obligatorio'),
+        description: yup
+        .string()
+        .required('La descripcion de la intervención es obligatoria'),
+        dayAplication: yup
+          .date()
+          .min(new Date(), 'La fecha no puede ser anterior al día de hoy')
+          .transform((value, originalValue) => {
+            if (originalValue) {
+              const date = new Date(originalValue);
+              return isValid(date) ? date : new Date('invalid');
+            }
+            return null;
+          })
+          .required('La fecha es requerida')
+          .typeError('Ingrese una fecha válida'),
+          })),
     });
-    const schema3 = schemaBase.concat(medicalHistoryTreatmentsSchema());
-    console.log(schema3);
-    mergedSchema = schema3.concat(medicalHistoryIntervationsSchema());
-    console.log(mergedSchema);
     
-    return mergedSchema || schema3 || schemaBase;
+    return schemaBase;
   }
 }
 
 export function initialTreatmentsValues() {
   return {
-    name: '',
+    nameTreatment: '',
     quantityTreatment: '',
     frequencyTreatment: '',
     days: '',
@@ -174,7 +202,7 @@ export function medicalHistoryIntervationsSchema(){
     description: yup
     .string()
     .required('La descripcion de la intervención es obligatoria'),
-    date: yup
+    dayAplication: yup
       .date()
       .min(new Date(), 'La fecha no puede ser anterior al día de hoy')
       .transform((value, originalValue) => {

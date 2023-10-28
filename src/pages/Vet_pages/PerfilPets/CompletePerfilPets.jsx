@@ -235,7 +235,7 @@ export function CompletePetPerfil() {
                 close={onOpenCloseModal}
                 title='Crear nueva hoja clinica'
               >
-                <MedicalHistoryForm close={onOpenCloseModal} onReload={onReload} />
+                <MedicalHistoryForm close={onOpenCloseModal} onReload={onReload}  petId={params.petId} />
               </Modal_medicalHistory>
             )}
             {/*<Paper

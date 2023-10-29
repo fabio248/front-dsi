@@ -29,25 +29,28 @@ export const HealthCertificationPdfFields = ({ formik }) => {
 
     const removeVaccine = (index) => {
         const newVaccines = formik.values.vaccines.filter((_, i) => i !== index)
-        const newErrorsVaccines = formik.errors.vaccines.filter((_, i) => i !== index)
-        formik.setFieldError('vaccines', newErrorsVaccines);
         formik.setFieldValue('vaccines', newVaccines);
         setVaccines(newVaccines);
+
+        if(formik.errors.vaccines.length > 0){
+            const newErrorsVaccines = formik.errors.vaccines.filter((_, i) => i !== index)
+            formik.setFieldError('vaccines', newErrorsVaccines);
+        }
+
+        if(formik.touched.vaccines.length > 0){
+            const newTouchedVaccines = formik.touched.vaccines.filter((_, i) => i !== index)
+            formik.setFieldTouched('vaccines', newTouchedVaccines);
+        }
     }
 
     useEffect(() => {
        setVaccines(formik.initialValues.vaccines)
     },[])
 
-    useEffect(() => {
-        console.log({touched: formik.touched, values: formik.values, errors: formik.errors, formik: formik})
-    }, [formik]);
-
     return (
     <Grid container spacing={1} justifyContent="space-between" textAlign="center" columns={{ xs: 4, sm: 8, md: 12 }}>
         <Grid item xs={4} sm={8} md>
             <TextField
-                autoFocus
                 fullWidth
                 name='destinationAdress'
                 label='Dirección de destino'

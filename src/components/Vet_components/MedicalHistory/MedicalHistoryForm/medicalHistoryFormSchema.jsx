@@ -2,11 +2,26 @@ import * as yup from 'yup';
 import { parse } from 'date-fns';
 import { isValid } from 'date-fns';
 
-export function initialPetValues(medicalHistory) {
-  let dateObject;
-  if (medicalHistory?.diagnostic?.surgicalIntervations) {
-    dateObject = parse(pet.birthday, 'dd/MM/yyyy', new Date());
+export function initialPetValues(medicalHistoryData) {
+  let medicalHistory = null;
+  if(medicalHistoryData){
+      const newDiagnostic = {
+      ...medicalHistoryData?.diagnostic,
+      surgicalIntervations: medicalHistoryData.diagnostic?.surgicalIntervations?.map(intervation => {
+            return {
+                ...intervation,
+                intervationDate: parse(intervation.intervationDate, 'dd/MM/yyyy', new Date())
+            }
+        })
+    }
+    medicalHistory = {
+        ...medicalHistoryData,
+        diagnostic: newDiagnostic
+    }
+    // console.log(medicalHistory);
   }
+
+
   return {
     //medicalHistory?: {
     vacuna: medicalHistory?.isHaveAllVaccine || false,

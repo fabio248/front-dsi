@@ -581,6 +581,7 @@ export function MedicalHistoryFormDiagnosticTextFields({ formik, medicalHistory,
       <Grid container spacing={2} sx={{ maxWidth: '97%', margin: '0' }}>
         <Grid item xs={12} sm={12}>
           <TextField
+            autoFocus
             fullWidth
             id='diagnostic'
             name='diagnostic'
@@ -683,6 +684,7 @@ export function MedicalHistoryFormDiagnosticTextFields({ formik, medicalHistory,
                                       helperText={
                                           formik.touched.tratamientos &&
                                           formik.touched.tratamientos[index] &&
+                                          formik.touched.tratamientos[index]?.quantity &&
                                           formik.errors.tratamientos &&
                                           formik.errors.tratamientos[index] &&
                                           formik.errors.tratamientos[index]?.quantity
@@ -711,6 +713,7 @@ export function MedicalHistoryFormDiagnosticTextFields({ formik, medicalHistory,
                                       helperText={
                                           formik.touched.tratamientos &&
                                           formik.touched.tratamientos[index] &&
+                                          formik.touched.tratamientos[index]?.frequency &&
                                           formik.errors.tratamientos &&
                                           formik.errors.tratamientos[index] &&
                                           formik.errors.tratamientos[index]?.frequency
@@ -740,6 +743,7 @@ export function MedicalHistoryFormDiagnosticTextFields({ formik, medicalHistory,
                                       helperText={
                                           formik.touched.tratamientos &&
                                           formik.touched.tratamientos[index] &&
+                                          formik.touched.tratamientos[index]?.days &&
                                           formik.errors.tratamientos &&
                                           formik.errors.tratamientos[index] &&
                                           formik.errors.tratamientos[index]?.days
@@ -822,6 +826,7 @@ export function MedicalHistoryFormDiagnosticTextFields({ formik, medicalHistory,
                                       helperText={
                                           formik.touched.intervenciones &&
                                           formik.touched.intervenciones[index] &&
+                                          formik.touched.intervenciones[index]?.name &&
                                           formik.errors.intervenciones &&
                                           formik.errors.intervenciones[index] &&
                                           formik.errors.intervenciones[index]?.name
@@ -848,6 +853,7 @@ export function MedicalHistoryFormDiagnosticTextFields({ formik, medicalHistory,
                                                 Boolean(formik.errors.intervenciones[index].intervationDate)) ?? false,
                                               helperText: (formik.touched.intervenciones &&
                                                   formik.touched.intervenciones[index] &&
+                                                  formik.touched.intervenciones[index]?.intervationDate &&
                                                   formik.errors.intervenciones &&
                                                   formik.errors.intervenciones[index] &&
                                                   formik.errors.intervenciones[index]?.intervationDate)
@@ -882,6 +888,7 @@ export function MedicalHistoryFormDiagnosticTextFields({ formik, medicalHistory,
                                       helperText={
                                           formik.touched.intervenciones &&
                                           formik.touched.intervenciones[index] &&
+                                          formik.touched.intervenciones[index]?.description &&
                                           formik.errors.intervenciones &&
                                           formik.errors.intervenciones[index] &&
                                           formik.errors.intervenciones[index]?.description

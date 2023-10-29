@@ -6,10 +6,11 @@ import { Pets, ModeEdit, Visibility, HistoryEdu, Vaccines, LocalHospital, FileCo
 import { createTheme, ThemeProvider, ListItemAvatar, ListItemIcon, ListItemText, List, ListItem } from '@mui/material';
 import { size, map } from 'lodash';
 import {Modal_medicalHistory} from "../../../shared/Modal_MedicalHistory/index.jsx";
+import { Modal_verInfoClientAndPet } from "../../../shared/modal_visualizar_ClientAndPet"
 import {
   MedicalHistoryForm
 } from "../../../components/Vet_components/MedicalHistory/MedicalHistoryForm/MedicalHistoryForm.jsx";
-
+import { MedicalSeeForm } from "../../../components/Vet_components/MedicalHistory/MedicalSeeForm"
 const defaultTheme = createTheme();
 
 export function PetMedicalHistory({ medicalHistory }) {
@@ -18,7 +19,6 @@ export function PetMedicalHistory({ medicalHistory }) {
   const [showGenerateMedicalHistoryPdf, setShowGenerateMedicalHistoryPdf] = useState(false)
   const onOpenInfoClientAndPets = () =>
     setShowVisualizar((prevState) => !prevState);
-    //console.log(medicalHistory.diagnostics);
 
   const [titleSeeInfoClientAndPet, setTitleSeeInfoClientAndPet] = useState('');
 
@@ -90,7 +90,7 @@ export function PetMedicalHistory({ medicalHistory }) {
         <ListItemAvatar sx={{ display: 'flex', flexDirection: 'row', margin: '0 auto' }}>
           <Grid container justifyContent='flex-end'>
             <Grid item>
-                <IconButton color='info'>
+                <IconButton color='info' onClick={openInfoClientAndPets}>
                   <Tooltip title="Ver detalle" arrow={true}>
                     <Visibility sx={{ fontSize: 30 }} />
                   </Tooltip>
@@ -117,6 +117,18 @@ export function PetMedicalHistory({ medicalHistory }) {
               <MedicalHistoryForm close={onOpenCloseModal} />
             </Modal_medicalHistory>
         )}
+        {
+          showVisualizar && (
+            <Modal_verInfoClientAndPet
+            show={showVisualizar}
+            close={openInfoClientAndPets}
+            title={"Detalles del historial médico"}
+            >
+
+              <MedicalSeeForm close={openInfoClientAndPets} medicalHistory={medicalHistory}/>
+            </Modal_verInfoClientAndPet>    
+          )
+        }
       </ListItem>
       <Divider>
         <Pets color='disabled' />

@@ -1,13 +1,9 @@
 import { Grid, TextField } from "@mui/material";
-import { useEffect } from "react";
 import { VaccinesFields } from "./VaccinesFields.jsx";
 import { DewormingFields } from "./DewormingFields.jsx";
 import { HeatFields } from "./HeatFields.jsx";
 
-export function GenerateMedicalHistoryFields({formik}) {
-    useEffect(() => {
-        console.log({touched: formik.touched, values: formik.values, errors: formik.errors, formik: formik})
-    }, [formik]);
+export function GenerateMedicalHistoryFields({ formik }) {
 
     return (
         <Grid container spacing={{xs:1, sm:2, md: 3}} columns={{xs:4, sm:8, md: 12}}>
@@ -36,7 +32,7 @@ export function GenerateMedicalHistoryFields({formik}) {
                     error={formik.touched.moreImportsData && Boolean(formik.errors.moreImportsData)}
                     helperText={formik.touched.moreImportsData && formik.errors.moreImportsData}
                 />
-                <HeatFields formik={formik}/>
+                <HeatFields formik={formik} />
             </Grid>
             <Grid item xs={4} sm={12} md={6}>
                 <DewormingFields formik={formik} />

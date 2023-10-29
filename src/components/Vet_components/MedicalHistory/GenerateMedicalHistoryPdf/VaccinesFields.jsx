@@ -87,7 +87,9 @@ export function VaccinesFields({ formik }) {
                                                fullWidth: true,
                                                error: ((formik.touched.vaccines &&
                                                    formik.touched.vaccines[index] &&
+                                                   formik.touched.vaccines[index].dayAplicationInit &&
                                                    formik.errors.vaccines &&
+                                                   formik.errors.vaccines[index] &&
                                                    Boolean(formik.errors.vaccines[index]?.dayAplicationInit)) ?? false),
                                                helperText: (formik.touched.vaccines &&
                                                    formik.touched.vaccines[index] &&
@@ -116,7 +118,9 @@ export function VaccinesFields({ formik }) {
                                                fullWidth: true,
                                                error: ((formik.touched.vaccines &&
                                                    formik.touched.vaccines[index] &&
+                                                   formik.touched.vaccines[index].dayAplicationfinal &&
                                                    formik.errors.vaccines &&
+                                                   formik.errors.vaccines[index] &&
                                                    Boolean(formik.errors.vaccines[index]?.dayAplicationfinal)) ?? false),
                                                helperText: (formik.touched.vaccines &&
                                                    formik.touched.vaccines[index] &&

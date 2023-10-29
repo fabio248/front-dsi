@@ -1,9 +1,8 @@
-import {useFormik} from "formik";
-import {initialValuesMedicalHistoryPdf, validateMedicalHistoryPdfSchema} from "./generateMedicalHistory.js";
-import {GenerateMedicalHistoryFields} from "./GenerateMedicalHistoryFields.jsx";
-import {Button, Grid} from "@mui/material";
-import React from "react";
-import {useNavigate} from "react-router-dom";
+import { useFormik } from "formik";
+import { initialValuesMedicalHistoryPdf, validateMedicalHistoryPdfSchema } from "./generateMedicalHistory.js";
+import { GenerateMedicalHistoryFields } from "./GenerateMedicalHistoryFields.jsx";
+import { Button, Grid } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export function GenerateMedicalHistoryForm(){
     const navigate = useNavigate();
@@ -19,7 +18,7 @@ export function GenerateMedicalHistoryForm(){
     return (
         <div className="medical-history-pdf-form">
             <form onSubmit={formik.handleSubmit}>
-                <GenerateMedicalHistoryFields formik={formik}/>
+                <GenerateMedicalHistoryFields formik={ formik } />
                 <Grid
                     sx={{
                         display: 'flex',

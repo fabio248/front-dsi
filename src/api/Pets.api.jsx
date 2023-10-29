@@ -15,7 +15,7 @@ export class Pets {
         method: 'GET', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
         headers: {
           // El tipo de contenido (este puede ser Authorization, Content-Type, conection etc)
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${this.accessToken}`,
         },
       };
 

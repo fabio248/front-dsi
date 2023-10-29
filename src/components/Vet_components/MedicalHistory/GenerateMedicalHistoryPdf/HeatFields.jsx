@@ -1,8 +1,8 @@
-import {useEffect, useState} from "react";
-import {Button, Card, CardContent, Grid, Typography} from "@mui/material";
-import {DeleteButton} from "../../../../shared/components/DeleteButton.jsx";
-import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
-import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
+import { useEffect, useState} from "react";
+import { Button, Card, CardContent, Grid, Typography } from "@mui/material";
+import { DeleteButton } from "../../../../shared/components/DeleteButton.jsx";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
 export function HeatFields({ formik, disabled }) {
     const [heats, setHeats] = useState([])
@@ -53,7 +53,7 @@ export function HeatFields({ formik, disabled }) {
                                <Typography variant="h6" gutterBottom sx={{ ml:3 }}>
                                    Celos {index + 1}
                                </Typography>
-                               <DeleteButton action={() => removeHeats(index)} />
+                               <DeleteButton action={() => removeHeats(index)} disabled={disabled} />
                            </Grid>
 
                             <Grid container rowSpacing={1} spacing={1}>
@@ -61,6 +61,7 @@ export function HeatFields({ formik, disabled }) {
                                <LocalizationProvider dateAdapter={AdapterDateFns}>
                                    <DatePicker
                                        label='Fecha inicio'
+                                       disabled={disabled}
                                        name={`celos[${index}].dayAplicationInitCelos`}
                                        value={formik.values.celos[index]?.dayAplicationInitCelos || ''}
                                        onBlur={formik.handleBlur}
@@ -91,6 +92,7 @@ export function HeatFields({ formik, disabled }) {
                            <Grid item xs={12} sm={6} md={6}>
                                <LocalizationProvider dateAdapter={AdapterDateFns}>
                                    <DatePicker
+                                       disabled={disabled}
                                        label='Día de finalización'
                                        name={`celos[${index}].dayAplicationFinalCelos`}
                                        value={formik.values.celos[index]?.dayAplicationFinalCelos || ''}
@@ -126,6 +128,7 @@ export function HeatFields({ formik, disabled }) {
             })}
             <Grid item xs={4} sm={8} md={12} sx={{textAlign:"center", mt:1, mb:1}}>
                 <Button
+                    disabled={disabled}
                     type="button"
                     onClick={addHeats}
                 >

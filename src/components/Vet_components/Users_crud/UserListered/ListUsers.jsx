@@ -61,7 +61,7 @@ export function ListUsers() {
           <Grid item sx={{ flexGrow: 1 }}>
             {/* Espacio flexible */}
           </Grid>
-          <Grid item>Total usuarios regitradas: {totalUsers}</Grid>
+          <Grid item>Total usuarios registrados: {totalUsers}</Grid>
           <Grid item>
             <SearchInput isFetching={isFetching} />
           </Grid>

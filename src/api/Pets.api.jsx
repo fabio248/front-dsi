@@ -2,6 +2,31 @@ import { config, configApiBackend } from '../config';
 import { format } from 'date-fns';
 import axios from 'axios';
 export class Pets {
+  async getPetById(accessToken, petId) {
+    try {
+
+      // URL de conexion con el backend
+      const url = `${config.baseApi}/${configApiBackend.pets}/${petId}`;
+
+      const params = {
+        method: 'GET', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
+        headers: {
+          // El tipo de contenido (este puede ser Authorization, Content-Type, conection etc)
+          Authorization: `Bearer ${accessToken}`,
+        },
+      };
+
+      const response = await fetch(url, params);
+      const result = await response.json();
+
+      if (response.status !== 200) throw result; // Valida la respuesta del back
+
+      return result;
+    } catch (error) {
+      throw error; // Manejo del error
+    }
+  }
+
   async getPetsForUsers(accessToken, userId) {
     try {
       const url = `${config.baseApi}/${configApiBackend.users}/${userId}/pets`;
@@ -218,6 +243,24 @@ export class Pets {
       if (response.status !== 200) throw result;
 
       return result;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getMedicalHistoryById(medicalHistoryId) {
+    try {
+
+      const response = await axios.get(
+          `${config.baseApi}/pets/medical-histories/${medicalHistoryId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${this.accessToken}`
+            }
+          }
+      )
+
+      return response.data;
     } catch (error) {
       throw error;
     }

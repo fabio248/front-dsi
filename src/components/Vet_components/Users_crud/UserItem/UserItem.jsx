@@ -114,6 +114,7 @@ export function UserItem({ user, onReload }) {
   };
 
   return (
+    <>
     <ThemeProvider theme={defaultTheme}>
       <Demo>
         <ListItem sx={{ display: 'flex', flexWrap: 'wrap' }}>
@@ -157,7 +158,7 @@ export function UserItem({ user, onReload }) {
               ) : null}
               {user.phone ? (
                 <>
-                  <b>Teléfono:</b>
+                  <b>Teléfono: </b>
                   {user.phone}
                 </>
               ) : null}
@@ -207,9 +208,10 @@ export function UserItem({ user, onReload }) {
           </ListItemAvatar>
         </ListItem>
         <Divider>
-          <PetsIcon color='disabled' />
+          <PetsIcon color='action' style={{ width: '60px', height: '40px' }} />
         </Divider>
       </Demo>
+      </ThemeProvider>
       <Modal_users show={showModal} close={onOpenCloseModal} title={titleModal}>
         <UserForm close={onOpenCloseModal} user={user} />
       </Modal_users>
@@ -228,6 +230,6 @@ export function UserItem({ user, onReload }) {
       >
         <PetsForm close={onOpenClosePets} idUser={user.id} />
       </Modal_create_pet>
-    </ThemeProvider>
+    </>
   );
 }

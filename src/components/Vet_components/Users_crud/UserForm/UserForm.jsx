@@ -74,6 +74,10 @@ export function UserFormTextFields({ formik }) {
           size='small'
           placeholder='yourAccountGoole@gmail.com'
           value={formik.values.email}
+          onKeyDown={(e) => {
+            if (e.key === ' ') {
+              e.preventDefault(); 
+          }}}
           onChange={formik.handleChange}
           error={formik.touched.email && Boolean(formik.errors.email)}
           helperText={formik.touched.email && formik.errors.email}
@@ -314,7 +318,7 @@ const UserForm = (props) => {
           {success && (
             <Alerta
               type={'success'}
-              title={user ? 'Usuario Actuallizado' : 'Usuario Regsitrado'}
+              title={user ? 'Usuario Actualizado' : 'Usuario Registrado'}
               message={
                 user
                   ? 'Se ha actualizado correctamente el usuario'

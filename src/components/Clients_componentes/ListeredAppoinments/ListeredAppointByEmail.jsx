@@ -37,7 +37,7 @@ export function ListeredAppointByEmail() {
   if (size(appointments) === 0) {
     return (
       <Typography variant='h6' style={{ textAlign: 'center' }}>
-        No se encontraron eventos Agendados, consulte al veterinario.
+        No se encontraron eventos agendados, consulte al Veterinario.
       </Typography>
     );
   }

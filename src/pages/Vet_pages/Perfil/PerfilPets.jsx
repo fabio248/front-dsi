@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 
 // mui material elements
 import ListItemText from '@mui/material/ListItemText';
@@ -51,18 +52,20 @@ export function PerfilPets({ pet }) {
             <b>Género: </b>
             <span style={{ color: 'gray' }}>{pet.gender}</span>
             <br />
-            <b>Nacimiento de la mascota U adquisición: </b>
+            <b>Nacimiento de la mascota o Adquisición: </b>
             <span style={{ color: 'gray' }}>{pet.birthday}</span>
             <br />
           </b>
         </ListItemText>
         <ListItemAvatar>
           <Grid container justifyContent='flex-end'>
-            <Grid item>
-              <IconButton color='warning' onClick={openInfoClientAndPets}>
-                <HistoryEduIcon sx={{ fontSize: 30 }} />
-              </IconButton>
-            </Grid>
+            <NavLink to={`/admin/pets/${pet.id}`}>
+              <Grid item>
+                <IconButton>
+                  <HistoryEduIcon sx={{ fontSize: 30 }} />
+                </IconButton>
+              </Grid>
+            </NavLink>
           </Grid>
         </ListItemAvatar>
       </ListItem>

@@ -14,9 +14,12 @@ const configApiBackend = {
   pets: import.meta.env.VITE_PETS,
   species: import.meta.env.VITE_SPECIES,
   appointments: import.meta.env.VITE_APPOINTMENTS,
+  products: import.meta.env.VITE_PRODUCTS,
   supabaseUrl: import.meta.env.VITE_SUPABASEURL,
   supabaseKey: import.meta.env.VITE_SUPABASEKEY,
   files: import.meta.env.VITE_FILE,
+  medicalHistories: import.meta.env.VITE_MEDICALHISTORIES,
+  bills: import.meta.env.VITE_BILLS
 };
 
 const configJwt = {

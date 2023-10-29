@@ -251,6 +251,10 @@ export function Login() {
               autoComplete='email'
               autoFocus
               value={formik.values.email}
+              onKeyDown={(e) => {
+                if (e.key === ' ') {
+                  e.preventDefault(); 
+              }}}
               onChange={formik.handleChange}
               error={formik.touched.email && Boolean(formik.errors.email)}
               helperText={formik.touched.email && formik.errors.email}

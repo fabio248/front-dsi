@@ -12,7 +12,7 @@ export function Auth_pages(props) {
         component='h1'
         color='#69458C'
       >
-        ¡Bienvenido a Clínica Veterinaria MISTUM!
+        ¡Bienvenido a Clínica Veterinaria MISTUN!
       </Typography>
 
       <Grid
@@ -21,11 +21,11 @@ export function Auth_pages(props) {
         justifyContent='center'
         style={{ marginBottom: '20px', marginTop: '20px' }}
       >
-        <Grid item xs={5}>
+        <Grid item xs={10} sm={4} >
           <img
             src='/galeria/favicon.png'
             alt='logo'
-            style={{ width: '90%', height: 'auto' }}
+            style={{ width: '100%', height: 'auto' }}
           />
         </Grid>
       </Grid>

@@ -1,0 +1,28 @@
+.product-page {
+    display: flex;
+    flex-direction: column;
+    height: 85vh;
+    overflow: hidden;
+    justify-content: flex-end;
+  }
+  
+  .product-page_add {
+    background-color: #f0f0f0;
+    padding: 10px;
+    width: 210px;
+    height: 50px;
+    text-align: right;
+    /* right: 0; */
+  }
+  
+  .box-container {
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: none; /* Para navegadores basados en Mozilla */
+    -ms-overflow-style: none; /* Para navegadores basados en Internet Explorer / Edge */
+  }
+  
+  .box-container::-webkit-scrollbar {
+    display: none; /* Para navegadores basados en WebKit (Chrome, Safari, Opera) */
+  }
+  

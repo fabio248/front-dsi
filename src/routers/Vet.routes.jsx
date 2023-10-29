@@ -1,11 +1,13 @@
 import { Route, Routes } from 'react-router-dom';
-import { Auth_pages, UserAndPets, Users, AgendarCita } from '../pages';
+import { Auth_pages, UserAndPets, Users, AgendarCita, ProductCatalog, FacturacionCatalog } from '../pages';
 import { Vet_Layouts } from '../layouts';
 
 import { useAuth } from '../hooks';
 import { ProtectedRoute } from '../components/Admin/Auth/ProtectedRoutes';
 import { PerfilUserAndPets } from '../pages';
 import { Layout } from '../shared/components/Layout';
+import { CompletePetPerfil } from '../pages/Vet_pages/PerfilPets/CompletePerfilPets';
+import {GenerateMedicalHistory} from "../pages/Vet_pages/PerfilPets/GenerateMedicalHistory.jsx";
 
 export function Vet_routes() {
   const { user } = useAuth();
@@ -17,12 +19,12 @@ export function Vet_routes() {
   }
   return (
     <Routes>
-      <Route
+       <Route
         path='/admin/'
         element={
           <ProtectedRoute isAllowed={!!user && isAdmin()} redirectTo='/login' />
         }
-      >
+       >     
         <Route path='' element={Layout(Vet_Layouts, Auth_pages)}></Route>
         <Route
           path='userAndPets'
@@ -33,8 +35,12 @@ export function Vet_routes() {
           path='calendar'
           element={Layout(Vet_Layouts, AgendarCita)}
         ></Route>
+        <Route path='products' element={Layout(Vet_Layouts, ProductCatalog)}></Route>
+        <Route path='facturations' element={Layout(Vet_Layouts, FacturacionCatalog)}></Route>
         <Route path='users/:userId' element={<PerfilUserAndPets />} />
-      </Route>
+        <Route path='pets/:petId' element={<CompletePetPerfil />} />
+        <Route path='pets/:petId/medical-history/:medicalHistoryId' element={<GenerateMedicalHistory />} />
+      </Route>    
     </Routes>
   );
 }

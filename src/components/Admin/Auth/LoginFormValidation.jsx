@@ -4,7 +4,7 @@ import * as yup from 'yup';
 export function LoginFormvalidations() {
   return yup.object({
     email: yup
-      .string()
+      .string().trim()
       .email('El email no es válido')
       .required('Campo obligatorio'),
     password: yup.string().required('Campo obligatorio'),

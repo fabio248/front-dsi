@@ -103,6 +103,7 @@ export function DewormingFields({ formik }) {
                                         helperText={
                                             formik.touched.deworming &&
                                             formik.touched.deworming[index] &&
+                                            formik.touched.deworming[index]?.dose &&
                                             formik.errors.deworming &&
                                             formik.errors.deworming[index] &&
                                             formik.errors.deworming[index]?.dose

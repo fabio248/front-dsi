@@ -83,7 +83,7 @@ export const HealthCertificationPdfFields = ({ formik }) => {
         <Grid item xs={4} sm={8} md>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
-                    label='Dia de viaje'
+                    label='Día de viaje'
                     name='dateJourney'
                     value={formik.values.dateJourney}
                     onBlur={formik.handleBlur}
@@ -176,6 +176,7 @@ export const HealthCertificationPdfFields = ({ formik }) => {
                                     helperText={
                                         formik.touched.vaccines &&
                                         formik.touched.vaccines[index] &&
+                                        formik.touched.vaccines[index]?.BrandAndLot &&
                                         formik.errors.vaccines &&
                                         formik.errors.vaccines[index] &&
                                         formik.errors.vaccines[index]?.BrandAndLot
@@ -183,7 +184,7 @@ export const HealthCertificationPdfFields = ({ formik }) => {
                                 />
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DatePicker
-                                        label='Dia de viaje'
+                                        label='Día aplicada'
                                         name={`vaccines[${index}].dayAplication`}
                                         sx={{ minWidth: '250px' }}
                                         value={formik.values.vaccines[index].dayAplication}
@@ -208,6 +209,7 @@ export const HealthCertificationPdfFields = ({ formik }) => {
                                             }
                                         }}
                                         showTodayButton
+                                        disableFuture
                                         format='dd/MM/yyyy'
                                         ref={index === vaccines.length - 1 ? lastVaccineCardRef : null}
                                     />

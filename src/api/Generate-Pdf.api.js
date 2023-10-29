@@ -1,15 +1,12 @@
-import {ApiAuth} from "./Auth.api.jsx";
-import {config} from "../config/index.jsx";
+import {config, configJwt} from "../config/index.jsx";
 import {format} from "date-fns";
 import axios from "axios";
-
-const apiAuth = new ApiAuth();
 
 export class GeneratePdfApi {
     url = `${config.baseApi}/generate-pdf`;
     params = {
         headers: {
-            Authorization: `Bearer ${apiAuth.getAccessToken()}`,
+            Authorization: `Bearer ${this.getAccessToken()}`,
         },
         responseType: 'blob',
     };
@@ -133,5 +130,9 @@ export class GeneratePdfApi {
         URL.revokeObjectURL(href);
 
         return href;
+    }
+
+    getAccessToken() {
+        return localStorage.getItem(configJwt.access);
     }
 }

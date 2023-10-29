@@ -1014,7 +1014,7 @@ const MedicalHistoryForm = (props) => {
       return await medicalHistoryController.update(accessToken, petId, medicalHistory, formValue);
     },
     onSuccess: () => {
-      // queryClient.invalidateQueries(['pets']);
+      queryClient.invalidateQueries(['pets']);
       setSuccess(true);
     },
     onError: () => {

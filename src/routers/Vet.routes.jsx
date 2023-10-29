@@ -1,5 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
-import { Auth_pages, UserAndPets, Users, AgendarCita, ProductCatalog } from '../pages';
+import { Auth_pages, UserAndPets, Users, AgendarCita, ProductCatalog, FacturacionCatalog } from '../pages';
 import { Vet_Layouts } from '../layouts';
 
 import { useAuth } from '../hooks';
@@ -36,6 +36,7 @@ export function Vet_routes() {
           element={Layout(Vet_Layouts, AgendarCita)}
         ></Route>
         <Route path='products' element={Layout(Vet_Layouts, ProductCatalog)}></Route>
+        <Route path='facturations' element={Layout(Vet_Layouts, FacturacionCatalog)}></Route>
         <Route path='users/:userId' element={<PerfilUserAndPets />} />
         <Route path='pets/:petId' element={<CompletePetPerfil />} />
         <Route path='pets/:petId/medical-history/:medicalHistoryId' element={<GenerateMedicalHistory />} />

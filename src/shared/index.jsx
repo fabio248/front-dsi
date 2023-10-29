@@ -6,4 +6,5 @@ export * from './Modal_create_pet';
 export * from './modal_visualizar_ClientAndPet';
 export * from './modal_visualizarClient';
 export * from './Modal_Register_Product';
-
+export * from './Modal_register_facture'
+export * from "./modal_visualizar_facture"

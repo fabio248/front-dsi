@@ -510,9 +510,11 @@ export function MedicalHistoryPhysicalExamTextFields({ formik, onBinaryStrChange
   );
 }
 
-export function MedicalHistoryFormDiagnosticTextFields({ formik, medicalHistory }) {
+export function MedicalHistoryFormDiagnosticTextFields({ formik, medicalHistory, setIntervationsDeleted,  setTreatmentsDeleted }) {
   const [tratamientos, setTratamientos] = useState(formik.values.tratamientos)
   const lastTreatmentCardRef = useRef(null);
+  const intervationsDeletedTemp = []
+  const treatmentsDeletedTemp = [];
 
   const [intervenciones, setIntervenciones] = useState(formik.values.intervenciones)
   const lastIntervationCardRef = useRef(null);
@@ -537,6 +539,11 @@ export function MedicalHistoryFormDiagnosticTextFields({ formik, medicalHistory 
 
   const removeIntervation = (index) => {
       const newIntervenciones = formik.values.intervenciones.filter((_, i) => i !== index)
+      if(formik.values.intervenciones[index].id !== undefined){
+          intervationsDeletedTemp.push(formik.values.intervenciones[index].id);
+          setIntervationsDeleted(intervationsDeletedTemp);
+      }
+      console.log(intervationsDeletedTemp);
       const newErrorsIntervenciones = formik.errors.intervenciones !== undefined ? formik.errors.intervenciones.filter((_, i) => i !== index) : [];
       formik.setFieldError('intervenciones', newErrorsIntervenciones);
       formik.setFieldValue('intervenciones', newIntervenciones);
@@ -559,6 +566,10 @@ export function MedicalHistoryFormDiagnosticTextFields({ formik, medicalHistory 
   };
   const removeTreatment = (index) => {
       const newTratamientos = formik.values.tratamientos.filter((_, i) => i !== index)
+      if(formik.values.tratamientos[index].id !== undefined){
+          treatmentsDeletedTemp.push(formik.values.tratamientos[index].id);
+          setTreatmentsDeleted(treatmentsDeletedTemp);
+      }
       const newErrorsTratamientos = formik.errors?.tratamientos?.name !== undefined ? formik.errors.tratamientos.filter((_, i) => i !== index) : [];
       formik.setFieldError('tratamientos', newErrorsTratamientos);
       formik.setFieldValue('tratamientos', newTratamientos);
@@ -903,11 +914,18 @@ const MedicalHistoryForm = (props) => {
   const { close, medicalHistory, petId} = props;
   const [isError, setIsError] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [intervationsDeleted, setIntervationsDeleted] = useState([])
+  const [treatmentsDeleted, setTreatmentsDeleted] = useState([]);
+
+  const diagnosticId = medicalHistory?.diagnostic?.id;
+
 
   //data for file amazon
   const [uploadData, setUploadData] = useState(null);
   const [fileOriginal, setFileOriginal] = useState(null);
   const [fileCharged, setFileCharged] = useState(false);
+
+  console.log(intervationsDeleted, treatmentsDeleted);
 
 
   //Stepper
@@ -926,6 +944,7 @@ const MedicalHistoryForm = (props) => {
   };
 
   ///////////////////////////
+  console.log(activeStep)
 
   const validateData = () => {
     formik.validateForm().then((errors) => {
@@ -974,8 +993,8 @@ const MedicalHistoryForm = (props) => {
     },
   });
 
-  const updatePetMuatation = useMutation({
-    mutationFn: async ({ petId, formValue }) => {
+  const updateMedicalHistoryMutation = useMutation({
+    mutationFn: async ({ petId, medicalHistory, formValue }) => {
       const accessToken = authController.getAccessToken();
       if (fileCharged) {
         const { url } = await petsController.filePets(
@@ -988,12 +1007,11 @@ const MedicalHistoryForm = (props) => {
         } catch (error) {
           console.error('Error al cargar el archivo en AWS S3:', error);
         }
-
-        return await petsController.updatePets(accessToken, petId, formValue);
       }
+      return await medicalHistoryController.update(accessToken, petId, medicalHistory, formValue);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['pets']);
+      // queryClient.invalidateQueries(['pets']);
       setSuccess(true);
     },
     onError: () => {
@@ -1023,21 +1041,17 @@ const MedicalHistoryForm = (props) => {
     validateOnChange: false,
     onSubmit: async (formValue) => {
       console.log(formValue);
-      if (activeStep === steps.length - 1 ){     
+      if (activeStep === steps.length){     
         if (!medicalHistory) {
           createMedicalHistoryMutation.mutate({ petId, formValue });
-          setTimeout(() => { 
-            close(); 
-          }, 2500);
         }
-        //aqui ira la peticion donde se actualizaran los datos
-        /*updatePetMuatation.mutate({ medicalHistoryId: medicalHistoryId, formValue });
-
-        setTimeout(() => {
-          close();
-        }, 1500);*/
+        else{
+          updateMedicalHistoryMutation.mutate({ petId, medicalHistory, formValue });
+        } 
+        setTimeout(() => { 
+          close(); 
+        }, 2500);
       } else {
-        handleNext();
         console.log(formValue)
       }
     },
@@ -1062,12 +1076,8 @@ const MedicalHistoryForm = (props) => {
       {activeStep === steps.length ? (
         <>
           <Typography sx={{ mt: 2, mb: 1 }}>
-            All steps completed - you&apos;re finished
+            Todos los paso han sido completados
           </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Box sx={{ flex: '1 1 auto' }} />
-            <Button onClick={handleReset}>Reset</Button>
-          </Box>
         </>
       ) : (
         activeStep === 0 ? (
@@ -1094,6 +1104,8 @@ const MedicalHistoryForm = (props) => {
               <MedicalHistoryFormDiagnosticTextFields
                 formik={formik}
                 medicalHistory={medicalHistory}
+                setIntervationsDeleted={setIntervationsDeleted}
+                setTreatmentsDeleted={setTreatmentsDeleted}
               />
           </React.Fragment>
             ) : (<></>)
@@ -1111,10 +1123,10 @@ const MedicalHistoryForm = (props) => {
           <Box sx={{ flex: '1 1 auto' }} />
 
           <Button 
-          type={activeStep === 2 ? 'submit' : 'button'}
-          onClick={activeStep < 2? validateData : () => {}}
+          type={activeStep === 3 ? 'submit' : 'button'}
+          onClick={activeStep < 3? validateData : () => {}}
           >
-            {activeStep === steps.length - 1 ? 'Finalizar' : 'Siguiente'}
+            {activeStep === steps.length ? 'Finalizar' : 'Siguiente'}
           </Button>
         </Grid>
       </Box>
@@ -1128,14 +1140,14 @@ const MedicalHistoryForm = (props) => {
             <Alerta
               type={'success'}
               title={
-                medicalHistory ? 'Mascota actualizada' : 'Usuario y mascota registrados'
+                medicalHistory ? 'Hoja clinica actualizada' : 'Hoja clinica registrada'
               }
               message={
                 medicalHistory
-                  ? 'Se ha actualizado correctamente la mascota'
+                  ? 'Se ha actualizado correctamente la hoja clinica'
                   : 'Se ha registrado correctamente'
               }
-              strong={medicalHistory ? `${pet.name}` : 'Verifica el registro'}
+              strong={medicalHistory ? `${medicalHistory.id}` : 'Verifica el registro'}
             />
           )}
           {isError && (
@@ -1144,10 +1156,10 @@ const MedicalHistoryForm = (props) => {
               title={'¡Ha ocurrido un problema!'}
               message={
                 medicalHistory
-                  ? 'No se ha podido actualizar mascota'
+                  ? 'No se ha podido actualizar hoja clinica'
                   : 'No se ha podido completar el registro'
               }
-              strong={medicalHistory ? `${pet.name}` : 'Verifica la información ingresada'}
+              strong={medicalHistory ? `${medicalHistory.id}` : 'Verifica la información ingresada'}
             />
           )}
       </div>

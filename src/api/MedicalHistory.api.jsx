@@ -72,49 +72,99 @@ export class PetsMedicalHistories {
     }
   }
 
-  async filePets(accessToken, fileType, petId) {
+  // ACTUALIZAR HOJA CLINICA
+  async update(accessToken, idPet, previousMedicalHistory, medicalHistoryData) {
+    const url = `${config.baseApi}/${configApiBackend.pets}/${configApiBackend.medicalHistories}`;
+    const params = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    }
     try {
-      const url = `${config.baseApi}/${configApiBackend.files}/${petId}`;
-      const params = {
-        method: 'POST',
+          const medicalHistory = {
+          ...medicalHistoryData,
+          intervenciones: medicalHistoryData.intervenciones.map(intervation => {
+              return {
+                  ...intervation,
+                  intervationDate: format(intervation.intervationDate, 'dd/MM/yyyy')
+              }
+          })
+      }
+      if (!medicalHistoryData.whichPets) {
+        delete medicalHistoryData.whichPets;
+      }
+      previousMedicalHistory.diagnostic.treatments.map( async (treatment) => {
+        let treatmentId = treatment.id;
+        if (treatmentId) {
+          await axios.delete(`${url}/diagnostics/treatments/${treatmentId}`, params);
+        }
+      })
+      medicalHistory.tratamientos.map( async (treatment) => {
+        await axios.post(`${url}/diagnostics/${previousMedicalHistory.diagnostic.id}/treatments`,
+          treatment, 
+          params);
+      })
+
+      previousMedicalHistory.diagnostic.surgicalIntervations.map( async (intervation) => {
+        let intervationId = intervation.id;
+        if (intervationId) {
+          await axios.delete(`${url}/diagnostics/surgical-interventions/${intervationId}`, params);
+        }
+      })
+      medicalHistory.intervenciones.map( async (intervation) => {
+        await axios.post(`${url}/diagnostics/${previousMedicalHistory.diagnostic.id}/surgical-interventions`,
+          intervation, 
+          params);
+      })
+
+      axios.patch(`${url}/${previousMedicalHistory.id}/diagnostics`, { description: medicalHistory.diagnostic}, params);
+       
+      const urlPatch = `${config.baseApi}/${configApiBackend.pets}/${configApiBackend.medicalHistories}/${previousMedicalHistory.id}`;
+      const paramsPatch = {
+        method: 'PATCH',
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          mimetype: fileType,
+            isHaveAllVaccine: medicalHistory.vacuna,
+            isReproduced: medicalHistory.reproduccion,
+            descendants: medicalHistory.descendencia,
+            room: medicalHistory.habitaculo,
+            diasesEvaluation: medicalHistory.enfermedad,
+            observation: medicalHistory.observacion,
+            food: {
+                quantity: medicalHistory.quantityFood,
+                type: medicalHistory.typeFood
+            },
+            physicalExam: {
+                weight: medicalHistory.weight,
+                palpitations: medicalHistory.palpitaciones,
+                temperature: medicalHistory.temperatura,
+                respiratoryRate: medicalHistory.frecuenciaRespiratoria,
+                cardiacRate: medicalHistory.frecuenciaCardiaca,
+                laboratoryExam: medicalHistory.examenLaboratorio,
+                pulse: medicalHistory.pulso,
+                mucous: medicalHistory.mucus
+            },
+            otherPet: {
+                isLiveOtherPets: medicalHistory.convivencia,
+                whichPets: medicalHistory.whichPets,
+            },
         }),
       };
-      console.log(fileType);
-      const response = await fetch(url, params);
+
+      const response = await fetch(urlPatch, paramsPatch);
       const result = await response.json();
 
-      if (response.status !== 201) throw result;
+      if (response.status !== 200) throw result;
       return result;
     } catch (error) {
       throw error;
     }
   }
 
-  async amazonQuery(urlComming, fileBuffer, fileOriginal) {
-    try {
-      if (!fileBuffer || !fileOriginal) {
-        return; // Salir de la función sin hacer nada
-      }
-      // Convert the ArrayBuffer to a Blob with the correct content type
-      const blob = new Blob([fileBuffer], { type: fileOriginal.type });
-
-      // Perform the request using Axios
-      const response = await axios.put(urlComming, blob, {
-        headers: {
-          'Content-Type': fileOriginal.type,
-        },
-      });
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  }
 
   async getMedicalHistoryById(medicalHistoryId) {
     try {

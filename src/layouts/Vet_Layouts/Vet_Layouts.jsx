@@ -147,7 +147,7 @@ export function Vet_Layouts(props) {
       </div>
   );
   const container =
-      window !== undefined ? () => window().document.body : undefined;
+    window !== undefined ? () => window().document.body : undefined;
   return (
       <>
         <div className='container'>

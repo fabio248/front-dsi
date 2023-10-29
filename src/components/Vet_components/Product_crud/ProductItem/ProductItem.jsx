@@ -124,7 +124,7 @@ export function ProductItem({ product, onReload }) {
               {product.descriptionProduct}
               <br />   
               <b>Precio de Venta: </b>
-              $ {product.sellingProduct} 
+              $ {product.sellingProduct.toFixed(2)} 
             </p>
           </ListItemText>
           <ListItemAvatar

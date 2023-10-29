@@ -194,7 +194,7 @@ export function DewormingFields({ formik }) {
                     type="button"
                     onClick={addDeworming}
                 >
-                    Añadir desparaistante
+                    Añadir desparasitante
                 </Button>
             </Grid>
     </Card>)

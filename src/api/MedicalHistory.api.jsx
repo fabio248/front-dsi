@@ -5,6 +5,7 @@ import {ApiAuth} from './Auth.api.jsx';
 export class PetsMedicalHistories {
   auth = new ApiAuth();
   accessToken = this.auth.getAccessToken();
+  baseUrl = `${config.baseApi}/${configApiBackend.pets}`;
 
   // CREAR HOJA CLINICA
   async create(accessToken, idPet, medicalHistoryData) {
@@ -22,7 +23,7 @@ export class PetsMedicalHistories {
                 }
             })
         }
-      const url = `${config.baseApi}/${configApiBackend.pets}/${idPet}/${configApiBackend.medicalHistories}`;
+      const url = `${config.baseApi}/${configApiBackend.pets}/${idPet}/medical-histories`;
       const params = {
         method: 'POST',
         headers: {
@@ -74,7 +75,7 @@ export class PetsMedicalHistories {
 
   // ACTUALIZAR HOJA CLINICA
   async update(accessToken, idPet, previousMedicalHistory, medicalHistoryData) {
-    const url = `${config.baseApi}/${configApiBackend.pets}/${configApiBackend.medicalHistories}`;
+    const url = `${this.baseUrl}/medical-histories`;
     const params = {
       headers: {
         Authorization: `Bearer ${accessToken}`,

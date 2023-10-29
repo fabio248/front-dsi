@@ -1,8 +1,9 @@
 import { config, configApiBackend } from '../config';
 export class Facture {
+  baseUrl = `${config.baseApi}/bills`;
     async getAllFacture(accessToken, pageParam) {
       try {
-        let url = `${config.baseApi}/${configApiBackend.bills}?page=${pageParam}&limit=10`;
+        let url = `${this.baseUrl}?page=${pageParam}&limit=10`;
   
         // if (search) {
         //   url = `${config.baseApi}/${configApiBackend.bills}?search=${search}&page=${page}&limit=10`;
@@ -27,7 +28,7 @@ export class Facture {
    // CREAR PRODUCTO
    async createFacture(accessToken, facture) {
     try {
-      const url = `${config.baseApi}/${configApiBackend.bills}`;
+      const url = `${this.baseUrl}`;
       const params = {
         method: 'POST',
         headers: {

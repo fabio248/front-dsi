@@ -59,15 +59,6 @@ export function PetMedicalHistorySurgicalIntervations({ intervation }) {
             <br />
           </b>
         </ListItemText>
-        <ListItemAvatar sx={{ display: 'flex', flexDirection: 'row', margin: '0 auto' }}>
-          <Grid container justifyContent='flex-end'>
-            <Grid item>
-              <IconButton color='warning' >
-                <ModeEditIcon sx={{ fontSize: 30 }} />
-              </IconButton>
-            </Grid>
-          </Grid>
-        </ListItemAvatar>
       </ListItem>
       <Divider>
         <PetsIcon color='disabled' />

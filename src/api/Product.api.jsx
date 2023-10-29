@@ -5,10 +5,10 @@ export class Product {
    //OBTENER TODOS LOS PRODUCTOS REGISTRADOS EN LA BASE
   async getAllProducts(accessToken, page, search = null) {
     try {
-      let url = `${config.baseApi}/${configApiBackend.products}?page=${page}&limit=10`;
+      let url = `${config.baseApi}/products?page=${page}&limit=10`;
 
       if (search) {
-        url = `${config.baseApi}/${configApiBackend.products}?search=${search}&page=${page}&limit=10`;
+        url = `${config.baseApi}/products?search=${search}&page=${page}&limit=10`;
       }
 
       const params = {
@@ -31,7 +31,7 @@ export class Product {
    // CREAR PRODUCTO
   async createProduct(accessToken, product) {
     try {
-      const url = `${config.baseApi}/${configApiBackend.products}`;
+      const url = `${config.baseApi}/products`;
       const params = {
         method: 'POST',
         headers: {
@@ -61,7 +61,7 @@ export class Product {
   // ACTUALIZAR UN PRODUCTO
   async updateProduct(accessToken, idProduct, data) {
     try {
-      const url = `${config.baseApi}/${configApiBackend.products}/${idProduct}`;
+      const url = `${config.baseApi}/products/${idProduct}`;
       const params = {
         method: 'PATCH', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
         headers: {
@@ -90,7 +90,7 @@ export class Product {
     // ELIMINAR UN PRODUCTO
     async deleteProduct(accessToken, idProduct) {
       try {
-        const url = `${config.baseApi}/${configApiBackend.products}/${idProduct}`;
+        const url = `${config.baseApi}/products/${idProduct}`;
         const params = {
           method: 'DELETE',
           headers: { Authorization: `Bearer ${accessToken}` },
@@ -106,33 +106,4 @@ export class Product {
         throw error;
       } 
   }
-
-  /*
-  // OBTENER PRODUCTOS POR ID
-  async getProduct(accessToken) {
-    try {
-      // Se decodifica el token para obtener su información
-      const PRODUCT_ID = decoderToken(accessToken).identify;
-
-      // URL de conexion con el backend
-      const url = `${config.baseApi}/${configApiBackend.products}/${PRODUCT_ID}`;
-
-      const params = {
-        method: 'GET', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
-        headers: {
-          // El tipo de contenido (este puede ser Authorization, Content-Type, conection etc)
-          Authorization: `Bearer ${accessToken}`,
-        },
-      };
-
-      const response = await fetch(url, params);
-      const result = await response.json();
-
-      if (response.status !== 200) throw result; // Valida la respuesta del back
-
-      return result;
-    } catch (error) {
-      throw error; // Manejo del error
-    }
-  }*/
 }

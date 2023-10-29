@@ -9,14 +9,16 @@ import {Modal_medicalHistory} from "../../../shared/Modal_MedicalHistory/index.j
 import {
   MedicalHistoryForm
 } from "../../../components/Vet_components/MedicalHistory/MedicalHistoryForm/MedicalHistoryForm.jsx";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 
 const defaultTheme = createTheme();
 
 export function PetMedicalHistory({ medicalHistory, petId }) {
+  let params = useParams();
   const navigate = useNavigate();
   //Modal informacion concreta
   const [showVisualizar, setShowVisualizar] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
   const onOpenInfoClientAndPets = () =>
     setShowVisualizar((prevState) => !prevState);
     //console.log(medicalHistory.diagnostics);
@@ -29,9 +31,12 @@ export function PetMedicalHistory({ medicalHistory, petId }) {
     onOpenInfoClientAndPets();
   };
 
+   const onOpenCloseModal = () => setShowEditModal((prevState) => !prevState);
+  const onReload = () => setReload((prevState) => !prevState);
+
   return (
-    <ThemeProvider theme={defaultTheme}>
     <div>
+    <ThemeProvider theme={defaultTheme}> 
       <ListItem
         sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}
       >
@@ -95,7 +100,7 @@ export function PetMedicalHistory({ medicalHistory, petId }) {
                     <Visibility sx={{ fontSize: 30 }} />
                   </Tooltip>
                 </IconButton>
-              <IconButton color='warning' >
+              <IconButton color='warning' onClick={onOpenCloseModal} >
                 <Tooltip title="Editar Hoja Clinica" arrow={true}>
                   <ModeEdit sx={{ fontSize: 30 }} />
                 </Tooltip>
@@ -112,7 +117,16 @@ export function PetMedicalHistory({ medicalHistory, petId }) {
       <Divider>
         <Pets color='disabled' />
       </Divider>
-    </div>
     </ThemeProvider>
+      {showEditModal && (
+        <Modal_medicalHistory
+          show={showEditModal}
+          close={onOpenCloseModal}
+          title='Editar hoja clinica'
+        >
+          <MedicalHistoryForm close={onOpenCloseModal} onReload={onReload}  petId={params.petId} medicalHistory = {medicalHistory}/>
+        </Modal_medicalHistory>
+      )}
+    </div>
   );
 }

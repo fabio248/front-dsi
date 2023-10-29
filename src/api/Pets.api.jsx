@@ -1,10 +1,7 @@
 import { config, configApiBackend } from '../config';
 import { format } from 'date-fns';
 import axios from 'axios';
-import {ApiAuth} from "./Auth.api.jsx";
 export class Pets {
-  auth = new ApiAuth();
-  accessToken = this.auth.getAccessToken();
   async getPetById(accessToken, petId) {
     try {
 
@@ -15,7 +12,7 @@ export class Pets {
         method: 'GET', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
         headers: {
           // El tipo de contenido (este puede ser Authorization, Content-Type, conection etc)
-          Authorization: `Bearer ${this.accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       };
 

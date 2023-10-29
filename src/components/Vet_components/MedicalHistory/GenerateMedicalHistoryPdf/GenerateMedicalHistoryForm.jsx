@@ -1,16 +1,36 @@
 import { useFormik } from "formik";
 import { initialValuesMedicalHistoryPdf, validateMedicalHistoryPdfSchema } from "./generateMedicalHistory.js";
 import { GenerateMedicalHistoryFields } from "./GenerateMedicalHistoryFields.jsx";
-import { Button, Grid } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import {Button, CircularProgress, Grid} from "@mui/material";
+import { useNavigate, useParams } from "react-router-dom";
+import {GeneratePdfApi} from "../../../../api/Generate-Pdf.api.js";
+import {useMutation, useQuery} from "@tanstack/react-query";
+import {Pets} from "../../../../api/Pets.api.jsx";
+import {ApiAuth} from "../../../../api/Auth.api.jsx";
 
-export function GenerateMedicalHistoryForm(){
+const generatePdfController = new GeneratePdfApi()
+const petController = new Pets()
+const authController = new ApiAuth()
+export function GenerateMedicalHistoryForm() {
     const navigate = useNavigate();
+    const { petId, medicalHistoryId} = useParams();
+
+    const { data: pet } = useQuery({
+        queryKey: ['pets', petId],
+        queryFn: async () => await petController.getPetById(authController.getAccessToken(), petId),
+    })
+
+    const generatePdf = useMutation({
+        mutationFn: async ({formValues}) => {
+            return generatePdfController.generateMedicalHistoryPdf({data: formValues, petId, petName: pet.name, medicalHistoryId})
+        },
+    })
+
     const formik = useFormik({
         initialValues: initialValuesMedicalHistoryPdf,
         validationSchema: validateMedicalHistoryPdfSchema,
-        onSubmit: (values) => {
-            console.log(values)
+        onSubmit: async (formValues) => {
+            await generatePdf.mutate({formValues})
         }
     })
 
@@ -40,7 +60,7 @@ export function GenerateMedicalHistoryForm(){
                         size='medium'
                         sx={{ mx: 2, marginTop: '12px' }}
                     >
-                        Generar
+                        {generatePdf.isLoading ? <CircularProgress /> :`Generar`}
                     </Button>
                 </Grid>
             </form>

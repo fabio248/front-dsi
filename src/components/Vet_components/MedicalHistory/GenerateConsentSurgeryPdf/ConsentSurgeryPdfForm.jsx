@@ -10,7 +10,6 @@ export const ConsentSurgeryPdfForm = (props) => {
     const { onClose, petId, petName} = props
     const generatePdf = useMutation({
         mutationFn: async ({formValues}) => {
-            console.log(formValues);
             return generatePdfApi.generateConsentPdf(formValues, petId, petName)
         },
     })

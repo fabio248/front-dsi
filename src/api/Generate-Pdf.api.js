@@ -2,6 +2,8 @@ import {ApiAuth} from "./Auth.api.jsx";
 import {config} from "../config/index.jsx";
 import {format} from "date-fns";
 import axios from "axios";
+import * as _ from "lodash";
+
 
 export class GeneratePdfApi {
     apiAuth = new ApiAuth();
@@ -69,6 +71,52 @@ export class GeneratePdfApi {
             return this.redirectDownloadPdf(response.data, petName, 'certificado-salud');
         } catch (e) {
             throw e;
+        }
+    }
+
+    async generateMedicalHistoryPdf({data, petId, petName, medicalHistoryId}) {
+        try {
+            const input = {
+                ...data,
+                clinicalNumber: data.clinicalNumber.toString(),
+                deworming: data.deworming.map(deworming => {
+                    return {
+                        ...deworming,
+                        dayAplicationInitDeworming: format(deworming.dayAplicationInitDeworming, 'dd/MM/yyyy'),
+                        dayAplicationFinalDeworming: format(deworming.dayAplicationFinalDeworming, 'dd/MM/yyyy'),
+                    }
+                }),
+                vaccines: data.vaccines.map(vaccine => {
+                    return {
+                        ...vaccine,
+                        dayAplicationInit: format(vaccine.dayAplicationInit, 'dd/MM/yyyy'),
+                        dayAplicationfinal: format(vaccine.dayAplicationfinal, 'dd/MM/yyyy'),
+                    }
+                }),
+                celos: data.celos.map(celo => {
+                    return {
+                        dayAplicationInitCelos: celo.dayAplicationInitCelos !== '' ? format(celo.dayAplicationInitCelos, 'dd/MM/yyyy') : '',
+                        dayAplicationFinalCelos: celo.dayAplicationFinalCelos !== '' ? format(celo.dayAplicationFinalCelos, 'dd/MM/yyyy') : '',
+                    }
+                })
+            }
+            
+            if (input.celos[0].dayAplicationInitCelos === '') {
+                input.celos = undefined;
+            }
+
+            const response = await
+                axios
+                    .post(
+                        `${this.url}/clinical-sheets/${petId}?medicalHistoryId=${medicalHistoryId}`,
+                        input,
+                        this.params
+                    )
+
+            return this.redirectDownloadPdf(response.data, petName, 'historial-clínico');
+
+        } catch (e) {
+            throw e
         }
     }
 

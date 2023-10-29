@@ -2,7 +2,6 @@ import { config, configApiBackend } from '../config';
 import { format } from 'date-fns';
 import axios from 'axios';
 export class Pets {
-
   async getPetById(accessToken, petId) {
     try {
 
@@ -244,6 +243,24 @@ export class Pets {
       if (response.status !== 200) throw result;
 
       return result;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getMedicalHistoryById(medicalHistoryId) {
+    try {
+
+      const response = await axios.get(
+          `${config.baseApi}/pets/medical-histories/${medicalHistoryId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${this.accessToken}`
+            }
+          }
+      )
+
+      return response.data;
     } catch (error) {
       throw error;
     }

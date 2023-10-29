@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 // mui material elements
 import { Divider, Avatar, Grid, IconButton, Tooltip } from '@mui/material';
-import { Pets, ModeEdit, Visibility, HistoryEdu, Vaccines, LocalHospital, FileCopy } from "@mui/icons-material";
+import { Pets, ModeEdit, Visibility, HistoryEdu, Vaccines, LocalHospital, FileCopy, AdfScanner } from "@mui/icons-material";
 import { createTheme, ThemeProvider, ListItemAvatar, ListItemIcon, ListItemText, List, ListItem } from '@mui/material';
 import { size, map } from 'lodash';
 import {Modal_medicalHistory} from "../../../shared/Modal_MedicalHistory/index.jsx";
@@ -11,12 +11,16 @@ import {
   MedicalHistoryForm
 } from "../../../components/Vet_components/MedicalHistory/MedicalHistoryForm/MedicalHistoryForm.jsx";
 import { MedicalSeeForm } from "../../../components/Vet_components/MedicalHistory/MedicalSeeForm"
+import {useNavigate, useParams} from "react-router-dom";
+
 const defaultTheme = createTheme();
 
-export function PetMedicalHistory({ medicalHistory }) {
+export function PetMedicalHistory({ medicalHistory, petId }) {
+  let params = useParams();
+  const navigate = useNavigate();
   //Modal informacion concreta
   const [showVisualizar, setShowVisualizar] = useState(false);
-  const [showGenerateMedicalHistoryPdf, setShowGenerateMedicalHistoryPdf] = useState(false)
+    const [showEditModal, setShowEditModal] = useState(false);
   const onOpenInfoClientAndPets = () =>
     setShowVisualizar((prevState) => !prevState);
 
@@ -28,10 +32,12 @@ export function PetMedicalHistory({ medicalHistory }) {
     onOpenInfoClientAndPets();
   };
 
-  const onOpenCloseModal = () => setShowGenerateMedicalHistoryPdf((prevState) => !prevState);
+   const onOpenCloseModal = () => setShowEditModal((prevState) => !prevState);
+  const onReload = () => setReload((prevState) => !prevState);
+
   return (
-    <ThemeProvider theme={defaultTheme}>
     <div>
+    <ThemeProvider theme={defaultTheme}>
       <ListItem
         sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}
       >
@@ -95,45 +101,45 @@ export function PetMedicalHistory({ medicalHistory }) {
                     <Visibility sx={{ fontSize: 30 }} />
                   </Tooltip>
                 </IconButton>
-              <IconButton color='warning' >
+              <IconButton color='warning' onClick={onOpenCloseModal} >
                 <Tooltip title="Editar Hoja Clinica" arrow={true}>
                   <ModeEdit sx={{ fontSize: 30 }} />
                 </Tooltip>
               </IconButton>
-                <IconButton color="success" onClick={onOpenCloseModal}>
+                <IconButton color="success" onClick={()=>navigate(`medical-history/${medicalHistory.id}`)}>
                   <Tooltip title="Generar PDF" arrow={true}>
-                    <FileCopy />
+                    <AdfScanner sx={{ fontSize: 30 }} />
                   </Tooltip>
                 </IconButton>
             </Grid>
           </Grid>
         </ListItemAvatar>
-        {showGenerateMedicalHistoryPdf && (
-            <Modal_medicalHistory
-                show={showGenerateMedicalHistoryPdf}
-                close={onOpenCloseModal}
-                title='Llenar información generar PDF'
-            >
-              <MedicalHistoryForm close={onOpenCloseModal} />
-            </Modal_medicalHistory>
-        )}
-        {
-          showVisualizar && (
-            <Modal_verInfoClientAndPet
-            show={showVisualizar}
-            close={openInfoClientAndPets}
-            title={"Detalles del historial médico"}
-            >
-
-              <MedicalSeeForm close={openInfoClientAndPets} medicalHistory={medicalHistory}/>
-            </Modal_verInfoClientAndPet>    
-          )
-        }
       </ListItem>
       <Divider>
         <Pets color='disabled' />
       </Divider>
-    </div>
     </ThemeProvider>
+        {
+            showVisualizar && (
+                <Modal_verInfoClientAndPet
+                    show={showVisualizar}
+                    close={openInfoClientAndPets}
+                    title={"Detalles del historial médico"}
+                >
+
+                    <MedicalSeeForm close={openInfoClientAndPets} medicalHistory={medicalHistory}/>
+                </Modal_verInfoClientAndPet>
+            )
+        }
+      {showEditModal && (
+        <Modal_medicalHistory
+          show={showEditModal}
+          close={onOpenCloseModal}
+          title='Editar hoja clinica'
+        >
+          <MedicalHistoryForm close={onOpenCloseModal} onReload={onReload}  petId={params.petId} medicalHistory = {medicalHistory}/>
+        </Modal_medicalHistory>
+      )}
+    </div>
   );
 }

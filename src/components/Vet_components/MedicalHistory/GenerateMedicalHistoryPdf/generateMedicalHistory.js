@@ -20,8 +20,8 @@ export const initialValuesMedicalHistoryPdf = {
     ],
     celos: [
         {
-            dayAplicationInitCelos: null,
-            dayAplicationFinalCelos: null
+            dayAplicationInitCelos: '',
+            dayAplicationFinalCelos: ''
         }
     ]
 }
@@ -41,7 +41,26 @@ export const validateMedicalHistoryPdfSchema = yup.object({
         vaccineName: yup.string().required('Nombre de la vacuna es requerido'),
     })),
     celos: yup.array().of(yup.object().shape({
-        dayAplicationInitCelos: yup.string(),
-        dayAplicationFinalCelos: yup.string(),
+        dayAplicationInitCelos: yup.string().test(
+            'conditional-validation',
+            'Dia de aplicación es requerido',
+            function (value) {
+                const dayAplicationFinalCelos = this.parent.dayAplicationFinalCelos;
+                if (dayAplicationFinalCelos !== undefined && dayAplicationFinalCelos !== '' && dayAplicationFinalCelos !== null) {
+                    return value !== undefined && value !== '';
+                }
+                return true; // If dayAplicationFinalCelos is not provided, no validation is required.
+            }
+        ),
+        dayAplicationFinalCelos: yup.string().test(
+            'conditional-validation',
+            'Dia de finalización de celos es requerido',
+            function (value) {
+                const dayAplicationInitCelos = this.parent.dayAplicationInitCelos;
+                if (dayAplicationInitCelos !== undefined && dayAplicationInitCelos !== '' && dayAplicationInitCelos !== null) {
+                    return value !== undefined && value !== '' && value !== null;
+                }
+                return true; // If dayAplicationInitCelos is not provided, no validation is required.
+            }),
     }))
 })

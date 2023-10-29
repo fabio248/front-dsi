@@ -32,7 +32,7 @@ export function DewormingFields({ formik }) {
         formik.setFieldValue('deworming', newDeworming);
         setDeworming(newDeworming);
 
-        if(formik.touched.deworming.length > 0) {
+        if(formik.touched.deworming && formik.touched.deworming.length > 0) {
             const newTouchedDeworming = formik.touched.deworming.filter((_, i) => i !== index)
             formik.setFieldTouched('deworming', newTouchedDeworming);
         }
@@ -181,7 +181,7 @@ export function DewormingFields({ formik }) {
                     type="button"
                     onClick={addDeworming}
                 >
-                    Añadir desparaistante
+                    Añadir Desparasitante
                 </Button>
             </Grid>
     </Card>)

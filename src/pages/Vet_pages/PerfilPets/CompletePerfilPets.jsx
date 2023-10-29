@@ -483,7 +483,7 @@ export function CompletePetPerfil() {
               <Modal_medicalHistory
                   show={showModalHealthCertificate}
                   close={onOpenCloseModalHealthCertificate}
-                  title='¿Desea generar consentimiento eutanasia?'
+                  title='Generación de constancia de salud'
               >
                 <HealthCertificationPdfForm onClose={onOpenCloseModalHealthCertificate} petId={pet.id} petName={pet.name}/>
               </Modal_medicalHistory>)

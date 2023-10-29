@@ -2,6 +2,7 @@ import { Grid, TextField } from "@mui/material";
 import { useEffect } from "react";
 import { VaccinesFields } from "./VaccinesFields.jsx";
 import { DewormingFields } from "./DewormingFields.jsx";
+import { HeatFields } from "./HeatFields.jsx";
 
 export function GenerateMedicalHistoryFields({formik}) {
     useEffect(() => {
@@ -35,6 +36,7 @@ export function GenerateMedicalHistoryFields({formik}) {
                     error={formik.touched.moreImportsData && Boolean(formik.errors.moreImportsData)}
                     helperText={formik.touched.moreImportsData && formik.errors.moreImportsData}
                 />
+                <HeatFields formik={formik}/>
             </Grid>
             <Grid item xs={4} sm={12} md={6}>
                 <DewormingFields formik={formik} />

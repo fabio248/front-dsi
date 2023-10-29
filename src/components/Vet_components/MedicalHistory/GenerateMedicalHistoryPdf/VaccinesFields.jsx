@@ -23,7 +23,7 @@ export function VaccinesFields({ formik }) {
         formik.setFieldError('vaccines', newErrorsVaccines);
         formik.setFieldValue('vaccines', newVaccines);
 
-        if(formik.touched.vaccines.length > 0){
+        if(formik.touched.vaccines && formik.touched.vaccines.length > 0){
             const newTouchedVaccines = formik.touched.vaccines.filter((_, i) => i !== index)
             formik.setFieldTouched('vaccines', newTouchedVaccines);
         }
@@ -65,6 +65,8 @@ export function VaccinesFields({ formik }) {
                                        }
                                        helperText={
                                            formik.touched.vaccines &&
+                                           formik.touched.vaccines[index] &&
+                                           formik.touched.vaccines[index].vaccineName &&
                                            formik.errors.vaccines &&
                                            formik.errors.vaccines[index] &&
                                            formik.errors.vaccines[index]?.vaccineName
@@ -76,7 +78,7 @@ export function VaccinesFields({ formik }) {
                                    <DatePicker
                                        label='Día aplicación'
                                        name={`vaccines[${index}].dayAplicationInit`}
-                                       value={formik.values.vaccines[index].dayAplication}
+                                       value={formik.values.vaccines[index]?.dayAplicationInit || null}
                                        onBlur={formik.handleBlur}
                                        onChange={(date)=>handleDateVaccinesChange(date, index, 'dayAplicationInit')}
                                        slotProps={{
@@ -88,6 +90,8 @@ export function VaccinesFields({ formik }) {
                                                    formik.errors.vaccines &&
                                                    Boolean(formik.errors.vaccines[index]?.dayAplicationInit)) ?? false),
                                                helperText: (formik.touched.vaccines &&
+                                                   formik.touched.vaccines[index] &&
+                                                   formik.touched.vaccines[index].dayAplicationInit &&
                                                    formik.errors.vaccines &&
                                                    formik.errors.vaccines[index] &&
                                                    formik.errors.vaccines[index]?.dayAplicationInit)
@@ -103,7 +107,7 @@ export function VaccinesFields({ formik }) {
                                    <DatePicker
                                        label='Día de proximo refuerzo'
                                        name={`vaccines[${index}].dayAplicationfinal`}
-                                       value={formik.values.vaccines[index].dayAplicationfinal}
+                                       value={formik.values.vaccines[index]?.dayAplicationfinal || null}
                                        onBlur={formik.handleBlur}
                                        onChange={(date)=>handleDateVaccinesChange(date, index, 'dayAplicationfinal')}
                                        slotProps={{
@@ -115,6 +119,8 @@ export function VaccinesFields({ formik }) {
                                                    formik.errors.vaccines &&
                                                    Boolean(formik.errors.vaccines[index]?.dayAplicationfinal)) ?? false),
                                                helperText: (formik.touched.vaccines &&
+                                                   formik.touched.vaccines[index] &&
+                                                   formik.touched.vaccines[index].dayAplicationfinal &&
                                                    formik.errors.vaccines &&
                                                    formik.errors.vaccines[index] &&
                                                    formik.errors.vaccines[index]?.dayAplicationfinal)

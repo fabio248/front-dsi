@@ -6,9 +6,11 @@ import { Pets, ModeEdit, Visibility, HistoryEdu, Vaccines, LocalHospital, FileCo
 import { createTheme, ThemeProvider, ListItemAvatar, ListItemIcon, ListItemText, List, ListItem } from '@mui/material';
 import { size, map } from 'lodash';
 import {Modal_medicalHistory} from "../../../shared/Modal_MedicalHistory/index.jsx";
+import { Modal_verInfoClientAndPet } from "../../../shared/modal_visualizar_ClientAndPet"
 import {
   MedicalHistoryForm
 } from "../../../components/Vet_components/MedicalHistory/MedicalHistoryForm/MedicalHistoryForm.jsx";
+import { MedicalSeeForm } from "../../../components/Vet_components/MedicalHistory/MedicalSeeForm"
 import {useNavigate, useParams} from "react-router-dom";
 
 const defaultTheme = createTheme();
@@ -21,7 +23,6 @@ export function PetMedicalHistory({ medicalHistory, petId }) {
     const [showEditModal, setShowEditModal] = useState(false);
   const onOpenInfoClientAndPets = () =>
     setShowVisualizar((prevState) => !prevState);
-    //console.log(medicalHistory.diagnostics);
 
   const [titleSeeInfoClientAndPet, setTitleSeeInfoClientAndPet] = useState('');
 
@@ -36,7 +37,7 @@ export function PetMedicalHistory({ medicalHistory, petId }) {
 
   return (
     <div>
-    <ThemeProvider theme={defaultTheme}> 
+    <ThemeProvider theme={defaultTheme}>
       <ListItem
         sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}
       >
@@ -95,7 +96,7 @@ export function PetMedicalHistory({ medicalHistory, petId }) {
         <ListItemAvatar sx={{ display: 'flex', flexDirection: 'row', margin: '0 auto' }}>
           <Grid container justifyContent='flex-end'>
             <Grid item>
-                <IconButton color='info'>
+                <IconButton color='info' onClick={openInfoClientAndPets}>
                   <Tooltip title="Ver detalle" arrow={true}>
                     <Visibility sx={{ fontSize: 30 }} />
                   </Tooltip>
@@ -118,6 +119,18 @@ export function PetMedicalHistory({ medicalHistory, petId }) {
         <Pets color='disabled' />
       </Divider>
     </ThemeProvider>
+        {
+            showVisualizar && (
+                <Modal_verInfoClientAndPet
+                    show={showVisualizar}
+                    close={openInfoClientAndPets}
+                    title={"Detalles del historial médico"}
+                >
+
+                    <MedicalSeeForm close={openInfoClientAndPets} medicalHistory={medicalHistory}/>
+                </Modal_verInfoClientAndPet>
+            )
+        }
       {showEditModal && (
         <Modal_medicalHistory
           show={showEditModal}

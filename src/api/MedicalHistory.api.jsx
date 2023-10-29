@@ -94,32 +94,33 @@ export class PetsMedicalHistories {
       if (!medicalHistoryData.whichPets) {
         delete medicalHistoryData.whichPets;
       }
-      previousMedicalHistory.diagnostic.treatments.map( async (treatment) => {
-        let treatmentId = treatment.id;
-        if (treatmentId) {
-          await axios.delete(`${url}/diagnostics/treatments/${treatmentId}`, params);
-        }
-      })
-      medicalHistory.tratamientos.map( async (treatment) => {
-        await axios.post(`${url}/diagnostics/${previousMedicalHistory.diagnostic.id}/treatments`,
-          treatment, 
-          params);
-      })
 
-      previousMedicalHistory.diagnostic.surgicalIntervations.map( async (intervation) => {
-        let intervationId = intervation.id;
-        if (intervationId) {
-          await axios.delete(`${url}/diagnostics/surgical-interventions/${intervationId}`, params);
-        }
-      })
-      medicalHistory.intervenciones.map( async (intervation) => {
-        await axios.post(`${url}/diagnostics/${previousMedicalHistory.diagnostic.id}/surgical-interventions`,
-          intervation, 
-          params);
-      })
+      await Promise.all([
+          previousMedicalHistory.diagnostic.treatments.map( async (treatment) => {
+              let treatmentId = treatment.id;
+              if (treatmentId) {
+                  return axios.delete(`${url}/diagnostics/treatments/${treatmentId}`, params);
+              }
+          }),
+          medicalHistory.tratamientos.map( async (treatment) => {
+              return axios.post(`${url}/diagnostics/${previousMedicalHistory.diagnostic.id}/treatments`,
+                  treatment,
+                  params);
+          }),
+          previousMedicalHistory.diagnostic.surgicalIntervations.map( async (intervation) => {
+              let intervationId = intervation.id;
+              if (intervationId) {
+                  return axios.delete(`${url}/diagnostics/surgical-interventions/${intervationId}`, params);
+              }
+          }),
+          medicalHistory.intervenciones.map( async (intervation) => {
+              return axios.post(`${url}/diagnostics/${previousMedicalHistory.diagnostic.id}/surgical-interventions`,
+                  intervation,
+                  params);
+          }),
+          axios.patch(`${url}/${previousMedicalHistory.id}/diagnostics`, { description: medicalHistory.diagnostic}, params)
+      ])
 
-      axios.patch(`${url}/${previousMedicalHistory.id}/diagnostics`, { description: medicalHistory.diagnostic}, params);
-       
       const urlPatch = `${config.baseApi}/${configApiBackend.pets}/${configApiBackend.medicalHistories}/${previousMedicalHistory.id}`;
       const paramsPatch = {
         method: 'PATCH',

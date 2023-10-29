@@ -11,10 +11,6 @@ import { Species } from '../../../../api/specie.api';
 import { ApiAuth } from '../../../../api/Auth.api';
 import { Pets } from '../../../../api/Pets.api';
 import { PetsMedicalHistories } from '../../../../api/MedicalHistory.api';
-import { size, map } from 'lodash';
-
-//MUI Material
-import Autocomplete from '@mui/material/Autocomplete';
 import {
   Grid,
   Card,

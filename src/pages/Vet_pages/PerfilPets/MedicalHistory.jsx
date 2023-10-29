@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 // mui material elements
 import { Divider, Avatar, Grid, IconButton, Tooltip } from '@mui/material';
-import { Pets, ModeEdit, Visibility, HistoryEdu, Vaccines, LocalHospital, FileCopy } from "@mui/icons-material";
+import { Pets, ModeEdit, Visibility, HistoryEdu, Vaccines, LocalHospital, FileCopy, AdfScanner } from "@mui/icons-material";
 import { createTheme, ThemeProvider, ListItemAvatar, ListItemIcon, ListItemText, List, ListItem } from '@mui/material';
 import { size, map } from 'lodash';
 import {Modal_medicalHistory} from "../../../shared/Modal_MedicalHistory/index.jsx";
@@ -102,7 +102,7 @@ export function PetMedicalHistory({ medicalHistory, petId }) {
               </IconButton>
                 <IconButton color="success" onClick={()=>navigate(`medical-history/${medicalHistory.id}`)}>
                   <Tooltip title="Generar PDF" arrow={true}>
-                    <FileCopy />
+                    <AdfScanner sx={{ fontSize: 30 }} />
                   </Tooltip>
                 </IconButton>
             </Grid>

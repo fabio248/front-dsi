@@ -58,6 +58,7 @@ export function CompletePetPerfil() {
 
   const [selectedTab, setSelectedTab] = useState(0);
   const [showModal, setShowModal] = useState(false);
+  const [isLoadingEuthanasias, setIsLoadingEuthanasias] = useState(false)
   const {showModal: showModalSurgery, onOpenCloseModal: onOpenCloseModalSurgery} = useModal();
   const { showModal: showModalEuthanasia, onOpenCloseModal:onOpenCloseModalEuthanasia } = useModal()
   const { showModal: showModalHealthCertificate, onOpenCloseModal: onOpenCloseModalHealthCertificate } = useModal()
@@ -466,13 +467,15 @@ export function CompletePetPerfil() {
                 </Button>
                 <Button
                     onClick={async () => {
+                      setIsLoadingEuthanasias(true)
                       await generatePdfController.generateEuthanasiaPdf({}, pet.id, pet.name)
+                      setIsLoadingEuthanasias(false)
                       onOpenCloseModalEuthanasia()
                     }}
                     size='medium'
                     sx={{ mx: 2, marginTop: '12px' }}
                 >
-                  Generar
+                  {isLoadingEuthanasias ? <CircularProgress /> :`Generar`}
                 </Button>
               </Grid>
 

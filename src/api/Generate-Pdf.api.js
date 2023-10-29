@@ -3,14 +3,13 @@ import {config} from "../config/index.jsx";
 import {format} from "date-fns";
 import axios from "axios";
 
+const apiAuth = new ApiAuth();
 
 export class GeneratePdfApi {
-    apiAuth = new ApiAuth();
-    accessToken = this.apiAuth.getAccessToken();
     url = `${config.baseApi}/generate-pdf`;
     params = {
         headers: {
-            Authorization: `Bearer ${this.accessToken}`,
+            Authorization: `Bearer ${apiAuth.getAccessToken()}`,
         },
         responseType: 'blob',
     };

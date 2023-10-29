@@ -465,8 +465,8 @@ export function CompletePetPerfil() {
                   Cancelar
                 </Button>
                 <Button
-                    onClick={() => {
-                      generatePdfController.generateEuthanasiaPdf({}, pet.id, pet.name)
+                    onClick={async () => {
+                      await generatePdfController.generateEuthanasiaPdf({}, pet.id, pet.name)
                       onOpenCloseModalEuthanasia()
                     }}
                     size='medium'

@@ -2,7 +2,6 @@ import {ApiAuth} from "./Auth.api.jsx";
 import {config} from "../config/index.jsx";
 import {format} from "date-fns";
 import axios from "axios";
-import * as _ from "lodash";
 
 
 export class GeneratePdfApi {
@@ -100,7 +99,7 @@ export class GeneratePdfApi {
                     }
                 })
             }
-            
+
             if (input.celos[0].dayAplicationInitCelos === '') {
                 input.celos = undefined;
             }

@@ -3,8 +3,7 @@ import { Container, Typography } from "@mui/material";
 import {
     GenerateMedicalHistoryForm
 } from "../../../components/Vet_components/MedicalHistory/GenerateMedicalHistoryPdf/GenerateMedicalHistoryForm.jsx";
-import {useParams} from "react-router-dom";
-import {useEffect} from "react";
+
 export function GenerateMedicalHistory() {
     return (
         <div>

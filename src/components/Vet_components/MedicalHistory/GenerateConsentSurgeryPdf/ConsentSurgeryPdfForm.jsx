@@ -1,7 +1,7 @@
 import React from "react";
 import { validateConsentSurgeryPdfSchema } from "./consetSurgeryPdfSchema.js";
 import { useFormik } from "formik";
-import { Button, Grid, TextField } from "@mui/material";
+import {Button, CircularProgress, Grid, TextField} from "@mui/material";
 import { useMutation } from '@tanstack/react-query';
 import { GeneratePdfApi } from "../../../../api/Generate-Pdf.api.js";
 
@@ -72,7 +72,7 @@ export const ConsentSurgeryPdfForm = (props) => {
                     size='medium'
                     sx={{ mx: 2, marginTop: '12px' }}
                 >
-                    Generar
+                    {generatePdf.isLoading ? <CircularProgress /> :`Generar`}
                 </Button>
             </Grid>
         </form>

@@ -2,7 +2,7 @@ import { GeneratePdfApi } from "../../../../api/Generate-Pdf.api.js";
 import { useMutation } from "@tanstack/react-query";
 import { useFormik } from "formik";
 import {initialValuesHealthCertificatePdf, validateHealthCertificatePdfSchema} from "./healthCertificatePdfSchema.js";
-import {Button, Grid} from "@mui/material";
+import {Button, CircularProgress, Grid} from "@mui/material";
 import React from "react";
 import { HealthCertificationPdfFields } from "./HealthCertificationPdfFields.jsx";
 
@@ -52,7 +52,7 @@ export const HealthCertificationPdfForm = (props) => {
                        size='medium'
                        sx={{ mx: 2, marginTop: '12px' }}
                    >
-                       Generar
+                       {generatePdf.isLoading ? <CircularProgress /> :`Generar`}
                    </Button>
                </Grid>
            </form>

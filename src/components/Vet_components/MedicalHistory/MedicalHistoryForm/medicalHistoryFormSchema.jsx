@@ -142,7 +142,7 @@ export function validationSchemaPetRegister(medicalHistory, activeStep) {
         description: yup
         .string()
         .required('La descripcion de la intervención es obligatoria'),
-        dayAplication: yup
+        intervationDate: yup
           .date()
           .min(new Date(), 'La fecha no puede ser anterior al día de hoy')
           .transform((value, originalValue) => {
@@ -202,7 +202,7 @@ export function medicalHistoryIntervationsSchema(){
     description: yup
     .string()
     .required('La descripcion de la intervención es obligatoria'),
-    dayAplication: yup
+    intervationDate: yup
       .date()
       .min(new Date(), 'La fecha no puede ser anterior al día de hoy')
       .transform((value, originalValue) => {

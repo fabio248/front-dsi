@@ -102,6 +102,7 @@ export function MedicalHistoryPhysicalExamTextFields({ formik, onBinaryStrChange
         <Grid container spacing={2} sx={{ maxWidth: '97%', margin: '0' }}>
           <Grid item xs={12} sm={6}>
             <TextField
+              autoFocus
               fullWidth
               name='weight'
               label='Peso de la mascota (Kg)'
@@ -280,7 +281,6 @@ export function MedicalHistoryPhysicalExamTextFields({ formik, onBinaryStrChange
                       size='small'
                       color='error'
                       startIcon={<DeleteOutlineIcon sx={{ color: 'Red'}}/>}
-                      sx = {{ zIndex: 500000000  }}
                     >
                       Eliminar
                     </Button>

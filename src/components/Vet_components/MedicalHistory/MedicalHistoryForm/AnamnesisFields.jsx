@@ -19,6 +19,7 @@ export function MedicalHistoryFormAnamnesisTextFields({ formik }) {
         <Grid container spacing={2} sx={{ maxWidth: '97%', margin: '0' }}>
           <Grid item xs={12} sm={6}>
             <TextField
+              autoFocus
               fullWidth
               id='quantityFood'
               name='quantityFood'

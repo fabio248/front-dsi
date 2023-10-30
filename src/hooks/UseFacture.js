@@ -6,7 +6,7 @@ const factureController = new BillsApi();
 export function useFacture({accessToken}) {
     let totalFacture = 0;
     const result = useInfiniteQuery({
-        queryKey: ['facture'],
+        queryKey: ['bills'],
         queryFn: async ({pageParam = 1}) => {
             const data = await factureController.getAllFacture(
                 accessToken,

@@ -37,12 +37,15 @@ export function BillsPage() {
             </Modal_Facture>
           )}
             {showSuccessCreationBillAlert &&
-                <Snackbar open={showSuccessCreationBillAlert} autoHideDuration={6000} onClose={onCloseSnackbar}>
-                    <Alert severity="success" variant="filled">
-                        <AlertTitle>Exito</AlertTitle>
-                        Factura creada con exito
-                    </Alert>
-                </Snackbar>}
+                <>
+                    <Snackbar open={showSuccessCreationBillAlert} autoHideDuration={6000} onClose={onCloseSnackbar}>
+                        <Alert severity="success" variant="filled">
+                            <AlertTitle>Exito</AlertTitle>
+                            Factura creada con exito
+                        </Alert>
+                    </Snackbar>
+                </>
+                }
         </div>
       );
 }

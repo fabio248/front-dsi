@@ -1,8 +1,7 @@
-import { useMutation } from "@tanstack/react-query";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
 import { useFormik } from "formik";
 import {validateBillsCreateSchema, initialValuesBills} from "./FactureFormValidateSchema.jsx";
 import { Button, CircularProgress, Grid} from "@mui/material";
-import React, {useState} from "react";
 import { FactureFormFields } from "./FactureFormsFields.jsx";
 import {BillsApi} from "../../../../api/Bills.api.js";
 import {useAuth} from "../../../../hooks/index.jsx";
@@ -12,14 +11,16 @@ export const FactureForm = (props) => {
     const { close, setShowAlert } = props
     const billsController = new BillsApi();
     const { accessToken } = useAuth();
+    const queryClient = useQueryClient();
 
 
     const generatePdf = useMutation({
-        mutationFn: async ({ formValues }) => {
-            return await billsController.createFacture(accessToken, formValues)
+        mutationFn:  ({ formValues }) => {
+            return billsController.createFacture(accessToken, formValues)
         },
-        onSuccess: () => {
+        onSuccess: async () => {
             setShowAlert(true)
+            await queryClient.invalidateQueries(['bills'])
             close()
         }
     })

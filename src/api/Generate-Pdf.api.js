@@ -115,6 +115,22 @@ export class GeneratePdfApi {
         }
     }
 
+    async generateBillPdf(billId, data = {}) {
+        try {
+            const response = await
+                axios
+                    .post(
+                        `${this.url}/bills/${billId}`,
+                        data,
+                        this.params
+                    )
+
+            return this.redirectDownloadPdf(response.data, '', 'factura');
+        } catch (e) {
+            throw e;
+        }
+    }
+
     redirectDownloadPdf(data, petName, filename) {
         const href = URL.createObjectURL(data);
 

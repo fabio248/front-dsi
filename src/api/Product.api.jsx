@@ -3,9 +3,9 @@ import { config, configApiBackend } from '../config';
 export class Product {
   
    //OBTENER TODOS LOS PRODUCTOS REGISTRADOS EN LA BASE
-  async getAllProducts(accessToken, page, search = null) {
+  async getAllProducts(accessToken, page, search = null, limit = 5) {
     try {
-      let url = `${config.baseApi}/products?page=${page}&limit=10`;
+      let url = `${config.baseApi}/products?page=${page}&limit=${limit}`;
 
       if (search) {
         url = `${config.baseApi}/products?search=${search}&page=${page}&limit=10`;

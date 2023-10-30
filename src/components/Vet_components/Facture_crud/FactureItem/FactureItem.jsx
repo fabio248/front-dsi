@@ -15,27 +15,14 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import {
 Modal_verInfoFacture
 } from '../../../../shared';
+import {GeneratePdfApi} from "../../../../api/Generate-Pdf.api.js";
+import {useMutation} from "@tanstack/react-query";
+import {FactureSeeData} from "../FactureSeeData/index.jsx";
 
-//objetos children que se renderizan dentro del modal
-import { FactureForm } from '../FactureForm';
-import {FactureSeeData} from "../FactureSeeData"
-
-//import petitions of back
-import { Facture } from '../../../../api/facture.api';
-import { NavLink } from 'react-router-dom';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { ApiAuth } from '../../../../api/Auth.api';
-
-//controladores de las clases API
-// const factureController = new Facture();
-// const authController = new ApiAuth();
 const defaultTheme = createTheme();
+const generatePdfController = new GeneratePdfApi()
 
-export function FactureItem({ facture }) {
-
-  //verificacion de error en la ejecución
-  const [error, setError] = useState(false);
-  const [success, setSuccess] = useState(false);
+export function FactureItem({ facture, billId }) {
 
   const Demo = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -52,8 +39,12 @@ export function FactureItem({ facture }) {
     setTitleModal(`Visualizando Factura de: ${facture.client.firstName} ${facture.client.lastName}`);
     onOpenCloseModal();
   };
-//   const accessToken = authController.getAccessToken();
-//   const queryClient = useQueryClient();
+
+  const generatePdf = useMutation({
+    mutationFn: async () => {
+        return await generatePdfController.generateBillPdf(billId)
+    },
+  })
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -99,7 +90,7 @@ export function FactureItem({ facture }) {
               </IconButton>
             </Grid>
             <Grid item>
-              <IconButton color='success' onClick={() => console.log("hola")}>
+              <IconButton color='success' onClick={() => generatePdf.mutate()}>
                 <AdfScannerIcon sx={{ fontSize: 30 }} />
               </IconButton>
 

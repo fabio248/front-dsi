@@ -1,19 +1,26 @@
-// import { GeneratePdfApi } from "../../../../api/Generate-Pdf.api.js";
 import { useMutation } from "@tanstack/react-query";
 import { useFormik } from "formik";
 import {validateBillsCreateSchema, initialValuesBills} from "./FactureFormValidateSchema.jsx";
-import {Button, CircularProgress, Grid} from "@mui/material";
-import React from "react";
+import { Button, CircularProgress, Grid} from "@mui/material";
+import React, {useState} from "react";
 import { FactureFormFields } from "./FactureFormsFields.jsx";
+import {BillsApi} from "../../../../api/Bills.api.js";
+import {useAuth} from "../../../../hooks/index.jsx";
 
 
 export const FactureForm = (props) => {
-    const {petId, petName, close} = props
-    // const generatePdfController = new GeneratePdfApi();
+    const { close, setShowAlert } = props
+    const billsController = new BillsApi();
+    const { accessToken } = useAuth();
+
 
     const generatePdf = useMutation({
-        mutationFn: async ({formValues}) => {
-            // return await generatePdfController.generateHealthCertificatesPdf(formValues, petId, petName)
+        mutationFn: async ({ formValues }) => {
+            return await billsController.createFacture(accessToken, formValues)
+        },
+        onSuccess: () => {
+            setShowAlert(true)
+            close()
         }
     })
 
@@ -22,8 +29,7 @@ export const FactureForm = (props) => {
         validationSchema: validateBillsCreateSchema,
         validateOnChange: false,
         onSubmit: async (formValues) => {
-          console.log(formValues);
-            // await generatePdf.mutate({formValues});
+          await generatePdf.mutate({ formValues });
         }
     })
 

@@ -1,105 +1,135 @@
 import { Button, Card, CardContent, FormHelperText, Grid, TextField, Typography, MenuItem } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import { DeleteOutline } from "@mui/icons-material";
-// import { useMutation, useQueryClient } from '@tanstack/react-query';
-
 import {User} from "../../../../api/User.api"
 import { useAuth } from '../../../../hooks';
-import { all } from "axios";
+import Autocomplete from "@mui/material/Autocomplete";
+import {Product} from "../../../../api/Product.api.jsx";
 
 
 const userController = new User()
+const productController = new Product()
  export  const FactureFormFields = ({ formik }) => {
-    const [billsDetails, setbillsDetails] = useState([])
-    const [allData, setAllData] = useState([]);
-    const lastnewBillsDetailsCardRef = useRef(null);
+    const [billsDetails, setBillsDetails] = useState([])
+    const [allUsers, setAllUsers] = useState([]);
+     const [allProducts, setAllProducts] = useState([])
+    const lastBillsDetailsCardRef = useRef(null);
 
     const { accessToken } = useAuth();
-
-    const handleDateVaccinesChange = (date, index) => {
-        formik.setFieldTouched(`billsDetails[${index}].quantity`, false);
-        formik.setFieldValue(`billsDetails[${index}].quantity`, date);
-    }
-
     const addBillsDetails = () => {
         const newBillsDetails = [...formik.values.billsDetails, { quantity: null, productId: null }];
-        setbillsDetails(newBillsDetails);
-        formik.setFieldValue('newBillsDetails', newBillsDetails);
+        setBillsDetails(newBillsDetails);
+        formik.setFieldValue('billsDetails', newBillsDetails);
 
-        if (lastnewBillsDetailsCardRef.current) {
-            lastnewBillsDetailsCardRef.current.scrollIntoView({ behavior: 'smooth' });
+        if (lastBillsDetailsCardRef.current) {
+            lastBillsDetailsCardRef.current.scrollIntoView({ behavior: 'smooth' });
         }
     };
 
     const removeBillsDetails= (index) => {
         const newBillsDetails = formik.values.billsDetails.filter((_, i) => i !== index)
-        formik.setFieldValue('newBillsDetails', newBillsDetails);
-        setbillsDetails(newBillsDetails);
+        formik.setFieldValue('billsDetails', newBillsDetails);
+        setBillsDetails(newBillsDetails);
 
-        if(formik.errors.billsDetails.length > 0){
+        if(formik.errors.billsDetails && typeof(formik.errors.billsDetails) !== 'string' && formik.errors.billsDetails.length > 0){
             const newErrorsBillsDetails = formik.errors.billsDetails.filter((_, i) => i !== index)
-            formik.setFieldError('newBillsDetails', newErrorsBillsDetails);
+            formik.setFieldError('billsDetails', newErrorsBillsDetails);
         }
 
-        if(formik.touched.billsDetails.length > 0){
+        if(formik.touched.billsDetails && formik.touched.billsDetails.length > 0){
             const newTouchedBillsDetails = formik.touched.billsDetails.filter((_, i) => i !== index)
-            formik.setFieldTouched('vaccines', newTouchedBillsDetails);
+            formik.setFieldTouched('billsDetails', newTouchedBillsDetails);
         }
     }
 
-    useEffect(() => {
-        setbillsDetails(formik.initialValues.billsDetails)
-        getAllUsersPaginated(accessToken);
-    },[accessToken])
-   
-const getAllUsersPaginated = async (accessToken) => {
-    try {
+     const getAllUsers = useCallback(
+         async () => {
+             let page = 1;
+             let allData = [];
 
-    let page = 1; 
-    let allData = [];
+             while (true) {
+                 const { data } = await userController.getAllUsers(accessToken,page, null, 25);
 
-    while (true) {
-      const response = await userController.getAllUsers(accessToken,page,null);
-      if (response.data) {
-        allData = allData.concat(response.data);
-      
-    }
-    if (response.data.length < 1) {
-        break;
-      }
-    page ++
-    }
-    setAllData(allData);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+                 if (data.length <= 0) {
+                     break;
+                 }
+
+                 if (data) {
+                     allData = allData.concat(data);
+                 }
+
+                 page++
+             }
+
+             setAllUsers(allData);
+         }, []
+     );
+
+     const getAllProducts = useCallback(
+         async () => {
+             let page = 1;
+             let allData = [];
+
+             while (true) {
+                 const { data } = await productController.getAllProducts(accessToken,page, null, 25);
+
+                 if (data.length <= 0) {
+                     break;
+                 }
+
+                 if (data) {
+                     allData = allData.concat(data);
+                 }
+
+                 page++
+             }
+
+             setAllProducts(allData);
+         }, []
+     );
+
+    useEffect( () => {
+        setBillsDetails(formik.initialValues.billsDetails)
+        getAllUsers().catch(console.error);
+        getAllProducts().catch(console.error);
+    },[getAllUsers, getAllProducts])
+
+
     return (
-    <Grid container spacing={1} justifyContent="space-between" textAlign="center" columns={{ xs: 4, sm: 8, md: 6 }}>
-        <Grid item xs={4} sm={8}>
-        <TextField
-                select
-                fullWidth
-                name='cliendId'
-                label='Selecciona al cliente'
-                variant='outlined'
-                size='small'
-                sx={{ minWidth: '350px' }}
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.cliendId}
-        >
-        {allData &&
-            allData.map((client) => (
-            <MenuItem key={client.id} value={client.id} sx={{ minWidth: '150px' }}>
-                {client.firstName} {client.lastName}
-            </MenuItem>
-            ))}
-</TextField>
-
-      </Grid>
+        <Grid container spacing={1} justifyContent="space-between" textAlign="center" columns={{ xs: 4, sm: 8, md: 6 }}>
+            <Grid item xs={4} sm={8}>
+                <Autocomplete
+                    name='cliendId'
+                    label='Selecciona al cliente'
+                    variant='outlined'
+                    size='small'
+                    onBlur={formik.handleBlur}
+                    options={allUsers.map((client) => ({label: `${client.firstName} ${client.lastName} - ${client.email}`, value: client.id}))}
+                    isOptionEqualToValue={(options, value) => (options.value === value.value)}
+                    onChange={(_,value)=>formik.setFieldValue('clientId', value ?? null)}
+                    getOptionLabel={(option) => option.label}
+                    value={formik.values.clientId}
+                    renderInput={(params)=>
+                        <TextField
+                            {...params}
+                            name='cliendId'
+                            label='Selecciona al cliente'
+                            inputProps={{
+                                ...params.inputProps,
+                            }}
+                            error={formik.touched.clientId && Boolean(formik.errors.clientId)}
+                            helperText={formik.touched.clientId && formik.errors.clientId}
+                        />}
+                />
+        </Grid>
 
         <Grid item xs={4} sm={8} md={12}>
+            {(formik.touched.billsDetails &&
+                    formik.values.billsDetails.length === 0 &&
+                    Boolean(formik.errors.billsDetails) &&
+                    (typeof(formik.errors.billsDetails) === 'string')) &&
+                <FormHelperText error={true}>{formik.errors.billsDetails}</FormHelperText>
+            }
             <div style={{ maxHeight: '350px', overflowY: 'auto' }}>
                 {billsDetails && billsDetails.map((billsDetails, index) => {
                     return <Grid
@@ -125,60 +155,77 @@ const getAllUsersPaginated = async (accessToken) => {
                                         <DeleteOutline color="action" />
                                     </Button>
                                 </Grid>
-                                <TextField
-                                    fullWidth
-                                    name={`billsDetails[${index}].quantity`}
-                                    label='Cantidad'
-                                    variant='outlined'
-                                    size='small'
-                                    sx={{ mb: 1.5, minWidth: '250px' }}
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    // value={formik.values.vaccines[index]?.vaccineName || ''}
-                                    // error={
-                                    //     (formik.touched.vaccines &&
-                                    //     formik.touched.vaccines[index] &&
-                                    //     formik.touched.vaccines[index]?.vaccineName &&
-                                    //     formik.errors.vaccines &&
-                                    //     formik.errors.vaccines[index] &&
-                                    //     Boolean(formik.errors.vaccines[index]?.vaccineName)) ?? false
-                                    // }
-                                    // helperText={
-                                    //     formik.touched.vaccines &&
-                                    //     formik.touched.vaccines[index] &&
-                                    //     formik.errors.vaccines &&
-                                    //     formik.errors.vaccines[index] &&
-                                    //     formik.errors.vaccines[index]?.vaccineName
-                                    // }
-                                />
+                                <Grid container rowSpacing={1} spacing={1}>
+                                    <Grid item xs={4} sm={12} md={9}>
+                                        <Autocomplete
+                                            label='Selecciona al cliente'
+                                            variant='outlined'
+                                            size='small'
+                                            name={`billsDetails[${index}].quantity`}
+                                            onBlur={formik.handleBlur}
+                                            options={allProducts.map((product) =>
+                                                ({label: `${product.nameProduct} - $${product.sellingProduct}`, value: product.id}))}
+                                            isOptionEqualToValue={(options, value) => (options.value === value.value)}
+                                            onChange={(_,value)=>
+                                                formik.setFieldValue(`billsDetails[${index}].productId`, value ?? null)}
+                                            getOptionLabel={(option) => option.label}
+                                            renderInput={(params)=>
+                                                <TextField
+                                                    {...params}
+                                                    name={`billsDetails[${index}].quantity`}
+                                                    label='Selecciona el producto'
+                                                    inputProps={{
+                                                        ...params.inputProps,
+                                                    }}
+                                                    error={(formik.touched.billsDetails &&
+                                                        formik.touched.billsDetails[index] &&
+                                                        formik.touched.billsDetails[index]?.productId &&
+                                                        formik.errors.billsDetails &&
+                                                        formik.errors.billsDetails[index] &&
+                                                        Boolean(formik.errors.billsDetails[index]?.productId)) ?? false}
+                                                    helperText={formik.touched.billsDetails &&
+                                                        formik.touched.billsDetails[index] &&
+                                                        formik.touched.billsDetails[index]?.productId &&
+                                                        formik.errors.billsDetails &&
+                                                        formik.errors.billsDetails[index] &&
+                                                        formik.errors.billsDetails[index]?.productId
+                                                    }
+                                                />}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={4} sm={12} md={3}>
+                                        <TextField
+                                            fullWidth
+                                            type='number'
+                                            name={`billsDetails[${index}].quantity`}
+                                            label='Cantidad'
+                                            variant='outlined'
+                                            size='small'
+                                            sx={{ mb: 1.5 }}
+                                            onChange={formik.handleChange}
+                                            onBlur={formik.handleBlur}
+                                            value={formik.values.billsDetails[index]?.quantity || ''}
+                                            error={
+                                                (formik.touched.billsDetails &&
+                                                    formik.touched.billsDetails[index] &&
+                                                    formik.touched.billsDetails[index]?.quantity &&
+                                                    formik.errors.billsDetails &&
+                                                    formik.errors.billsDetails[index] &&
+                                                    Boolean(formik.errors.billsDetails[index]?.quantity)) ?? false
+                                            }
+                                            helperText={
+                                                formik.touched.billsDetails &&
+                                                formik.touched.billsDetails[index] &&
+                                                formik.touched.billsDetails[index]?.quantity &&
+                                                formik.errors.billsDetails &&
+                                                formik.errors.billsDetails[index] &&
+                                                formik.errors.billsDetails[index]?.quantity
+                                            }
+                                            ref={index === billsDetails.length - 1 ? lastBillsDetailsCardRef : null}
+                                        />
+                                    </Grid>
+                                </Grid>
 
-                                <TextField
-                                    fullWidth
-                                    name={`billsDetails[${index}].productId`}
-                                    label='Seleccione el producto'
-                                    variant='outlined'
-                                    size='small'
-                                    sx={{ mb: 1.5, minWidth: '250px' }}
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    // value={formik.values.vaccines[index]?.BrandAndLot || ''}
-                                    // error={
-                                    //     (formik.touched.vaccines &&
-                                    //     formik.touched?.vaccines[index] &&
-                                    //     formik.touched.vaccines[index]?.BrandAndLot &&
-                                    //     formik.errors.vaccines &&
-                                    //     formik.errors.vaccines[index] &&
-                                    //     Boolean(formik.errors.vaccines[index].BrandAndLot)) ?? false
-                                    // }
-                                    // helperText={
-                                    //     formik.touched.vaccines &&
-                                    //     formik.touched.vaccines[index] &&
-                                    //     formik.errors.vaccines &&
-                                    //     formik.errors.vaccines[index] &&
-                                    //     formik.errors.vaccines[index]?.BrandAndLot
-                                    // }
-                                />
-                                
                             </CardContent>
                         </Card>
                     </Grid>
@@ -191,7 +238,7 @@ const getAllUsersPaginated = async (accessToken) => {
                 type="button"
                 onClick={addBillsDetails}
             >
-                Añadir Otra Factura
+                Añadir Producto
             </Button>
         </Grid>
     </Grid>

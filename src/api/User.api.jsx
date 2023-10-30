@@ -32,9 +32,9 @@ export class User {
     }
   }
   //OBTENER TODOS LOS USUARIOS REGISTRADOS EN LA BASE
-  async getAllUsers(accessToken, page, search = null) {
+  async getAllUsers(accessToken, page, search = null, limit = 5) {
     try {
-      let url = `${config.baseApi}/${configApiBackend.users}?page=${page}&limit=5`;
+      let url = `${config.baseApi}/${configApiBackend.users}?page=${page}&limit=${limit}`;
 
       if (search) {
         url = `${config.baseApi}/${configApiBackend.users}?search=${search}&page=${page}&limit=4`;

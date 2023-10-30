@@ -102,9 +102,9 @@ const MedicalHistoryForm = (props) => {
         }
       }
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries(['pets']);
+    onSuccess: async () => {
       setSuccess(true);
+      await queryClient.invalidateQueries(['pets']);
     },
     onError: () => {
       setIsError(true);

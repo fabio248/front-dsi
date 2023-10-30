@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
-import { Button, Box } from '@mui/material';
+import {Button, Box, AlertTitle} from '@mui/material';
 import {Modal_Facture  } from "../../../shared"
 import {ListFacture} from "../../../components"
 import {FactureForm} from "../../../components"
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
-export function FacturacionCatalog() {
+export function BillsPage() {
     const [showModal, setShowModal] = useState(false);
+    const [showSuccessCreationBillAlert, setShowSuccessCreationBillAlert] = useState()
+
+    const onCloseSnackbar = () => setShowSuccessCreationBillAlert(false);
     const onOpenCloseModal = () => setShowModal((prevState) => !prevState);
     return (
         <div className='product-page'>
@@ -19,7 +24,6 @@ export function FacturacionCatalog() {
     
           <div className='box-container'>
             <Box sx={{ width: '100%' }}>
-              {/* renderizando a las facturas */}
               <ListFacture />
             </Box>
           </div>
@@ -29,9 +33,16 @@ export function FacturacionCatalog() {
               close={onOpenCloseModal}
               title='Crear Factura'
             >
-            <FactureForm close={onOpenCloseModal} />
+                <FactureForm close={onOpenCloseModal} setShowAlert={setShowSuccessCreationBillAlert} />
             </Modal_Facture>
           )}
+            {showSuccessCreationBillAlert &&
+                <Snackbar open={showSuccessCreationBillAlert} autoHideDuration={6000} onClose={onCloseSnackbar}>
+                    <Alert severity="success" variant="filled">
+                        <AlertTitle>Exito</AlertTitle>
+                        Factura creada con exito
+                    </Alert>
+                </Snackbar>}
         </div>
       );
 }

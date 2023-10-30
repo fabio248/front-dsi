@@ -34,12 +34,12 @@ export const validateMedicalHistoryPdfSchema = yup.object({
         dayAplicationFinalDeworming: yup.string().required('Dia de próximo refuerzo es requerido'),
         dewormingName: yup.string().required('Desparasitante es requerido'),
         dose: yup.string().required('Dosis es requerido'),
-    })),
+    })).min(1, 'Debe agregar al menos un desparasitante'),
     vaccines: yup.array().of(yup.object().shape({
         dayAplicationInit: yup.string().required('Dia de aplicación es requerido'),
         dayAplicationfinal: yup.string().required('Dia de próximo refuerzo es requerido'),
         vaccineName: yup.string().required('Nombre de la vacuna es requerido'),
-    })),
+    })).min(1, 'Debe agregar al menos una vacuna'),
     celos: yup.array().of(yup.object().shape({
         dayAplicationInitCelos: yup.string().test(
             'conditional-validation',

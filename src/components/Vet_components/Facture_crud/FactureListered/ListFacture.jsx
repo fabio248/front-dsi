@@ -89,18 +89,18 @@ export function ListFacture() {
           scrollThreshold={0.5}
         >
           {map(facture, (facture) => (
-            <FactureItem key={facture.id} facture={facture} />
+            <FactureItem billId={facture.id} facture={facture} />
           ))}
         </InfiniteScroll>
       </div>
 
-      {hasNextPage & !isFetching ? (
+      {hasNextPage && !isFetching ? (
         <Button onClick={() => fetchNextPage()}>Cargar más Facturas</Button>
       ) : undefined}
 
       {isFetching ? <CircularProgress /> : undefined}
 
-      {!hasNextPage & (facture.length !== 0) ? (
+      {!hasNextPage && (facture.length !== 0) ? (
         <Typography style={{ textAlign: 'center', fontWeight: 500 }}>
           Ya tienes todas las facturas cargados
         </Typography>

@@ -287,7 +287,7 @@ export function MedicalHistoryPhysicalExamTextFields({ formik, onBinaryStrChange
                   </Box>
                 )}
                 {errorMessage && (
-                    <Box sx={{ display: 'flex', flexDirection: 'colum', height: '4vh', alignItems: 'center', mt:7, mb: -7 }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'colum', height: '4vh', alignItems: 'center', mt:2, mb: -4 }}>
                         <ErrorOutlineIcon color='error' sx={{ fontSize: '2rem', mx: 1 }} />
                         <br/>
                         <Typography variant='subtitle2' textAlign='center' color= 'error' sx={{ fontSize: '1rem',}}>

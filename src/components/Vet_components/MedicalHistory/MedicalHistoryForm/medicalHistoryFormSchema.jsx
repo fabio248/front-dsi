@@ -18,7 +18,6 @@ export function initialPetValues(medicalHistoryData) {
         ...medicalHistoryData,
         diagnostic: newDiagnostic
     }
-    // console.log(medicalHistory);
   }
 
 
@@ -68,7 +67,6 @@ export function initialPetValues(medicalHistoryData) {
 export function validationSchemaPetRegister(medicalHistory, activeStep) {
   // Anamnesis Schema
   if(activeStep === 0){
-    console.log('0');
     return yup.object({
       quantityFood: yup
       .string()

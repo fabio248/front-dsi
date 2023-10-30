@@ -21,7 +21,6 @@ export function PetMedicalHistorySurgicalIntervations({ intervation }) {
   const [showVisualizar, setShowVisualizar] = useState(false);
   const onOpenInfoClientAndPets = () =>
     setShowVisualizar((prevState) => !prevState);
-    console.log(intervation);
 
   const [titleSeeInfoClientAndPet, setTitleSeeInfoClientAndPet] = useState('');
 

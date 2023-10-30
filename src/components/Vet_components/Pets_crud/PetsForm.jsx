@@ -325,7 +325,6 @@ export function PetFormTextFields({ formik, onBinaryStrChange, onDropFile }) {
 
 const PetsForm = (props) => {
   const { close, pet, idUser } = props;
-  console.log(close)
   const [isError, setIsError] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -371,7 +370,6 @@ const PetsForm = (props) => {
     onSubmit: async (formValue) => {
       if (!pet) {
         createPetMutation.mutate({ idUser, formValue });
-        console.log(formValue);
       } else {
         updatePetMuatation.mutate({ petId: pet.id, formValue });
       }

@@ -2,7 +2,6 @@ import React from 'react'
 import { Typography, Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 
 export function FactureSeeData({ facture }) {
-    console.log(facture)
   return (
     <>
     <div>

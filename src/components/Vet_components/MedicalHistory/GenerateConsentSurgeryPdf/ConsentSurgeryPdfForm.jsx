@@ -4,13 +4,16 @@ import { useFormik } from "formik";
 import {Button, CircularProgress, Grid, TextField} from "@mui/material";
 import { useMutation } from '@tanstack/react-query';
 import { GeneratePdfApi } from "../../../../api/Generate-Pdf.api.js";
+import {useAuth} from "../../../../hooks/index.jsx";
 
 const generatePdfApi = new GeneratePdfApi();
 export const ConsentSurgeryPdfForm = (props) => {
     const { onClose, petId, petName} = props
+    const { accessToken } = useAuth()
+
     const generatePdf = useMutation({
         mutationFn: async ({formValues}) => {
-            return generatePdfApi.generateConsentPdf(formValues, petId, petName)
+            return generatePdfApi.generateConsentPdf(formValues, petId, petName, accessToken)
         },
     })
 

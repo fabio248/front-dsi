@@ -39,7 +39,7 @@ import {
 import {SurgeryIcon} from "../../../shared/Icons/index.js";
 import {EuthanasiasIcon} from "../../../shared/Icons/euthanasias.icon.jsx";
 import {GeneratePdfApi} from "../../../api/Generate-Pdf.api.js";
-import {useModal} from "../../../hooks";
+import {useAuth, useModal} from "../../../hooks";
 import {
   HealthCertificationPdfForm
 } from "../../../components/Vet_components/MedicalHistory/GenerateHealthCertificatePdf/HealthCertificatePdfForm.jsx";
@@ -52,6 +52,7 @@ const generatePdfController = new GeneratePdfApi();
 export function CompletePetPerfil() {
   const allTreatments = [];
   const allIntervations = [];
+  const { accessToken } = useAuth();
 
   let params = useParams();
   const navigate = useNavigate();
@@ -468,7 +469,7 @@ export function CompletePetPerfil() {
                 <Button
                     onClick={async () => {
                       setIsLoadingEuthanasias(true)
-                      await generatePdfController.generateEuthanasiaPdf({}, pet.id, pet.name)
+                      await generatePdfController.generateEuthanasiaPdf({}, pet.id, pet.name, accessToken)
                       setIsLoadingEuthanasias(false)
                       onOpenCloseModalEuthanasia()
                     }}

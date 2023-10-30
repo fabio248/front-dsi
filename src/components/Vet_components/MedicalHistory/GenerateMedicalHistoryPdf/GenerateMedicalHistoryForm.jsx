@@ -7,12 +7,14 @@ import {GeneratePdfApi} from "../../../../api/Generate-Pdf.api.js";
 import {useMutation, useQuery} from "@tanstack/react-query";
 import {Pets} from "../../../../api/Pets.api.jsx";
 import {ApiAuth} from "../../../../api/Auth.api.jsx";
+import {useAuth} from "../../../../hooks/index.jsx";
 
 const generatePdfController = new GeneratePdfApi()
 const petController = new Pets()
 const authController = new ApiAuth()
 export function GenerateMedicalHistoryForm() {
     const navigate = useNavigate();
+    const { accessToken } = useAuth()
     const { petId, medicalHistoryId} = useParams();
 
     const { data: pet } = useQuery({
@@ -22,7 +24,7 @@ export function GenerateMedicalHistoryForm() {
 
     const generatePdf = useMutation({
         mutationFn: async ({formValues}) => {
-            return generatePdfController.generateMedicalHistoryPdf({data: formValues, petId, petName: pet.name, medicalHistoryId})
+            return generatePdfController.generateMedicalHistoryPdf({data: formValues, petId, petName: pet.name, medicalHistoryId, accessToken})
         },
     })
 

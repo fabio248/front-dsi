@@ -18,11 +18,13 @@ Modal_verInfoFacture
 import {GeneratePdfApi} from "../../../../api/Generate-Pdf.api.js";
 import {useMutation} from "@tanstack/react-query";
 import {FactureSeeData} from "../FactureSeeData/index.jsx";
+import {useAuth} from "../../../../hooks/index.jsx";
 
 const defaultTheme = createTheme();
 const generatePdfController = new GeneratePdfApi()
 
 export function FactureItem({ facture, billId }) {
+  const {accessToken} = useAuth()
 
   const Demo = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -42,7 +44,7 @@ export function FactureItem({ facture, billId }) {
 
   const generatePdf = useMutation({
     mutationFn: async () => {
-        return await generatePdfController.generateBillPdf(billId)
+        return await generatePdfController.generateBillPdf(billId, accessToken)
     },
   })
 

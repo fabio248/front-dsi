@@ -11,14 +11,19 @@ export class GeneratePdfApi {
         responseType: 'blob',
     };
 
-    async generateConsentPdf(data, petId, petName) {
+    async generateConsentPdf(data, petId, petName, accessToken) {
         try {
             const response = await
                 axios
                     .post(
                         `${this.url}/consent-surgeries/${petId}`,
                         data,
-                        this.params)
+                        {
+                            headers: {
+                                Authorization: `Bearer ${accessToken}`,
+                            },
+                            responseType: 'blob',
+                        })
 
             return this.redirectDownloadPdf(response.data, petName, 'consentimiento-cirugía');
         } catch (e) {
@@ -26,14 +31,20 @@ export class GeneratePdfApi {
         }
     }
 
-    async generateEuthanasiaPdf(data, petId, petName) {
+    async generateEuthanasiaPdf(data, petId, petName, accessToken) {
         try {
             const response = await
                 axios
                     .post(
                         `${this.url}/euthanasias/${petId}`,
                         data,
-                        this.params)
+                        {
+                            headers: {
+                                Authorization: `Bearer ${accessToken}`,
+                            },
+                            responseType: 'blob',
+                        }
+                    )
 
             return this.redirectDownloadPdf(response.data, petName, 'consentimiento-eutanasia');
         } catch (e) {
@@ -41,7 +52,7 @@ export class GeneratePdfApi {
         }
     }
 
-    async generateHealthCertificatesPdf(data, petId, petName) {
+    async generateHealthCertificatesPdf(data, petId, petName, accessToken) {
         try {
             const input = {
                 ...data,
@@ -60,7 +71,12 @@ export class GeneratePdfApi {
                     .post(
                         `${this.url}/health-certificates/${petId}`,
                         input,
-                        this.params
+                        {
+                            headers: {
+                                Authorization: `Bearer ${accessToken}`,
+                            },
+                            responseType: 'blob',
+                        }
                     )
 
             return this.redirectDownloadPdf(response.data, petName, 'certificado-salud');
@@ -69,7 +85,7 @@ export class GeneratePdfApi {
         }
     }
 
-    async generateMedicalHistoryPdf({data, petId, petName, medicalHistoryId}) {
+    async generateMedicalHistoryPdf({data, petId, petName, medicalHistoryId, accessToken}) {
         try {
             const input = {
                 ...data,
@@ -105,7 +121,12 @@ export class GeneratePdfApi {
                     .post(
                         `${this.url}/clinical-sheets/${petId}?medicalHistoryId=${medicalHistoryId}`,
                         input,
-                        this.params
+                        {
+                            headers: {
+                                Authorization: `Bearer ${accessToken}`,
+                            },
+                            responseType: 'blob',
+                        }
                     )
 
             return this.redirectDownloadPdf(response.data, petName, 'historial-clínico');
@@ -115,14 +136,19 @@ export class GeneratePdfApi {
         }
     }
 
-    async generateBillPdf(billId, data = {}) {
+    async generateBillPdf(billId, accessToken, data = {}) {
         try {
             const response = await
                 axios
                     .post(
                         `${this.url}/bills/${billId}`,
                         data,
-                        this.params
+                        {
+                            headers: {
+                                Authorization: `Bearer ${accessToken}`,
+                            },
+                            responseType: 'blob',
+                        }
                     )
 
             return this.redirectDownloadPdf(response.data, '', 'factura');
@@ -149,6 +175,6 @@ export class GeneratePdfApi {
     }
 
     getAccessToken() {
-        return localStorage.getItem(configJwt.access);
+        return localStorage.getItem('access');
     }
 }

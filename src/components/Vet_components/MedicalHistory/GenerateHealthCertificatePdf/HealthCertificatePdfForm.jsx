@@ -5,15 +5,17 @@ import {initialValuesHealthCertificatePdf, validateHealthCertificatePdfSchema} f
 import {Button, CircularProgress, Grid} from "@mui/material";
 import React from "react";
 import { HealthCertificationPdfFields } from "./HealthCertificationPdfFields.jsx";
+import {useAuth} from "../../../../hooks/index.jsx";
 
 
 export const HealthCertificationPdfForm = (props) => {
     const {petId, petName, onClose} = props
+    const { accessToken } = useAuth()
     const generatePdfController = new GeneratePdfApi();
 
     const generatePdf = useMutation({
         mutationFn: async ({formValues}) => {
-            return await generatePdfController.generateHealthCertificatesPdf(formValues, petId, petName)
+            return await generatePdfController.generateHealthCertificatesPdf(formValues, petId, petName, accessToken)
         }
     })
 

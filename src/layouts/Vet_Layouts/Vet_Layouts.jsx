@@ -16,12 +16,12 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
-import CategoryIcon from '@mui/icons-material/Category';
 import DescriptionIcon from '@mui/icons-material/Description';
 import EventIcon from '@mui/icons-material/Event';
 import { Logout } from '../../components/Admin/Auth/Logout';
 import { NavLink } from 'react-router-dom';
+import PetsIcon from "@mui/icons-material/Pets";
+import {ProductionQuantityLimitsTwoTone} from "@mui/icons-material";
 
 const drawerWidth = 240;
 
@@ -58,38 +58,6 @@ export function Vet_Layouts(props) {
             </ListItem>
           </NavLink>
           <Divider />
-
-          <NavLink
-              to='/admin/calendar'
-              style={{
-                textDecoration: 'none', // Quitar subrayado
-                color: 'black', // Color de texto deseado
-              }}
-          >
-            <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  <EventIcon />
-                </ListItemIcon>
-                <ListItemText primary='Programación de citas' />
-              </ListItemButton>
-            </ListItem>
-          </NavLink>
-
-          <Divider />
-          <ListItem disablePadding>
-            <ListItemButton
-                href='https://calendar.google.com/calendar/u/0/r'
-                target='_blank'
-            >
-              <ListItemIcon>
-                <CalendarMonthIcon />
-              </ListItemIcon>
-              <ListItemText primary='Visualizar citas' />
-            </ListItemButton>
-          </ListItem>
-
-          <Divider />
           <NavLink
               to='/admin/userAndPets'
               style={{
@@ -100,9 +68,9 @@ export function Vet_Layouts(props) {
             <ListItem disablePadding>
               <ListItemButton>
                 <ListItemIcon>
-                  <PersonAddAltIcon />
+                  <PetsIcon />
                 </ListItemIcon>
-                <ListItemText primary='Agregar Clientes y sus mascotas' />
+                <ListItemText primary='Mascotas' />
               </ListItemButton>
             </ListItem>
           </NavLink>
@@ -119,9 +87,9 @@ export function Vet_Layouts(props) {
             <ListItem disablePadding>
               <ListItemButton>
                 <ListItemIcon>
-                  <CategoryIcon/>
+                  <ProductionQuantityLimitsTwoTone/>
                 </ListItemIcon>
-                <ListItemText primary='Agregar Productos' />
+                <ListItemText primary='Productos' />
               </ListItemButton>
             </ListItem>
           </NavLink>
@@ -142,6 +110,36 @@ export function Vet_Layouts(props) {
               </ListItemButton>
             </ListItem>
           </NavLink>
+            <Divider />
+
+            <NavLink
+                to='/admin/calendar'
+                style={{
+                    textDecoration: 'none', // Quitar subrayado
+                    color: 'black', // Color de texto deseado
+                }}
+            >
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <EventIcon />
+                        </ListItemIcon>
+                        <ListItemText primary='Programación de citas' />
+                    </ListItemButton>
+                </ListItem>
+            </NavLink>
+          <Divider />
+            <ListItem disablePadding>
+                <ListItemButton
+                    href='https://calendar.google.com/calendar/u/0/r'
+                    target='_blank'
+                >
+                    <ListItemIcon>
+                        <CalendarMonthIcon />
+                    </ListItemIcon>
+                    <ListItemText primary='Visualizar citas' />
+                </ListItemButton>
+            </ListItem>
           <Divider />
         </List>
       </div>

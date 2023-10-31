@@ -6,10 +6,7 @@ import {
   Container,
   Grid,
   Paper,
-  AppBar,
-  Toolbar,
   Typography,
-  Button,
   CircularProgress,
 } from '@mui/material';
 //render of pets
@@ -29,7 +26,6 @@ const apiAuthController = new ApiAuth();
 
 export function PerfilUserAndPets() {
   let params = useParams();
-  const navigate = useNavigate();
   const { data: userAndPet, isLoading } = useQuery({
     queryKey: ['users', params.userId],
     queryFn: async () => {

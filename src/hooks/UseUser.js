@@ -1,36 +1,36 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { User } from '../api/User.api';
+import {useInfiniteQuery} from '@tanstack/react-query';
+import {UserApi} from '../api/User.api';
 
-const userController = new User();
+const userController = new UserApi();
 
-export function useUser({ accessToken, search }) {
-  let totalUsers = 0;
-  const result = useInfiniteQuery({
-    queryKey: ['users', search],
-    queryFn: async ({ pageParam = 1 }) => {
-      const data = await userController.getAllUsers(
-        accessToken,
-        pageParam,
-        search
-      );
-      return data;
-    },
-    getNextPageParam: (lastPage) => {
-      if (!lastPage.hasNextPage) return;
+export function useUser({accessToken, search}) {
+    let totalUsers = 0;
+    const result = useInfiniteQuery({
+        queryKey: ['users', search],
+        queryFn: async ({pageParam = 1}) => {
+            const data = await userController.getAllUsers(
+                accessToken,
+                pageParam,
+                search
+            );
+            return data;
+        },
+        getNextPageParam: (lastPage) => {
+            if (!lastPage.hasNextPage) return;
 
-      return lastPage.nextPage;
-    },
-  });
+            return lastPage.nextPage;
+        },
+    });
 
-  const users =
-    result.data?.pages.reduce((prevUsers, page) => {
-      totalUsers = page.totalItems;
-      return prevUsers.concat(page.data);
-    }, []) ?? [];
+    const users =
+        result.data?.pages.reduce((prevUsers, page) => {
+            totalUsers = page.totalItems;
+            return prevUsers.concat(page.data);
+        }, []) ?? [];
 
-  return {
-    ...result,
-    users,
-    totalUsers,
-  };
+    return {
+        ...result,
+        users,
+        totalUsers,
+    };
 }

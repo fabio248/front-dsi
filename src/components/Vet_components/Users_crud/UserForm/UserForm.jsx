@@ -6,14 +6,13 @@ import { initialValues, validationSchemaRegister } from './UserFormValidate';
 
 //Backend petitions
 import { ApiAuth } from '../../../../api/Auth.api';
-import { User } from '../../../../api/User.api';
+import { UserApi } from '../../../../api/User.api';
 import { useAuth } from '../../../../hooks';
 
 //MUI Material
 import Autocomplete from '@mui/material/Autocomplete';
 import { Grid, TextField, Button, FormHelperText } from '@mui/material';
 import MaskedInput from 'react-text-mask';
-import InputMask from 'react-input-mask';
 import { Alerta } from '../../../../shared';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -24,7 +23,7 @@ import './UserForm.css';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const authControl = new ApiAuth();
-const userControl = new User();
+const userControl = new UserApi();
 
 export function UserFormTextFields({ formik }) {
   const roles = [

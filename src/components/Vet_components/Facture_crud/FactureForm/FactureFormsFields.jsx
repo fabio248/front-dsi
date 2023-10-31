@@ -1,13 +1,13 @@
-import { Button, Card, CardContent, FormHelperText, Grid, TextField, Typography, MenuItem } from "@mui/material";
+import { Button, Card, CardContent, FormHelperText, Grid, TextField, Typography } from "@mui/material";
 import {useCallback, useEffect, useRef, useState} from "react";
 import { DeleteOutline } from "@mui/icons-material";
-import {User} from "../../../../api/User.api"
+import {UserApi} from "../../../../api/User.api"
 import { useAuth } from '../../../../hooks';
 import Autocomplete from "@mui/material/Autocomplete";
 import {Product} from "../../../../api/Product.api.jsx";
 
 
-const userController = new User()
+const userController = new UserApi()
 const productController = new Product()
  export  const FactureFormFields = ({ formik }) => {
     const [billsDetails, setBillsDetails] = useState([])

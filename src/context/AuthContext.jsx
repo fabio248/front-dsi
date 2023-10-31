@@ -1,9 +1,9 @@
 import { useState, useEffect, createContext } from 'react';
-import { User } from '../api/User.api';
+import { UserApi } from '../api/User.api';
 import { ApiAuth } from '../api/Auth.api';
 import { hasExpiredToken } from '../utils';
 
-const userController = new User();
+const userController = new UserApi();
 const authController = new ApiAuth();
 
 export const AuthContext = createContext();

@@ -19,9 +19,12 @@ export function VaccinesFields({ formik }) {
 
     const removeVaccine = (index) => {
         const newVaccines = formik.values.vaccines.filter((_, i) => i !== index)
-        const newErrorsVaccines = formik.errors.vaccines.filter((_, i) => i !== index)
-        formik.setFieldError('vaccines', newErrorsVaccines);
         formik.setFieldValue('vaccines', newVaccines);
+
+        if(formik.errors.vaccines && formik.errors.vaccines.length > 0){
+            const newErrorsVaccines = formik.errors.vaccines.filter((_, i) => i !== index)
+            formik.setFieldError('vaccines', newErrorsVaccines);
+        }
 
         if(formik.touched.vaccines && formik.touched.vaccines.length > 0){
             const newTouchedVaccines = formik.touched.vaccines.filter((_, i) => i !== index)

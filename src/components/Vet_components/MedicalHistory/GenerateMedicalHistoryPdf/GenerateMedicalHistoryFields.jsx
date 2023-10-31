@@ -8,17 +8,10 @@ export function GenerateMedicalHistoryFields({ formik }) {
     return (
         <Grid container spacing={{xs:1, sm:2, md: 3}} columns={{xs:4, sm:8, md: 12}}>
             <Grid item xs={4} sm={12} md={6}>
-                <TextField
-                    fullWidth
-                    sx={{mb:2}}
-                    type="number"
-                    name="clinicalNumber"
-                    label='Numero de clinica'
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    error={formik.touched.clinicalNumber && Boolean(formik.errors.clinicalNumber)}
-                    helperText={formik.touched.clinicalNumber && formik.errors.clinicalNumber}
-                />
+                <DewormingFields formik={formik} />
+                <VaccinesFields formik={formik} />
+            </Grid>
+            <Grid item xs={4} sm={12} md={6}>
                 <TextField
                     fullWidth
                     multiline
@@ -33,10 +26,6 @@ export function GenerateMedicalHistoryFields({ formik }) {
                     helperText={formik.touched.moreImportsData && formik.errors.moreImportsData}
                 />
                 <HeatFields formik={formik} />
-            </Grid>
-            <Grid item xs={4} sm={12} md={6}>
-                <DewormingFields formik={formik} />
-                <VaccinesFields formik={formik} />
             </Grid>
         </Grid>
     )

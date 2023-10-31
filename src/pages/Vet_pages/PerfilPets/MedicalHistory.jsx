@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 
 // mui material elements
 import { Divider, Avatar, Grid, IconButton, Tooltip } from '@mui/material';
-import { Pets, ModeEdit, Visibility, HistoryEdu, Vaccines, LocalHospital, FileCopy, AdfScanner } from "@mui/icons-material";
-import { createTheme, ThemeProvider, ListItemAvatar, ListItemIcon, ListItemText, List, ListItem } from '@mui/material';
+import { Pets, ModeEdit, Visibility, HistoryEdu, Vaccines, LocalHospital, AdfScanner } from "@mui/icons-material";
+import { createTheme, ThemeProvider, ListItemAvatar, ListItemIcon, ListItemText, ListItem } from '@mui/material';
 import { size, map } from 'lodash';
-import {Modal_medicalHistory} from "../../../shared/Modal_MedicalHistory/index.jsx";
+import {SharedModal} from "../../../shared/Modal_MedicalHistory/index.jsx";
 import { Modal_verInfoClientAndPet } from "../../../shared/modal_visualizar_ClientAndPet"
 import {
   MedicalHistoryForm
@@ -132,13 +132,13 @@ export function PetMedicalHistory({ medicalHistory, petId }) {
             )
         }
       {showEditModal && (
-        <Modal_medicalHistory
+        <SharedModal
           show={showEditModal}
           close={onOpenCloseModal}
           title='Editar hoja clinica'
         >
           <MedicalHistoryForm close={onOpenCloseModal} onReload={onReload}  petId={params.petId} medicalHistory = {medicalHistory}/>
-        </Modal_medicalHistory>
+        </SharedModal>
       )}
     </div>
   );

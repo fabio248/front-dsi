@@ -2,8 +2,13 @@
 import { decoderToken } from '../utils';
 import { config, configApiBackend } from '../config';
 import { format } from 'date-fns';
+import axios from 'axios';
 
-export class User {
+const typeDocument = {
+  HEALTH_CERTIFICATION:'HEALTH_CERTIFICATION'
+}
+
+export class UserApi {
   // OBTENER USUARIO POR ID
   async getUser(accessToken) {
     try {
@@ -185,6 +190,38 @@ export class User {
       return result;
     } catch (error) {
       throw error; // Manejo del error
+    }
+  }
+
+  async requestHealthCertificate(accessToken, idPet) {
+    try {
+      const url = `${config.baseApi}/${configApiBackend.users}/request-document/${idPet}`;
+      const params = {
+        method: 'POST',
+        headers: {
+          // El tipo de contenido (este puede ser Authorization, Content-Type, conection etc)
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      };
+
+      const response = await axios.post(
+        url,
+        {
+          typeDocument: typeDocument.HEALTH_CERTIFICATION,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      console.log({response})
+
+      return response;
+    } catch (error) {
+      throw error;
     }
   }
 }

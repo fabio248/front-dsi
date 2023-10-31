@@ -1,1 +1,1 @@
-export * from './Modal_medicalHistory';
+export * from './SharedModal.jsx';

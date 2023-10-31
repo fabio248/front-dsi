@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import { useFormik } from 'formik';
 
 // Datos iniciales y esquema de validación del formulario
@@ -54,7 +54,7 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export function ChangePassword() {
-    
+    const navigate = useNavigate();
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
 
@@ -82,6 +82,9 @@ export function ChangePassword() {
                 
                 setSuccess(true);
                 cleanFields();
+                setTimeout(() => {
+                    navigate('/login')
+                }, 3000)
             } catch (error) {
                 setError(error.message);
             }

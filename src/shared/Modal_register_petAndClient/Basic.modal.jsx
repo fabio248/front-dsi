@@ -25,11 +25,11 @@ import {
 } from '../../components/Vet_components/Pets_crud';
 
 //API
-import { User } from '../../api/User.api';
+import { UserApi } from '../../api/User.api';
 import { ApiAuth } from '../../api/Auth.api';
 import { useQueryClient } from '@tanstack/react-query';
 
-const userController = new User();
+const userController = new UserApi();
 const authController = new ApiAuth();
 
 const steps = [

@@ -31,7 +31,7 @@ import { size, map } from 'lodash';
 import { Pets } from '../../../api/Pets.api';
 import { ApiAuth } from '../../../api/Auth.api';
 import { useQuery } from '@tanstack/react-query';
-import { Modal_medicalHistory } from '../../../shared/Modal_MedicalHistory/index.jsx';
+import { SharedModal } from '../../../shared/Modal_MedicalHistory/index.jsx';
 import { MedicalHistoryForm } from '../../../components/Vet_components/MedicalHistory/MedicalHistoryForm/MedicalHistoryForm';
 import {
   ConsentSurgeryPdfForm
@@ -55,7 +55,6 @@ export function CompletePetPerfil() {
   const { accessToken } = useAuth();
 
   let params = useParams();
-  const navigate = useNavigate();
 
   const [selectedTab, setSelectedTab] = useState(0);
   const [showModal, setShowModal] = useState(false);
@@ -230,13 +229,13 @@ export function CompletePetPerfil() {
               Registrar hoja clinica
             </Button>
             {showModal && (
-              <Modal_medicalHistory
+              <SharedModal
                 show={showModal}
                 close={onOpenCloseModal}
                 title='Crear nueva hoja clinica'
               >
                 <MedicalHistoryForm close={onOpenCloseModal} onReload={onReload}  petId={params.petId} />
-              </Modal_medicalHistory>
+              </SharedModal>
             )}
             {/*<Paper
               style={{
@@ -435,17 +434,17 @@ export function CompletePetPerfil() {
         </Container>
 
       {showModalSurgery ? (
-        <Modal_medicalHistory
+        <SharedModal
             show={showModalSurgery}
             close={onOpenCloseModalSurgery}
             title='Generar Consentimiento Cirugía'
         >
           <ConsentSurgeryPdfForm onClose={onOpenCloseModalSurgery} petId={pet.id} petName={pet.name}/>
-        </Modal_medicalHistory>)
+        </SharedModal>)
         : null}
 
       {showModalEuthanasia ? (
-            <Modal_medicalHistory
+            <SharedModal
                 show={showModalEuthanasia}
                 close={onOpenCloseModalEuthanasia}
                 title='¿Desea generar consentimiento eutanasia?'
@@ -480,17 +479,17 @@ export function CompletePetPerfil() {
                 </Button>
               </Grid>
 
-            </Modal_medicalHistory>): null
+            </SharedModal>): null
       }
       {showModalHealthCertificate
           ? (
-              <Modal_medicalHistory
+              <SharedModal
                   show={showModalHealthCertificate}
                   close={onOpenCloseModalHealthCertificate}
                   title='Generación de constancia de salud'
               >
                 <HealthCertificationPdfForm onClose={onOpenCloseModalHealthCertificate} petId={pet.id} petName={pet.name}/>
-              </Modal_medicalHistory>)
+              </SharedModal>)
           : null
       }
     </>

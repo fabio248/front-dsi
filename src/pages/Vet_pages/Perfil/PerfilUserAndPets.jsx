@@ -6,10 +6,7 @@ import {
   Container,
   Grid,
   Paper,
-  AppBar,
-  Toolbar,
   Typography,
-  Button,
   CircularProgress,
 } from '@mui/material';
 //render of pets
@@ -22,13 +19,13 @@ import { size, map } from 'lodash';
 import { Pets } from '../../../api/Pets.api';
 import { ApiAuth } from '../../../api/Auth.api';
 import { useQuery } from '@tanstack/react-query';
+import {Header} from "../../../shared/components/Header.jsx";
 
 const petsController = new Pets();
 const apiAuthController = new ApiAuth();
 
 export function PerfilUserAndPets() {
   let params = useParams();
-  const navigate = useNavigate();
   const { data: userAndPet, isLoading } = useQuery({
     queryKey: ['users', params.userId],
     queryFn: async () => {
@@ -43,29 +40,7 @@ export function PerfilUserAndPets() {
 
   return (
     <>
-      <AppBar position='static' sx={{ m:-1, width: '101.2%' }}>
-        <Toolbar>
-          <Typography
-            variant='h6'
-            component='div'
-            sx={{ flexGrow: 1 }}
-            onClick={() => navigate('/admin')}
-          >
-            Clínica Veterinaria Mistun
-          </Typography>
-
-          <Button
-            variant='contained'
-            color='success'
-            style={{ color: 'white' }}
-            onClick={() => navigate(-1)}
-          >
-            Regresar
-          </Button>
-        </Toolbar>
-      </AppBar>
-      <br />
-        
+      <Header />
       <Container maxWidth='xl' sx={{ mt: 4, mb: 4 }}>
         <Grid container spacing={2}>
           <Grid item xs={18} md={4} sx={{ height: '100%' }}>

@@ -95,26 +95,6 @@ export class Pets {
           birthday: format(pet.birthday, 'dd/MM/yyyy'),
           gender: pet.gender,
           pedigree: pet.pedigree,
-          medicalHistory: {
-            isHaveAllVaccine: pet.vacuna,
-            isReproduced: pet.reproduccion,
-            descendants: pet.descendencia,
-            room: pet.habitaculo,
-            diasesEvaluation: pet.enfermedad,
-            observation: pet.observacion,
-            food: {
-              quantity: pet.quantityFood,
-              type: pet.typeFood,
-            },
-            physicalExam: {
-              weight: pet.weight,
-              palpitations: pet.palpitaciones,
-            },
-            otherPet: {
-              isLiveOtherPets: pet.convivencia,
-              whichPets: pet.whichPets,
-            },
-          },
         }),
       };
 
@@ -128,7 +108,7 @@ export class Pets {
     }
   }
 
-  async filePets(accessToken, fileType, petId) {
+  async filePets(accessToken, fileType, petId, medicalHistoryId) {
     try {
       const url = `${config.baseApi}/${configApiBackend.files}/${petId}`;
       const params = {
@@ -139,13 +119,13 @@ export class Pets {
         },
         body: JSON.stringify({
           mimetype: fileType,
+          medicalHistoryId
         }),
       };
-      console.log(fileType);
       const response = await fetch(url, params);
       const result = await response.json();
 
-      if (response.status !== 201) throw result;
+      if (response.status !== 200) throw result;
       return result;
     } catch (error) {
       throw error;
@@ -195,26 +175,6 @@ export class Pets {
           birthday: format(pet.birthday, 'dd/MM/yyyy'),
           gender: pet.gender,
           pedigree: pet.pedigree,
-          medicalHistory: {
-            isHaveAllVaccine: pet.vacuna,
-            isReproduced: pet.reproduccion,
-            descendants: pet.descendencia,
-            room: pet.habitaculo,
-            diasesEvaluation: pet.enfermedad,
-            observation: pet.observacion,
-            food: {
-              quantity: pet.quantityFood,
-              type: pet.typeFood,
-            },
-            physicalExam: {
-              weight: pet.weight,
-              palpitations: pet.palpitaciones,
-            },
-            otherPet: {
-              isLiveOtherPets: pet.convivencia,
-              whichPets: pet.whichPets,
-            },
-          },
         }),
       };
 

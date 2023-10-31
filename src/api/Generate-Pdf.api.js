@@ -89,7 +89,6 @@ export class GeneratePdfApi {
         try {
             const input = {
                 ...data,
-                clinicalNumber: data.clinicalNumber.toString(),
                 deworming: data.deworming.map(deworming => {
                     return {
                         ...deworming,
@@ -111,8 +110,8 @@ export class GeneratePdfApi {
                     }
                 })
             }
-
-            if (input.celos[0].dayAplicationInitCelos === '') {
+            console.log(input.celos)
+            if (input.celos.length === 0 || input.celos[0].dayAplicationInitCelos === '') {
                 input.celos = undefined;
             }
 

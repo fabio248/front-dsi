@@ -30,17 +30,17 @@ import { UserForm } from '../UserForm';
 import { PetsForm } from '../../Pets_crud';
 
 //import petitions of back
-import { User } from '../../../../api/User.api';
+import { UserApi } from '../../../../api/User.api';
 import { ApiAuth } from '../../../../api/Auth.api';
 import { NavLink } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 //controladores de las clases API
-const userController = new User();
+const userController = new UserApi();
 const authController = new ApiAuth();
 const defaultTheme = createTheme();
 
-export function UserItem({ user, onReload }) {
+export function UserItem({ user }) {
   //elementos enviados a UserItem en props
   // const { user, onReload } = props;
 

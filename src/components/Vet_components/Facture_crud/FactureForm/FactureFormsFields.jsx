@@ -1,5 +1,5 @@
-import { Button, Card, CardContent, FormHelperText, Grid, TextField, Typography } from "@mui/material";
-import {useCallback, useEffect, useRef, useState} from "react";
+import {Button, Card, CardContent, CircularProgress, FormHelperText, Grid, TextField, Typography} from "@mui/material";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import { DeleteOutline } from "@mui/icons-material";
 import {UserApi} from "../../../../api/User.api"
 import { useAuth } from '../../../../hooks';
@@ -14,6 +14,8 @@ const productController = new Product()
     const [allUsers, setAllUsers] = useState([]);
     const [allProducts, setAllProducts] = useState([])
     const lastBillsDetailsCardRef = useRef(null);
+    const [isLoadingUsers, setIsLoadingUsers] = useState(false);
+    const [isLoadingProducts, setIsLoadingProducts] = useState(false);
 
     const { accessToken } = useAuth();
     const addBillsDetails = () => {
@@ -44,6 +46,7 @@ const productController = new Product()
 
      const getAllUsers = useCallback(
          async () => {
+             setIsLoadingUsers(true)
              let page = 1;
              let allData = [];
 
@@ -62,11 +65,13 @@ const productController = new Product()
              }
 
              setAllUsers(allData);
+             setIsLoadingUsers(false)
          }, []
      );
 
      const getAllProducts = useCallback(
          async () => {
+            setIsLoadingProducts(true)
              let page = 1;
              let allData = [];
 
@@ -85,6 +90,7 @@ const productController = new Product()
              }
 
              setAllProducts(allData);
+             setIsLoadingProducts(false)
          }, []
      );
 
@@ -104,21 +110,32 @@ const productController = new Product()
                     variant='outlined'
                     size='small'
                     onBlur={formik.handleBlur}
-                    options={allUsers.map((client) => ({label: `${client.firstName} ${client.lastName} - ${client.email}`, value: client.id}))}
+                    options={allUsers.map((client) => ({label: `${client.email}`, value: client.id, firstName: client.firstName, lastName: client.lastName  }))}
                     isOptionEqualToValue={(options, value) => (options.value === value.value)}
-                    onChange={(_,value)=>formik.setFieldValue('clientId', value ?? null)}
+                    onChange={(_,value)=> {
+                        formik.setFieldValue('clientId', value ?? null)
+                        formik.setFieldValue('firstName', value?.firstName ?? '')
+                        formik.setFieldValue('lastName', value?.lastName ?? '')
+                    }}
                     getOptionLabel={(option) => option.label}
                     value={formik.values.clientId}
+                    loading={isLoadingUsers}
                     renderInput={(params)=>
                         <TextField
                             {...params}
                             name='cliendId'
                             label='Selecciona al cliente'
-                            inputProps={{
-                                ...params.inputProps,
-                            }}
                             error={formik.touched.clientId && Boolean(formik.errors.clientId)}
                             helperText={formik.touched.clientId && formik.errors.clientId}
+                            InputProps={{
+                                ...params.InputProps,
+                                endAdornment: (
+                                    <React.Fragment>
+                                        {isLoadingUsers ? <CircularProgress color="inherit" size={20} /> : null}
+                                        {params.InputProps.endAdornment}
+                                    </React.Fragment>
+                                ),
+                            }}
                         />}
                 />
         </Grid>
@@ -166,16 +183,24 @@ const productController = new Product()
                                             options={allProducts.map((product) =>
                                                 ({label: `${product.nameProduct} - $${product.sellingProduct}`, value: product.id}))}
                                             isOptionEqualToValue={(options, value) => (options.value === value.value)}
-                                            onChange={(_,value)=>
-                                                formik.setFieldValue(`billsDetails[${index}].productId`, value ?? null)}
+                                            onChange={(_,value)=> {
+                                                formik.setFieldValue(`billsDetails[${index}].productId`, value ?? null)
+                                            }}
+                                            loading={isLoadingProducts}
                                             getOptionLabel={(option) => option.label}
                                             renderInput={(params)=>
                                                 <TextField
                                                     {...params}
                                                     name={`billsDetails[${index}].quantity`}
                                                     label='Selecciona el producto'
-                                                    inputProps={{
-                                                        ...params.inputProps,
+                                                    InputProps={{
+                                                        ...params.InputProps,
+                                                        endAdornment: (
+                                                            <React.Fragment>
+                                                                {isLoadingProducts ? <CircularProgress color="inherit" size={20} /> : null}
+                                                                {params.InputProps.endAdornment}
+                                                            </React.Fragment>
+                                                        ),
                                                     }}
                                                     error={(formik.touched.billsDetails &&
                                                         formik.touched.billsDetails[index] &&

@@ -13,7 +13,7 @@ import { ApiCitas } from '../../../api/Appointment.api';
 import { ApiAuth } from '../../../api/Auth.api';
 
 // MUI Material
-import {Grid, TextField, Button, Divider, Box, CircularProgress} from '@mui/material';
+import {Grid, TextField, Button, Divider, Box, CircularProgress, Container, Typography} from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -46,6 +46,7 @@ const AgendarCita = () => {
   const [success, setSuccess] = useState(false);
   const [allUsers, setAllUsers] = useState([])
   const [appointmentId, setAppointmentId] = useState(null)
+  const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
 
 
@@ -106,6 +107,7 @@ const AgendarCita = () => {
 
   const getAllUsers = useCallback(
       async () => {
+          setLoading(true)
         let page = 1;
         let allData = [];
 
@@ -124,6 +126,7 @@ const AgendarCita = () => {
         }
 
         setAllUsers(allData);
+        setLoading(false)
       }, []
   );
 
@@ -131,73 +134,64 @@ const AgendarCita = () => {
     getAllUsers();
   }, [getAllUsers]);
 
-  useEffect(() => {
-    console.log({values: formik.values, touched: formik.touched, errors: formik.errors})
-  }, [formik]);
-
   return (
-    <>
+    <Container>
       <Box sx={{ px: 4 }}>
         <form onSubmit={formik.handleSubmit}>
-          <h3>Agendar Cita</h3>
           <Grid container spacing={2} justifyContent='center'>
-            <Grid item xs={12} sm={6}>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <MobileDateTimePicker
-              label='Inicio Dia/Mes/Año HH:mm'
-              name='startDate'
-              value={formik.values.startDate}
-              onChange={handleStartDateChange}
-              onBlur={formik.handleBlur}
-              slotProps={{ textField: { size: 'small', fullWidth: true } }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  error={
-                    formik.touched.startDate && Boolean(formik.errors.startDate)
-                  }
-                />
-              )}
-              disablePast // Deshabilitar fechas anteriores al día de hoy
-              showTodayButton // Mostrar botón para seleccionar la fecha actual
-              clearable // Permitir borrar la fecha seleccionada
-              format='dd/MM/yyyy hh:mm a'
-            />
-            {formik.touched.startDate && formik.errors.startDate && (
-              <FormHelperText error>{formik.errors.startDate}</FormHelperText>
-            )}
-            </LocalizationProvider>
+            <Grid item xs={12} sm={12} md={12} >
+                <Typography variant="h5">Agendar Cita</Typography>
             </Grid>
-
             <Grid item xs={12} sm={6}>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <MobileDateTimePicker
-              label='Finalización Dia/Mes/Año HH:mm'
-              name='endDate'
-              value={formik.values.endDate}
-              onChange={handleEndDateChange}
-              onBlur={formik.handleBlur}
-              slotProps={{ textField: { size: 'small', fullWidth: true } }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  error={
-                    formik.touched.endDate && Boolean(formik.errors.endDate)
-                  }
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <MobileDateTimePicker
+                  label='Inicio Dia/Mes/Año HH:mm'
+                  name='startDate'
+                  value={formik.values.startDate}
+                  onChange={handleStartDateChange}
+                  onBlur={formik.handleBlur}
+                  slotProps={{
+                      textField: {
+                          size: 'small',
+                          fullWidth: true,
+                          error: formik.touched.startDate && !formik.values.endDate && Boolean(formik.errors.startDate),
+                      }
+                  }}
+                  disablePast // Deshabilitar fechas anteriores al día de hoy
+                  format='dd/MM/yyyy hh:mm a'
                 />
-              )}
-              disablePast // Deshabilitar fechas anteriores al día de hoy
-              showTodayButton // Mostrar botón para seleccionar la fecha actual
-              clearable // Permitir borrar la fecha seleccionada
-              format='dd/MM/yyyy hh:mm a'
-            />
-            {formik.touched.endDate && formik.errors.endDate && (
-              <FormHelperText error>{formik.errors.endDate}</FormHelperText>
-            )}
-            </LocalizationProvider>
+                    {formik.touched.startDate && !formik.values.endDate && formik.errors.startDate && (
+                        <FormHelperText error>{formik.errors.startDate}</FormHelperText>
+                    )}
+                </LocalizationProvider>
             </Grid>
-          </Grid>
-           
+                <Grid item xs={12} sm={6}>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <MobileDateTimePicker
+                      label='Finalización Dia/Mes/Año HH:mm'
+                      name='endDate'
+                      value={formik.values.endDate}
+                      onChange={handleEndDateChange}
+                      onBlur={formik.handleBlur}
+                      slotProps={{
+                          textField: {
+                              size: 'small',
+                              fullWidth: true,
+                              error: formik.touched.endDate && !formik.values.endDate && Boolean(formik.errors.endDate),
+                              onBlur:formik.handleBlur,
+                          }
+                      }}
+                      disablePast // Deshabilitar fechas anteriores al día de hoy
+                      showTodayButton // Mostrar botón para seleccionar la fecha actual
+                      clearable // Permitir borrar la fecha seleccionada
+                      format='dd/MM/yyyy hh:mm a'
+                    />
+                    {formik.touched.endDate && !formik.values.endDate && formik.errors.endDate && (
+                      <FormHelperText error>{formik.errors.endDate}</FormHelperText>
+                    )}
+                    </LocalizationProvider>
+                </Grid>
+            </Grid>
             <Autocomplete
                 name='name'
                 label='Motivo de Consulta'
@@ -205,9 +199,12 @@ const AgendarCita = () => {
                 onBlur={formik.handleBlur}
                 options={typesAppointments}
                 isOptionEqualToValue={(options, value) => (options.value === value.value)}
-                onChange={(_, value) =>
-                  formik.setFieldValue('name', value ?? null)
-                }
+                onChange={(_, value) => {
+                    formik.setFieldValue('name', value ?? null)
+                    if (typesAppointments.map((type)=>type.value).includes(formik.values.description) || formik.values.description === '') {
+                        formik.setFieldValue('description', value?.value ?? '')
+                    }
+                }}
                 getOptionLabel={(option) => option.label}
                 value={formik.values.name}
                 renderInput={(params) => (
@@ -222,9 +219,8 @@ const AgendarCita = () => {
                     helperText={formik.touched.name && formik.errors.name}
                     style={{ marginBottom: '20px', marginTop:'20px'}}
                     />
-                  )}
+                )}
             />
-           
             <TextField
                 fullWidth
                 style={{ marginBottom: '15px' }}
@@ -247,23 +243,47 @@ const AgendarCita = () => {
 
           <Grid container spacing={2} justifyContent='center'>
             <Grid item xs={12}>
-              <TextField
-                  fullWidth
-                  name='emailClient'
-                  label='Correo'
-                  variant='outlined'
-                  size='small'
-                  placeholder='ClientAccountGoogle@gmail.com'
-                  value={formik.values.emailClient}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  error={formik.touched.emailClient && Boolean(formik.errors.emailClient)}
-                  helperText={formik.touched.emailClient && formik.errors.emailClient}
-              />
+                <Autocomplete
+                    name='emailClient'
+                    label='Correo cliente'
+                    size='small'
+                    onBlur={formik.handleBlur}
+                    options={allUsers.map((user)=> ({label: user.email, value: user.email, firstName: user.firstName, lastName: user.lastName}))}
+                    isOptionEqualToValue={(options, value) => (options.value === value.value)}
+                    onChange={(_, value) => {
+                        formik.setFieldValue('emailClient', value ?? null)
+                        formik.setFieldValue('firstName', value?.firstName ?? '')
+                        formik.setFieldValue('lastName', value?.lastName ?? '')
+                    }}
+                    getOptionLabel={(option) => option.label}
+                    value={formik.values.emailClient}
+                    loading={loading}
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            name='emailClient'
+                            label='Correo cliente'
+                            error={formik.touched.emailClient && Boolean(formik.errors.emailClient)}
+                            helperText={formik.touched.emailClient && formik.errors.emailClient}
+                            style={{ marginBottom: '20px', marginTop:'20px'}}
+                            InputProps={{
+                                ...params.InputProps,
+                                endAdornment: (
+                                    <React.Fragment>
+                                        {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                                        {params.InputProps.endAdornment}
+                                    </React.Fragment>
+                                ),
+                            }}
+                        />
+                    )}
+
+                />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
+                disabled
                 name='firstName'
                 label='Nombres'
                 variant='outlined'
@@ -280,6 +300,7 @@ const AgendarCita = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
+                disabled
                 name='lastName'
                 label='Apellidos'
                 variant='outlined'
@@ -348,7 +369,7 @@ const AgendarCita = () => {
           )}
         </form>
       </Box>
-    </>
+    </Container>
   );
 };
 

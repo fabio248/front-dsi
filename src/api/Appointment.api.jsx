@@ -1,6 +1,7 @@
 import { config, configApiBackend } from '../config';
 import { format } from 'date-fns';
 import axios from 'axios';
+import moment from "dayjs";
 
 export class ApiCitas {
   baseUrl = `${config.baseApi}/${configApiBackend.appointments}`;
@@ -20,6 +21,7 @@ export class ApiCitas {
           startDate: format(data.startDate, 'dd/MM/yyyy HH:mm'),
           endDate: format(data.endDate, 'dd/MM/yyyy HH:mm'),
           name: data.name.value,
+          emailClient: data.emailClient.value,
         }),
       };
       const response = await fetch(url, params);
@@ -36,19 +38,20 @@ export class ApiCitas {
   async createEventGoogleCalendar(formikValues, providerToken) {
     const {
       name,
-      descripcion,
+      description,
       startDate,
       endDate,
       emailClient,
     } = formikValues
 
+    console.log(formikValues)
+
     const event = {
-      summary: name,
-      //sendNotifications: true,
+      summary: name.value,
       sendNotifications: {
         useDefault: true,
       },
-      description: descripcion,
+      description,
       location:
           'https://www.google.com/maps/place/Cl%C3%ADnica+Veterinaria+Mistun/@13.5110156,-88.8710632,17z/data=!3m1!4b1!4m6!3m5!1s0x8f7cadbe1e0ae625:0xf916477fc1f3c161!8m2!3d13.5110156!4d-88.8684883!16s%2Fg%2F11j09_yr57?entry=ttu',
       start: {
@@ -61,7 +64,7 @@ export class ApiCitas {
       },
       attendees: [
         { email: 'veterinariamistum2013@gmail.com' },
-        { email: emailClient },
+        { email: emailClient.value },
       ],
       reminders: {
         useDefault: false,

@@ -144,8 +144,10 @@ export function Vet_Layouts(props) {
         </List>
       </div>
   );
+
   const container =
     window !== undefined ? () => window().document.body : undefined;
+
   return (
       <>
         <div className='container'>

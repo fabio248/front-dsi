@@ -12,7 +12,7 @@ const productController = new Product()
  export  const FactureFormFields = ({ formik }) => {
     const [billsDetails, setBillsDetails] = useState([])
     const [allUsers, setAllUsers] = useState([]);
-     const [allProducts, setAllProducts] = useState([])
+    const [allProducts, setAllProducts] = useState([])
     const lastBillsDetailsCardRef = useRef(null);
 
     const { accessToken } = useAuth();
@@ -156,7 +156,7 @@ const productController = new Product()
                                     </Button>
                                 </Grid>
                                 <Grid container rowSpacing={1} spacing={1}>
-                                    <Grid item xs={4} sm={12} md={9}>
+                                    <Grid item xs={12} sm={12} md={9}>
                                         <Autocomplete
                                             label='Selecciona al cliente'
                                             variant='outlined'
@@ -193,7 +193,7 @@ const productController = new Product()
                                                 />}
                                         />
                                     </Grid>
-                                    <Grid item xs={4} sm={12} md={3}>
+                                    <Grid item xs={12} sm={12} md={3}>
                                         <TextField
                                             fullWidth
                                             type='number'

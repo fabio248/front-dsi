@@ -102,8 +102,8 @@ const productController = new Product()
 
 
     return (
-        <Grid container spacing={1} justifyContent="space-between" textAlign="center" columns={{ xs: 4, sm: 8, md: 6 }}>
-            <Grid item xs={4} sm={8}>
+        <Grid container spacing={1} justifyContent="space-between" textAlign="center" columns={{ xs: 4, sm: 8, md: 12 }}>
+            <Grid item xs={4} sm={8} md={12}>
                 <Autocomplete
                     name='cliendId'
                     label='Selecciona al cliente'
@@ -139,8 +139,42 @@ const productController = new Product()
                         />}
                 />
         </Grid>
+        <Grid item xs={12} sm={12} md={6}>
+            <TextField
+                fullWidth
+                disabled
+                name='firstName'
+                label='Nombres'
+                variant='outlined'
+                size='small'
+                onChange={formik.handleChange}
+                value={formik.values.firstName}
+                onBlur={formik.handleBlur}
+                error={
+                    formik.touched.firstName && Boolean(formik.errors.firstName)
+                }
+                helperText={formik.touched.firstName && formik.errors.firstName}
+            />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+            <TextField
+                fullWidth
+                disabled
+                name='lastName'
+                label='Apellidos'
+                variant='outlined'
+                size='small'
+                value={formik.values.lastName}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={
+                    formik.touched.lastName && Boolean(formik.errors.lastName)
+                }
+                helperText={formik.touched.lastName && formik.errors.lastName}
+            />
+        </Grid>
 
-        <Grid item xs={4} sm={8} md={12}>
+        <Grid item xs={4} sm={12} md={12}>
             {(formik.touched.billsDetails &&
                     formik.values.billsDetails.length === 0 &&
                     Boolean(formik.errors.billsDetails) &&

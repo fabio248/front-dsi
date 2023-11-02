@@ -1,10 +1,10 @@
-import {Button, Card, CardContent, CircularProgress, FormHelperText, Grid, TextField, Typography} from "@mui/material";
-import React, {useCallback, useEffect, useRef, useState} from "react";
+import { Button, Card, CardContent, CircularProgress, FormHelperText, Grid, TextField, Typography } from "@mui/material";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { DeleteOutline } from "@mui/icons-material";
-import {UserApi} from "../../../../api/User.api"
+import { UserApi } from "../../../../api/User.api"
 import { useAuth } from '../../../../hooks';
 import Autocomplete from "@mui/material/Autocomplete";
-import {Product} from "../../../../api/Product.api.jsx";
+import { Product } from "../../../../api/Product.api.jsx";
 
 
 const userController = new UserApi()

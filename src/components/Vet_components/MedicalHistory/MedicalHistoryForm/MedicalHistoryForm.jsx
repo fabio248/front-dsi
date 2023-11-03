@@ -131,8 +131,8 @@ const MedicalHistoryForm = (props) => {
       return await medicalHistoryController.update(accessToken, petId, medicalHistory, formValue);
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries(['pets']);
       setSuccess(true);
+      await queryClient.invalidateQueries(['pets']);
     },
     onError: () => {
       setIsError(true);
@@ -162,10 +162,10 @@ const MedicalHistoryForm = (props) => {
     onSubmit: async (formValue) => {
       if (activeStep === steps.length){     
         if (!medicalHistory) {
-          await createMedicalHistoryMutation.mutate({ petId, medicalHistory, formValue });
+          await createMedicalHistoryMutation.mutateAsync({ petId, medicalHistory, formValue });
         }
         else{
-          await updateMedicalHistoryMutation.mutate({ petId, medicalHistory, formValue });
+          await updateMedicalHistoryMutation.mutateAsync({ petId, medicalHistory, formValue });
         } 
         setTimeout(() => { 
           close(); 

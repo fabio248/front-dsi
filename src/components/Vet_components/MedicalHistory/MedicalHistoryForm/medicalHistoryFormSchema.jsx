@@ -106,25 +106,19 @@ export function validationSchemaPetRegister(medicalHistory, activeStep) {
       .required('Las palpitaciones obligatorio'),
       temperatura: yup
       .number()
-      .positive('La temperatura debe ser positivo para que sea válido')
-      .required('La temperatura de la mascota es obligatorio'),
+      .positive('La temperatura debe ser positivo para que sea válido'),
       frecuenciaCardiaca: yup
       .number()
-      .positive('La frecuencia cardiaca debe ser positivo para que sea válido')
-      .required('La frecuencia cardiaca de la mascota es obligatorio'),
+      .positive('La frecuencia cardiaca debe ser positivo para que sea válido'),
       frecuenciaRespiratoria: yup
       .number()
-      .positive('La frecuencia respiratoria debe ser positivo para que sea válido')
-      .required('La frecuencia respiratoria de la mascota es obligatorio'),
+      .positive('La frecuencia respiratoria debe ser positivo para que sea válido'),
       examenLaboratorio: yup
-      .string()
-      .required('El examen de laboratorio obligatorio'),
+      .string(),
       pulso: yup
-      .string()
-      .required('El pulso obligatorio'),
+      .string(),
       mucus: yup
-      .string()
-      .required('El mucus de la mascota es obligatorio'),
+      .string(),
     });
   } else if (activeStep === 2){
     let mergedSchema = null;

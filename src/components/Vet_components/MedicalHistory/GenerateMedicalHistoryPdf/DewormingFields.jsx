@@ -45,10 +45,6 @@ export function DewormingFields({ formik }) {
         setDeworming(formik.initialValues.deworming)
     },[])
 
-    useEffect(() => {
-        console.log({values: formik.values.deworming, errors: formik.errors.deworming, touched: formik.touched.deworming})
-    }, [formik]);
-
     return (
         <Card className="deworming-fields">
             {deworming && deworming.map((deworming, index) => {

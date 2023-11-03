@@ -160,7 +160,6 @@ export class ApiAuth {
   //FORGOT PASSWORD
   async forgotPassword(data, token) {
     try {
-      console.log(token)
       const url = `${config.baseApi}/${configApiBackend.forgotPassword}`; // RUTA
       const params = {
         method: 'POST', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)

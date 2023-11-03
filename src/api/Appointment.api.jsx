@@ -28,7 +28,7 @@ export class ApiCitas {
       const result = await response.json();
 
       if (response.status !== 201) throw result; // Valida la respuesta del back
-      console.log(result)
+
       return result;
     } catch (error) {
       throw error; // Manejo del error
@@ -44,7 +44,6 @@ export class ApiCitas {
       emailClient,
     } = formikValues
 
-    console.log(formikValues)
 
     const event = {
       summary: name.value,

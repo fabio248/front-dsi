@@ -69,7 +69,7 @@ export function FactureItem({ facture, billId }) {
               <br />
               {facture.client.dui ?(
                   <div>
-                 <b>Documento: </b>
+                 <b>Documento de identidad: </b>
                 {facture.client.dui}
              </div>
               )

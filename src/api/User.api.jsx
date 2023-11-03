@@ -217,8 +217,6 @@ export class UserApi {
         }
       );
 
-      console.log({response})
-
       return response;
     } catch (error) {
       throw error;

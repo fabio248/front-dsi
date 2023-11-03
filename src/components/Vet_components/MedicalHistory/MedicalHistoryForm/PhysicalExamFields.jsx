@@ -225,7 +225,7 @@ const onDeleteProduct = async () => {
             <TextField
               fullWidth
               name='frecuenciaCardiaca'
-              label='Frecuencia rcardiaca (lat/min)'
+              label='Frecuencia cardiaca (lat/min)'
               variant='outlined'
               placeholder='Ejemplo: 92 lat/min'
               size='small'
@@ -278,7 +278,7 @@ const onDeleteProduct = async () => {
           </Grid>
           <Grid item xs={12} sm={15}>
     {/* INICIO DE LA CARGA DE LOS ARCHIVOS */}
-            {medicalHistory.files && medicalHistory.files.length > 0 && (
+            {medicalHistory?.files && medicalHistory.files.length > 0 && (
             <Paper elevation={3} style={{ padding: '20px', marginBottom: '20px', maxHeight: '300px', overflow: 'auto' }}>
                 <Typography variant="h6">Documentos de la mascota:</Typography>
                 <TableContainer component={Paper}>

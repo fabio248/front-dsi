@@ -1,4 +1,3 @@
-import React from 'react'
 import { Typography, Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 
 export function FactureSeeData({ facture }) {
@@ -22,7 +21,7 @@ export function FactureSeeData({ facture }) {
              </div> ) : null}</Typography>
         <Typography>{facture.client.dui ? (
                   <div>
-                 <b>Documento: </b>
+                 <b>Documento de identidad : </b>
                 {facture.client.dui}
              </div> ) : null}</Typography>
         <Typography>{facture.client.dui ? (

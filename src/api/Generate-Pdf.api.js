@@ -110,7 +110,7 @@ export class GeneratePdfApi {
                     }
                 })
             }
-            console.log(input.celos)
+
             if (input.celos.length === 0 || input.celos[0].dayAplicationInitCelos === '') {
                 input.celos = undefined;
             }

@@ -1,8 +1,65 @@
-import React from 'react';
-import { Typography, Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
+import React, {useState} from 'react';
+import { Typography, Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, IconButton} from '@mui/material';
+import Button from '@mui/material/Button';
+import SendIcon from '@mui/icons-material/Send';
+import { NavLink } from 'react-router-dom';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Alerta } from "../../../../shared"
+//API SERVICE BACK
+import { Files } from "../../../../api/files.api"
+import { ApiAuth } from "../../../../api/Auth.api"
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+//elimination modal for files
+import { Modal_delete } from "../../../../shared/modal_delete"
+
+
+const filesController = new Files()
+const authController = new ApiAuth()
 export function MedicalSeeForm({ medicalHistory }) {
+  const [fileId, setFileId] = useState(null)
+  //funcion que habilita la eliminacion
+  const [showConfirm, setShowConfirm] = useState(false);
 
+  //funcion que cancela la accion de eliminar
+  const onCloseConfirm = () => setShowConfirm((prevState) => !prevState);
+  
+  //mensaje al eliminar
+  const [confirmMessage, setConfirmMessage] = useState('');
+
+  //titulo del mensaje
+  const [titleDelete, setTitleDelete] = useState('');
+
+  const openDeleteProduct = (fileName, fileId) => {
+    setFileId(fileId);
+    setTitleDelete(`Eliminar Archivo: ${fileName}`);
+    setConfirmMessage(`¿Esta seguro de que desea eliminar este archivo?`);
+    onCloseConfirm();
+  };
+
+  const accessToken = authController.getAccessToken();
+  const queryClient = useQueryClient();
+  //mutacion para eliminar el archivo
+  const deleteFileMutation = useMutation({
+    mutationFn: async ({ accessToken }) => {
+      await filesController.deleteFile(accessToken, fileId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['pets']);
+      queryClient.invalidateQueries(['medical-histories']);
+      queryClient.invalidateQueries(['files']);
+      setSuccess(true);
+      onCloseConfirm();
+    },
+    onError: () => {
+      onCloseConfirm();
+      setError(true);
+    },
+  });
+  //funcion que elimiar el archivo
+  const onDeleteProduct = async () => {
+    deleteFileMutation.mutate({ accessToken });
+  };
   return (
     <div>
       {/* Render medical history details */}
@@ -10,26 +67,26 @@ export function MedicalSeeForm({ medicalHistory }) {
         <Typography variant="h6">Detalles del historial médico:</Typography>
         <Typography>
           <div>
-            <b>Fecha de Creación: </b>
+            <b>Fecha de Creación:  </b>
             {medicalHistory.createdAt}
           </div>
         </Typography>
         <Typography>
           <div>
-            <b>Evaluación de Días: </b>
+            <b>Evaluación de Días:  </b>
             {medicalHistory.diasesEvaluation}
           </div>
         </Typography>
         <Typography>
           <div>
-            <b>¿Posee todas sus vacunas?: </b>
-            {medicalHistory.isHaveAllVaccine ? "Si posee todas sus vacunas":"No posee todas sus vacunas"}
+            <b>¿Posee todas sus vacunas?:  </b>
+            {medicalHistory.isHaveAllVaccine ? " Si posee todas sus vacunas":"No posee todas sus vacunas"}
           </div>
         </Typography>
         <Typography>
           <div>
-            <b>¿Se ha reproducido?: </b>
-            {medicalHistory.isReproduced ? "Si se ha reproducido;" : "No se ha reproducido"}
+            <b>¿Se ha reproducido?:  </b>
+            {medicalHistory.isReproduced ? " Si se ha reproducido" : "No se ha reproducido"}
           </div>
         </Typography>
         <Typography>
@@ -44,6 +101,7 @@ export function MedicalSeeForm({ medicalHistory }) {
             {medicalHistory.room}
           </div>
         </Typography>
+        <br />
         <div  style={{ fontWeight:"bold" }}>Diagnóstico</div>
         <Typography>
           <div>
@@ -51,7 +109,7 @@ export function MedicalSeeForm({ medicalHistory }) {
             {medicalHistory.diagnostic.description}
           </div>
         </Typography>
-
+<br />
     <div  style={{ fontWeight:"bold" }}>Alimentación</div>
         <Typography>
           <div>
@@ -65,6 +123,7 @@ export function MedicalSeeForm({ medicalHistory }) {
             {medicalHistory.food.type}
           </div>
         </Typography>
+        <br />
         <div style={{ fontWeight:"bold" }}>Otras mascotas</div>
     <Typography>
           <div>
@@ -72,6 +131,7 @@ export function MedicalSeeForm({ medicalHistory }) {
             {medicalHistory.otherPet.isLiveOtherPets ? "Si convive con otras mascotas ": "No convive con otras mascotas"}
           </div>
         </Typography>
+        <br />
         <Typography>
           <div>
             {medicalHistory.food.type ? (
@@ -93,12 +153,14 @@ export function MedicalSeeForm({ medicalHistory }) {
           <div>
             <b>Peso: </b>
             {medicalHistory.physicalExam.weight}
+            <b>  Kg</b>
           </div>
         </Typography>
         <Typography>
           <div>
             <b>Palpitaciones: </b>
             {medicalHistory.physicalExam.palpitations}
+            <b>  latidos por minuto</b>
           </div>
         </Typography>
         <Typography>
@@ -123,6 +185,7 @@ export function MedicalSeeForm({ medicalHistory }) {
             <div>
                 <b>Ritmo Cardiáco: </b>
                 {medicalHistory.physicalExam.cardiacRate }
+                <b>  latidos por minuto</b>
             </div>
         </Typography>
             ) : (null)
@@ -138,6 +201,7 @@ export function MedicalSeeForm({ medicalHistory }) {
             <div>
                 <b>Temperatura: </b>
                 {medicalHistory.physicalExam.temperature }
+                <b>  °C</b>
             </div>
         </Typography>
             ) : (null)
@@ -153,6 +217,7 @@ export function MedicalSeeForm({ medicalHistory }) {
             <div>
                 <b>Ritmo de respiración: </b>
                 {medicalHistory.physicalExam.respiratoryRate }
+                <b>  respiraciones por minuto</b>
             </div>
         </Typography>
             ) : (null)
@@ -168,6 +233,7 @@ export function MedicalSeeForm({ medicalHistory }) {
             <div>
                 <b>Pulso: </b>
                 {medicalHistory.physicalExam.pulse }
+                <b>  latidos por minuto</b>
             </div>
         </Typography>
             ) : (null)
@@ -245,7 +311,55 @@ export function MedicalSeeForm({ medicalHistory }) {
             </Table>
           </TableContainer>
         </Paper>
-      )}
+
+    )}
+    <br />
+      {/*render information about files for medical history*/}
+      {medicalHistory.files && medicalHistory.files.length > 0 && (
+  <Paper elevation={3} style={{ padding: '20px', marginBottom: '20px', maxHeight: '300px', overflow: 'auto' }}>
+    <Typography variant="h6">Documentos de la mascota:</Typography>
+    <TableContainer component={Paper}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Documentos médicos</TableCell>
+            <TableCell></TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+        {medicalHistory.files.map((files, index) => (
+          <React.Fragment key={index}>
+            <TableRow>
+              <TableCell>
+                <NavLink to={`${files.url}`} style={{ textDecoration: 'none' }} >
+                  <Button variant="outlined" endIcon={<SendIcon />} style={{ marginTop: "5px" }}
+                   >
+                    Visualizar Archivo: {files.name.split("-")[5]}
+                  </Button>
+                </NavLink>
+              </TableCell>
+              <TableCell>
+                <IconButton onClick={() => openDeleteProduct(files.name.split("-")[5], files.id)}>
+                  <DeleteIcon color='error'/>
+                </IconButton>
+              </TableCell>
+            </TableRow>
+          </React.Fragment>
+        ))}
+      </TableBody>
+      </Table>
+    </TableContainer>
+  </Paper>
+)}
+      <Modal_delete 
+      onOpen={showConfirm}
+      onCancel={onCloseConfirm}
+      onConfirm={onDeleteProduct}
+      content={confirmMessage}
+      title={titleDelete}
+      size='mini'
+      ></Modal_delete>
     </div>
+
   );
 }

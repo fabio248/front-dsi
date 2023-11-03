@@ -89,7 +89,7 @@ export function ListFacture() {
           scrollThreshold={0.5}
         >
           {map(facture, (facture) => (
-            <FactureItem billId={facture.id} facture={facture} />
+            <FactureItem key={facture.id} billId={facture.id} facture={facture} />
           ))}
         </InfiniteScroll>
       </div>

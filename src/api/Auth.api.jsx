@@ -158,8 +158,9 @@ export class ApiAuth {
   }
 
   //FORGOT PASSWORD
-  async forgotPassword(data) {
+  async forgotPassword(data, token) {
     try {
+      console.log(token)
       const url = `${config.baseApi}/${configApiBackend.forgotPassword}`; // RUTA
       const params = {
         method: 'POST', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
@@ -170,6 +171,8 @@ export class ApiAuth {
         body: JSON.stringify({
           // Parametros a enviar
           email: data.email,
+          recoveryToken: token,
+
         }),
       };
       // Fetch funcion que genera la peticion al back con la URL(a donde debe ir) y params(que parametros envias)
@@ -187,6 +190,7 @@ export class ApiAuth {
   //CHANGE PASSWORD
   async changePassword(data, changePasswordToken) {
     try {
+      console.log(changePasswordToken)
       const url = `${config.baseApi}/${configApiBackend.changePassword}`;
       const params = {
         method: 'POST', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
@@ -197,7 +201,7 @@ export class ApiAuth {
         body: JSON.stringify({
           // Parametros a enviar
           newPassword: data.password,
-          token: changePasswordToken,
+          recoveryToken: changePasswordToken,
         }),
       };
       // Fetch funcion que genera la peticion al back con la URL(a donde debe ir) y params(que parametros envias)

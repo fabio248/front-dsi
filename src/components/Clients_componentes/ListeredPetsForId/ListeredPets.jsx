@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
-
 // mui material y lodash se usa para mapear los datos
-import { CircularProgress, Typography } from '@mui/material';
+import {CircularProgress, Grid, Typography} from '@mui/material';
 import { size, map } from 'lodash';
 
 // decodificador de tokens
@@ -47,10 +45,13 @@ export function ListeredPets() {
   }
 
   return (
-    <div>
+    <Grid container  columns={{ xs: 4, sm: 8, md: 12 }}>
+      <Grid item xs={4} sm={8} md={12}>
+        <Typography variant="h5"> Mascotas registradas</Typography>
+      </Grid>
       {map(data.pets, (pet) => (
         <PetsItem key={pet.id} pet={pet} />
       ))}
-    </div>
+    </Grid>
   );
 }

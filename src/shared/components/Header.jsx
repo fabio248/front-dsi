@@ -1,11 +1,12 @@
 import { AppBar, Button, Toolbar, Typography } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
+import React from "react";
 
 export function Header() {
     const navigate = useNavigate();
 
     return (
-        <AppBar position='static' sx={{ m: -1, width: '102%'}}>
+        <AppBar position='static' sx={{ m:-1, width: '101.2%' }}>
             <Toolbar>
                 <Typography
                     variant='h6'

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IconButton, Avatar, Grid, Divider } from '@mui/material';
+import {IconButton, Avatar, Grid, Divider, Button, CircularProgress} from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 //Mui material
@@ -18,12 +18,15 @@ Modal_verInfoFacture
 import {GeneratePdfApi} from "../../../../api/Generate-Pdf.api.js";
 import {useMutation} from "@tanstack/react-query";
 import {FactureSeeData} from "../FactureSeeData/index.jsx";
+import {useAuth, useModal} from "../../../../hooks/index.jsx";
+import {SharedModal} from "../../../../shared/Modal_MedicalHistory/index.jsx";
 
 const defaultTheme = createTheme();
 const generatePdfController = new GeneratePdfApi()
 
 export function FactureItem({ facture, billId }) {
-
+  const { accessToken } = useAuth()
+  const { showModal: showModalGeneratePdf, onOpenCloseModal: onOpenCloseGeneratePdf} = useModal()
   const Demo = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
   }));
@@ -42,7 +45,7 @@ export function FactureItem({ facture, billId }) {
 
   const generatePdf = useMutation({
     mutationFn: async () => {
-        return await generatePdfController.generateBillPdf(billId)
+        return await generatePdfController.generateBillPdf(billId, accessToken)
     },
   })
 
@@ -90,7 +93,7 @@ export function FactureItem({ facture, billId }) {
               </IconButton>
             </Grid>
             <Grid item>
-              <IconButton color='success' onClick={() => generatePdf.mutate()}>
+              <IconButton color='success' onClick={onOpenCloseGeneratePdf}>
                 <AdfScannerIcon sx={{ fontSize: 30 }} />
               </IconButton>
 
@@ -104,6 +107,36 @@ export function FactureItem({ facture, billId }) {
       <Modal_verInfoFacture show={showModal} close={onOpenCloseModal} title={titleModal}>
         <FactureSeeData close={onOpenCloseModal} facture={facture} />
       </Modal_verInfoFacture>
+      <SharedModal
+        show={showModalGeneratePdf}
+        close={onOpenCloseGeneratePdf}
+        title="Quieres generar un pdf de la factura?"
+      >
+        <Grid
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              margin: '0 auto',
+            }}
+        >
+          <Button
+              color='error'
+              onClick={close}
+              size='medium'
+              sx={{ mx: 2, marginTop: '12px' }}
+          >
+            Cancelar
+          </Button>
+          <Button
+              onClick={() => generatePdf.mutate()}
+              size='medium'
+              sx={{ mx: 2, marginTop: '12px' }}
+          >
+            {generatePdf.isLoading ? <CircularProgress /> :`Generar`}
+          </Button>
+        </Grid>
+      </SharedModal>
     </ThemeProvider>
   );
 }

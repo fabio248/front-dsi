@@ -16,7 +16,7 @@ export const modalStyle = {
   p: 4,
 };
 
-export function Modal_medicalHistory({ show, close, title, children }) {
+export function SharedModal({ show, close, title, children }) {
   if (!show) {
     return null;
   }

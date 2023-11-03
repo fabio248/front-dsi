@@ -27,10 +27,13 @@ export function DewormingFields({ formik }) {
 
     const removeDeworming = (index) => {
         const newDeworming = formik.values.deworming.filter((_, i) => i !== index)
-        const newErrorsDeworming = formik.errors.deworming.filter((_, i) => i !== index)
-        formik.setFieldError('deworming', newErrorsDeworming);
         formik.setFieldValue('deworming', newDeworming);
         setDeworming(newDeworming);
+
+        if(formik.errors.deworming && formik.errors.deworming.length > 0) {
+            const newErrorsDeworming = formik.errors.deworming.filter((_, i) => i !== index)
+            formik.setFieldError('deworming', newErrorsDeworming);
+        }
 
         if(formik.touched.deworming && formik.touched.deworming.length > 0) {
             const newTouchedDeworming = formik.touched.deworming.filter((_, i) => i !== index)
@@ -41,6 +44,10 @@ export function DewormingFields({ formik }) {
     useEffect(() => {
         setDeworming(formik.initialValues.deworming)
     },[])
+
+    useEffect(() => {
+        console.log({values: formik.values.deworming, errors: formik.errors.deworming, touched: formik.touched.deworming})
+    }, [formik]);
 
     return (
         <Card className="deworming-fields">
@@ -115,7 +122,7 @@ export function DewormingFields({ formik }) {
                                         <DatePicker
                                             label='Día aplicación'
                                             name={`deworming[${index}].dayAplicationInit`}
-                                            value={formik.values.deworming[index].dayAplicationInitDeworming}
+                                            value={formik.values.deworming[index]?.dayAplicationInitDeworming || null}
                                             onBlur={formik.handleBlur}
                                             onChange={(date)=>handleDateDewormingChange(date, index, 'dayAplicationInitDeworming')}
                                             slotProps={{
@@ -146,7 +153,7 @@ export function DewormingFields({ formik }) {
                                         <DatePicker
                                             label='Día de proximo refuerzo'
                                             name={`deworming[${index}].dayAplicationFinalDeworming`}
-                                            value={formik.values.deworming[index].dayAplicationFinalDeworming}
+                                            value={formik.values.deworming[index]?.dayAplicationFinalDeworming || null}
                                             onBlur={formik.handleBlur}
                                             onChange={(date)=>handleDateDewormingChange(date, index, 'dayAplicationFinalDeworming')}
                                             slotProps={{

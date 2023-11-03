@@ -244,14 +244,19 @@ export function MedicalHistoryPhysicalExamTextFields({ formik, onBinaryStrChange
                         {uploadedFile
                             ?   <>
                                     <CloudDoneIcon sx={{ fontSize: '4.5rem', mb: 1}} />
-                                    <Box sx={{ m:0, p:0, display: 'flex', flexDirection: 'row' }}>
-                                        {
-                                            uploadedFile.name.split('.')[1] === 'pdf' 
-                                            ? <PictureAsPdfIcon color='secondary' sx={{ fontSize: '1.5rem', mx: 1 }} />
-                                            : <CollectionsIcon color='secondary' sx={{ fontSize: '1.5rem', mx: 1 }} />
-                                        }
+                                    <Box sx={{ m:0, p:0, display: 'flex', flexDirection: 'column' }}>
+                                        <Grid xs={12} sx={{ m:'0 auto', p:0, display: 'flex', flexDirection: 'row' }}>
+                                            {
+                                                uploadedFile.name.split('.')[1] === 'pdf' 
+                                                ? <PictureAsPdfIcon color='secondary' sx={{ fontSize: '1.5rem', mx: 1 }} />
+                                                : <CollectionsIcon color='secondary' sx={{ fontSize: '1.5rem', mx: 1 }} />
+                                            }
+                                            <Typography xs={6} variant='subtitle2' textAlign='center' color='secondary' sx={{ fontSize: '1rem' }}>
+                                                Archivo cargado: 
+                                            </Typography>
+                                        </Grid>
                                         <Typography variant='subtitle2' textAlign='center' color='secondary' sx={{ fontSize: '1rem' }}>
-                                            { 'Archivo cargado: ' + uploadedFile.name }
+                                            {uploadedFile.name }
                                         </Typography>
                                     </Box>
                                     <Typography variant='caption' textAlign='center' color= 'secondary' sx={{ fontSize: '0.7rem'}}>

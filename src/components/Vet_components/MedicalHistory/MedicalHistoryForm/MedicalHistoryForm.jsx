@@ -210,6 +210,7 @@ const MedicalHistoryForm = (props) => {
                 formik={formik}
                 onBinaryStrChange={handleBinaryStrChange}
                 onDropFile={handleDropFile}
+                medicalHistory={medicalHistory}
               />
           </React.Fragment>
           ) : (

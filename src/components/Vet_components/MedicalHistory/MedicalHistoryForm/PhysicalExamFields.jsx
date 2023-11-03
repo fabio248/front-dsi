@@ -4,23 +4,48 @@ import CloudDoneIcon from '@mui/icons-material/CloudDone';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import CollectionsIcon from '@mui/icons-material/Collections';
-
+import DeleteIcon from '@mui/icons-material/Delete';
+import SendIcon from '@mui/icons-material/Send';
 import {
   Grid,
   TextField,
   Button,
   Box,
   Typography,
+  Paper,
+  TableRow,
+  TableBody,
+  TableContainer,
+  Table,
+  TableHead,
+  TableCell,
+  IconButton
 } from '@mui/material';
+import { NavLink } from 'react-router-dom';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { useDropzone } from 'react-dropzone';
 import './medicalHistory.css'
 
-export function MedicalHistoryPhysicalExamTextFields({ formik, onBinaryStrChange, onDropFile }) {
+//API SERVICE BACK
+import { Files } from "../../../../api/files.api"
+import { ApiAuth } from "../../../../api/Auth.api"
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+//elimination modal for files
+import { Modal_delete } from "../../../../shared/modal_delete"
+
+const filesController = new Files()
+const authController = new ApiAuth()
+
+export function MedicalHistoryPhysicalExamTextFields({ formik, onBinaryStrChange, onDropFile, medicalHistory }) {
     const [uploadedFile, setUploadedFile] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
     const [isError, setIsError] = useState(false);
-  
+    const [titleDelete, setTitleDelete] = useState('');
+    const [confirmMessage, setConfirmMessage] = useState('');
+    const [fileId, setFileId] = useState(null)
+    const [showConfirm, setShowConfirm] = useState(false);
+
     const onDrop = useCallback(
       (acceptedFiles) => {
         const file = acceptedFiles[0];
@@ -96,7 +121,44 @@ export function MedicalHistoryPhysicalExamTextFields({ formik, onBinaryStrChange
       ml: 0,
       mb: -5,
     };
-  
+
+
+
+// CODIGO DE RENDERIZADO DE LOS ARCHIVOS PARA ELIMINACION Y VISUALIZACION NO TOCAR!!!!!!!!
+
+const onCloseConfirm = () => setShowConfirm((prevState) => !prevState);
+
+const openDeleteProduct = (fileName, fileId) => {
+  setFileId(fileId);
+  setTitleDelete(`Eliminar Archivo: ${fileName}`);
+  setConfirmMessage(`¿Esta seguro de que desea eliminar este archivo?`);
+  onCloseConfirm();
+};
+
+const accessToken = authController.getAccessToken();
+const queryClient = useQueryClient();
+//mutacion para eliminar el archivo
+const deleteFileMutation = useMutation({
+  mutationFn: async ({ accessToken }) => {
+    await filesController.deleteFile(accessToken, fileId);
+  },
+  onSuccess: () => {
+    queryClient.invalidateQueries(['pets']);
+    queryClient.invalidateQueries(['medical-histories']);
+    queryClient.invalidateQueries(['files']);
+    setSuccess(true);
+    onCloseConfirm();
+  },
+  onError: () => {
+    onCloseConfirm();
+    setError(true);
+  },
+});
+//funcion que elimiar el archivo
+const onDeleteProduct = async () => {
+  deleteFileMutation.mutate({ accessToken });
+};
+// CODIGO DE RENDERIZADO DE LOS ARCHIVOS PARA ELIMINACION Y VISUALIZACION NO TOCAR!!!!!!!!
     return (
       <Box sx={{ height:'97%', mb: 10}}>
         <Grid container spacing={2} sx={{ maxWidth: '97%', margin: '0' }}>
@@ -214,6 +276,54 @@ export function MedicalHistoryPhysicalExamTextFields({ formik, onBinaryStrChange
               helperText={formik.touched.mucus && formik.errors.mucus}
             />
           </Grid>
+          <Grid item xs={12} sm={15}>
+    {/* INICIO DE LA CARGA DE LOS ARCHIVOS */}
+            {medicalHistory.files && medicalHistory.files.length > 0 && (
+            <Paper elevation={3} style={{ padding: '20px', marginBottom: '20px', maxHeight: '300px', overflow: 'auto' }}>
+                <Typography variant="h6">Documentos de la mascota:</Typography>
+                <TableContainer component={Paper}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Documentos médicos</TableCell>
+                        <TableCell></TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                    {medicalHistory.files.map((files, index) => (
+                      <React.Fragment key={index}>
+                        <TableRow>
+                          <TableCell>
+                            <NavLink to={`${files.url}`} style={{ textDecoration: 'none' }} >
+                              <Button variant="outlined" endIcon={<SendIcon />} style={{ marginTop: "5px" }}
+                              >
+                                Visualizar Archivo: {files.name.split("-")[5]}
+                              </Button>
+                            </NavLink>
+                          </TableCell>
+                          <TableCell>
+                            <IconButton onClick={() => openDeleteProduct(files.name.split("-")[5], files.id)}>
+                              <DeleteIcon color='error'/>
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      </React.Fragment>
+                    ))}
+                  </TableBody>
+                  </Table>
+                </TableContainer>
+              </Paper>
+            )}
+            </Grid>
+            <Modal_delete 
+      onOpen={showConfirm}
+      onCancel={onCloseConfirm}
+      onConfirm={onDeleteProduct}
+      content={confirmMessage}
+      title={titleDelete}
+      size='mini'
+      ></Modal_delete>
+    {/* FIN DE LA CARGA DE LOS ARCHIVOS */}
           <Grid container spacing={3} sx={{ margin: '0 auto' }}>
             <Grid item xs={12} sm={12}>
               <Box {...getRootProps()} sx={dropzoneStyle}>

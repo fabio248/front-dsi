@@ -158,7 +158,7 @@ export const HealthCertificationPdfFields = ({ formik }) => {
                                 <TextField
                                     fullWidth
                                     name={`vaccines[${index}].BrandAndLot`}
-                                    label='Marcar y lote vacuna'
+                                    label='Marca y lote vacuna'
                                     variant='outlined'
                                     size='small'
                                     sx={{ mb: 1.5, minWidth: '250px' }}

@@ -294,7 +294,7 @@ const onDeleteProduct = async () => {
                       <React.Fragment key={index}>
                         <TableRow>
                           <TableCell>
-                            <NavLink to={`${files.url}`} style={{ textDecoration: 'none' }} >
+                            <NavLink to={`${files.url}`} target="_blank" style={{ textDecoration: 'none' }} >
                               <Button variant="outlined" endIcon={<SendIcon />} style={{ marginTop: "5px" }}
                               >
                                 Visualizar Archivo: {files.name.split("-")[5]}

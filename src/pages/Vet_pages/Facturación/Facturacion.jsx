@@ -39,7 +39,7 @@ export function BillsPage() {
             {showSuccessCreationBillAlert &&
                 <>
                     <Snackbar open={showSuccessCreationBillAlert} autoHideDuration={6000} onClose={onCloseSnackbar}>
-                        <Alert severity="success" variant="filled">
+                        <Alert severity="success" variant="standard">
                             <AlertTitle>Exito</AlertTitle>
                             Factura creada con exito
                         </Alert>

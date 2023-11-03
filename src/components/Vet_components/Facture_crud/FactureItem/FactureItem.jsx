@@ -20,7 +20,7 @@ import {useMutation} from "@tanstack/react-query";
 import {FactureSeeData} from "../FactureSeeData/index.jsx";
 import {useAuth, useModal} from "../../../../hooks/index.jsx";
 import {SharedModal} from "../../../../shared/Modal_MedicalHistory/index.jsx";
-
+import { format } from "date-fns"
 const defaultTheme = createTheme();
 const generatePdfController = new GeneratePdfApi()
 
@@ -81,7 +81,7 @@ export function FactureItem({ facture, billId }) {
               {facture.totalSales.toFixed(2)}
               <br />   
               <b>Fecha de creación de la factura: </b>
-              {facture.createdAt} 
+              {format(new Date(facture.createdAt),'dd/MM/yyyy')}
             </p>
           </ListItemText>
           <ListItemAvatar
@@ -110,7 +110,7 @@ export function FactureItem({ facture, billId }) {
       <SharedModal
         show={showModalGeneratePdf}
         close={onOpenCloseGeneratePdf}
-        title="Quieres generar un pdf de la factura?"
+        title="¿Quieres generar un pdf de la factura?"
       >
         <Grid
             sx={{
@@ -122,14 +122,17 @@ export function FactureItem({ facture, billId }) {
         >
           <Button
               color='error'
-              onClick={close}
+              onClick={onOpenCloseGeneratePdf}
               size='medium'
               sx={{ mx: 2, marginTop: '12px' }}
           >
             Cancelar
           </Button>
           <Button
-              onClick={() => generatePdf.mutate()}
+              onClick={async () => {
+                await generatePdf.mutateAsync()
+                onOpenCloseGeneratePdf()
+              }}
               size='medium'
               sx={{ mx: 2, marginTop: '12px' }}
           >

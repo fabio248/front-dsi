@@ -11,7 +11,9 @@ import {
   Paper,
   Typography,
   Button,
-  CircularProgress, IconButton, Tooltip,
+  CircularProgress,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
 import {
   HistoryEdu,
@@ -128,44 +130,53 @@ export function CompletePetPerfil() {
                       <CircularProgress style={{ alignSelf: 'center' }} />
                     </div>
                 ) : (
-                    <>
-                      <b>Nombre: </b>
-                      {pet.name}
+                    <div /*style={{ fontFamily:"revert-layer" }}*/>
+                      <Typography>
+                        <b>Nombre: </b>
+                        {pet.name}
+                      </Typography>
                       <br />
+                      <Typography>
+                        <b>Género: </b>
+                        {pet.gender}
+                      </Typography>
                       <br />
-                      <b>Género: </b>
-                      {pet.gender}
+                      <Typography>
+                        <b>Especie: </b>
+                        {pet.specie.name}
+                      </Typography>
                       <br />
+                      <Typography>
+                        <b>Raza: </b>
+                        {pet.raza}
+                      </Typography>
                       <br />
-                      <b>Especie: </b>
-                      {pet.specie.name}
+                      <Typography>
+                        <b>Color: </b>
+                        {pet.color}
+                      </Typography>
                       <br />
+                      <Typography>
+                        <b>Tatuajes: </b>
+                        {pet.isHaveTatto ? 'Sí posee':'No posee'}
+                      </Typography>
                       <br />
-                      <b>Raza: </b>
-                      {pet.raza}
+                      <Typography>
+                        <b>Pedigree: </b>
+                        {pet.pedigree ? 'Sí posee':'No posee'}
+                      </Typography>
                       <br />
-                      <br />
-                      <b>Color: </b>
-                      {pet.color}
-                      <br />
-                      <br />
-                      <b>Tatuajes: </b>
-                      {pet.isHaveTatto ? 'Sí posee':'No posee'}
-                      <br />
-                      <br />
-                      <b>Pedigree: </b>
-                      {pet.pedigree ? 'Sí posee':'No posee'}
-                      <br />
-                      <br />
-                      {pet.birthday ? (
-                          <>
-                            <b>Fecha de nacimiento: </b>
-                            {pet.birthday}
-                            <br />
-                            <br />
-                          </>
-                      ) : null}
-                    </>
+                      <Typography>
+                        {pet.birthday ? (
+                            <>
+                              <b>Fecha de nacimiento: </b>
+                              {pet.birthday}
+                              <br />
+                              <br />
+                            </>
+                        ) : null}
+                      </Typography>
+                    </div>
                 )}
               </Paper>
             </Grid>

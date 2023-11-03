@@ -78,7 +78,7 @@ const MedicalHistoryForm = (props) => {
 
   const queryClient = useQueryClient();
   const createMedicalHistoryMutation = useMutation({
-    mutationFn: async ({ petId, formValue }) => {
+    mutationFn: async ({ petId, medicalHistory, formValue }) => {
       const accessToken = authController.getAccessToken();
       // Ejecutar la creación de la mascota primero
       const response = await medicalHistoryController.create(
@@ -92,7 +92,8 @@ const MedicalHistoryForm = (props) => {
           const { url } = await petsController.filePets(
             accessToken,
             fileOriginal.type,
-            response.id
+            petId,
+            response.id,
           );
           // Después ejecutar la función amazonPeticionForFile
           await amazonPeticionForFile(url, uploadData, fileOriginal);
@@ -122,7 +123,7 @@ const MedicalHistoryForm = (props) => {
           medicalHistory.id
         );
         try {
-          amazonPeticionForFile(url, uploadData, fileOriginal);
+          await amazonPeticionForFile(url, uploadData, fileOriginal);
         } catch (error) {
           console.error('Error al cargar el archivo en AWS S3:', error);
         }
@@ -161,10 +162,10 @@ const MedicalHistoryForm = (props) => {
     onSubmit: async (formValue) => {
       if (activeStep === steps.length){     
         if (!medicalHistory) {
-          createMedicalHistoryMutation.mutate({ petId, formValue });
+          await createMedicalHistoryMutation.mutate({ petId, medicalHistory, formValue });
         }
         else{
-          updateMedicalHistoryMutation.mutate({ petId, medicalHistory, formValue });
+          await updateMedicalHistoryMutation.mutate({ petId, medicalHistory, formValue });
         } 
         setTimeout(() => { 
           close(); 
@@ -189,8 +190,8 @@ const MedicalHistoryForm = (props) => {
       <Box sx={{ display: 'flex', flexDirection: 'column', pt: 2 }} component='form' noValidate onSubmit={formik.handleSubmit}>
       {activeStep === steps.length ? (
         <>
-          <Typography sx={{ mt: 2, mb: 1 }}>
-            Todos los paso han sido completados
+          <Typography sx={{ fontSize:16, textAlign:'center', mt: 2, mb: 1 }}>
+            ¡Todos los paso han sido completados y se han enviado la información!
           </Typography>
         </>
       ) : (
@@ -209,6 +210,7 @@ const MedicalHistoryForm = (props) => {
                 formik={formik}
                 onBinaryStrChange={handleBinaryStrChange}
                 onDropFile={handleDropFile}
+                medicalHistory={medicalHistory}
               />
           </React.Fragment>
           ) : (
@@ -228,6 +230,7 @@ const MedicalHistoryForm = (props) => {
           <Button
             color="inherit"
             disabled={activeStep === 0}
+            sx={{ display: activeStep === 3 ? 'none' : 'flex' }}
             onClick={handleBack}
           >
             Regresar
@@ -236,9 +239,10 @@ const MedicalHistoryForm = (props) => {
 
           <Button 
           type={activeStep === 3 ? 'submit' : 'button'}
+          sx={{ display: activeStep === 3 ? 'none' : 'flex' }}
           onClick={activeStep < 3? validateData : (e) => {e.preventDefault}}
           >
-            {activeStep === steps.length ? 'Finalizar' : 'Siguiente'}
+            {activeStep === steps.length - 1 ? 'Finalizar' : 'Siguiente'}
           </Button>
         </Grid>
       </Box>

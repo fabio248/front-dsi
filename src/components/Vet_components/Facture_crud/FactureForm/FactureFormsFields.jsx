@@ -195,7 +195,7 @@ const productController = new Product()
                             <CardContent sx={{ display: 'flex', flexDirection: 'column' }}>
                                 <Grid container spacing={1} justifyContent="space-between" alignItems="center" sx={{ mb:1 }}>
                                     <Typography variant="h6" gutterBottom sx={{ ml:5 }}>
-                                        Datos de la Factura {index + 1}
+                                        Item {index + 1}
                                     </Typography>
                                     <Button
                                         variant="contained"

@@ -63,7 +63,7 @@ export function HeatFields({ formik, disabled }) {
                                        label='Fecha inicio'
                                        disabled={disabled}
                                        name={`celos[${index}].dayAplicationInitCelos`}
-                                       value={formik.values.celos[index]?.dayAplicationInitCelos || null}
+                                       value={formik.values.celos[index]?.dayAplicationInitCelos}
                                        onBlur={formik.handleBlur}
                                        onChange={(date)=>handleDateHeatsChange(date, index, 'dayAplicationInitCelos')}
                                        slotProps={{
@@ -95,7 +95,7 @@ export function HeatFields({ formik, disabled }) {
                                        disabled={disabled}
                                        label='Día de finalización'
                                        name={`celos[${index}].dayAplicationFinalCelos`}
-                                       value={formik.values.celos[index]?.dayAplicationFinalCelos || null}
+                                       value={formik.values.celos[index]?.dayAplicationFinalCelos}
                                        onBlur={formik.handleBlur}
                                        onChange={(date)=>handleDateHeatsChange(date, index, 'dayAplicationFinalCelos')}
                                        slotProps={{

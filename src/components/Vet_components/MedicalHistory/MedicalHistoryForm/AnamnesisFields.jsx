@@ -155,7 +155,7 @@ export function MedicalHistoryFormAnamnesisTextFields({ formik }) {
               helperText={formik.touched.whichPets && formik.errors.whichPets}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={12}>
             <TextField
               fullWidth
               id='enfermedad'
@@ -172,7 +172,7 @@ export function MedicalHistoryFormAnamnesisTextFields({ formik }) {
               helperText={formik.touched.enfermedad && formik.errors.enfermedad}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={12}>
             <TextField
               fullWidth
               id='observacion'

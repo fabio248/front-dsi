@@ -39,6 +39,7 @@ import { useAuth } from '../../hooks';
 // Google Authentication
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useMutation } from '@tanstack/react-query';
+import {createApi} from "unsplash-js";
 
 // API Object
 const authLoginController = new ApiAuth();
@@ -66,6 +67,7 @@ export function Login() {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [loginImage, setLoginImage] = useState('')
   const navigate = useNavigate();
 
   const loginMutation = useMutation({
@@ -124,6 +126,16 @@ export function Login() {
       alert('Error logging in to google provider with supabase');
     }
   }
+
+  const unsplash = createApi({
+    accessKey: config.unplashAccessKey,
+  })
+
+  useEffect(() => {
+    unsplash.photos.getRandom({ query: 'pets', count: 1 }).then((result) => {
+      setLoginImage(result.response[0].urls.regular)
+    });
+  }, [])
 
   // RECUPERACIÓN DE LA SESIÓN DE GOOGLE Y ALMACENAMIENTO DE DATOS EN EL BACKEND
   useEffect(() => {
@@ -197,7 +209,7 @@ export function Login() {
         sm={4}
         md={7}
         sx={{
-          backgroundImage: 'url(https://source.unsplash.com/random?pets)',
+          backgroundImage: 'url(' + loginImage + ')',
           backgroundRepeat: 'no-repeat',
           backgroundColor: (t) =>
             t.palette.mode === 'light'

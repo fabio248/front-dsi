@@ -2,6 +2,7 @@ const config = {
   baseApi: import.meta.env.VITE_BASE_API,
   basePath: import.meta.env.VITE_BASE_PATH,
   baseSupabases: import.meta.env.VITE_BASE_SUPABASE,
+  unplashAccessKey: import.meta.env.VITE_UNSPLASH_ACCESS_KEY,
 };
 
 const configApiBackend = {

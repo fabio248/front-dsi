@@ -7,7 +7,7 @@ import { Basic_modal } from '../../../shared';
 import { Box } from '@mui/material';
 
 //importar vista de renderizado de las mascotas
-import { ListeredAllPets } from '../../../components/Vet_components';
+import { ListeredAllPets } from '../../../components/index.jsx';
 
 export function UserAndPets() {
   const [showModal, setShowModal] = useState(false);
@@ -46,11 +46,4 @@ export function UserAndPets() {
       </div>
     </>
   );
-}
-
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
 }

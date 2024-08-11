@@ -228,12 +228,11 @@ export function Vet_Layouts(props) {
                     flexGrow: 1,
                     p: 3,
                     width: { sm: `calc(100% - ${drawerWidth}px)` },
+                    height: '100vh',
                   }}
               >
-                <Toolbar />
+                <Toolbar sx={{ height: { xs: '4rem', sm: '7rem', md: '7rem', lg: '7rem' } }}  />
                 {children}
-                <Typography paragraph></Typography>
-                <Typography paragraph></Typography>
               </Box>
             </Box>
           </div>

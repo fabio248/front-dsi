@@ -7,7 +7,6 @@ import './Users.css';
 
 export function Users() {
   const [showModal, setShowModal] = useState(false);
-  const [value, setValue] = useState(0);
 
   const onOpenCloseModal = () => setShowModal((prevState) => !prevState);
   const onReload = () => setReload((prevState) => !prevState);
@@ -23,7 +22,7 @@ export function Users() {
       </Button>
 
       <div className='box-container'>
-        <Box sx={{ width: '100%' }}>
+        <Box sx={{ width: '100%', height: '100%' }}>
           {/* renderizando a los usuarios */}
           <ListUsers />
         </Box>

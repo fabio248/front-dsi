@@ -1,0 +1,39 @@
+name: Playwright E2E
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      # Opcional: build y levantar tu app
+      - name: Build app
+        run: npm run build
+
+      - name: Start app
+        run: npm run start:test &
+        # o el script que tengas para levantar el server
+
+      - name: Run Playwright tests
+        run: npx playwright test
+        env:
+          CI: true

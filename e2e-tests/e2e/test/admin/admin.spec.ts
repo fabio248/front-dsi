@@ -1,4 +1,4 @@
-import { test, expect } from '../../fixtures/auth.fixture';
+import { test } from '../../fixtures/auth.fixture';
 import { AdminDashboardPage } from '../../pages/admin/dashboard.page';
 import { AppRoutes } from '../../routes/app.routes';
 

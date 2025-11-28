@@ -37,9 +37,6 @@ jobs:
         env:
           CI: true
 
-      - name: Wait for app to be ready
-        run: npx wait-on http://localhost:5173
-
       - name: Run Playwright tests
         run: npm run test:e2e
         env:

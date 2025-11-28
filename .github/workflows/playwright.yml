@@ -38,13 +38,13 @@ jobs:
           CI: true
 
       - name: Wait for app to be ready
-        run: npx wait-on http://localhost:3000
+        run: npx wait-on http://localhost:5173
 
       - name: Run Playwright tests
         run: npm run test:e2e
         env:
           CI: true
-          PLAYWRIGHT_BASE_URL: http://localhost:3000
+          PLAYWRIGHT_BASE_URL: http://localhost:5173
 
       - name: Upload Playwright report
         if: always()

@@ -8,7 +8,7 @@
     "start": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test:e2e": "cd e2e-tests && npx playwright test"
+    "test:e2e": "cd e2e-tests && npm ci &&npx playwright test"
   },
   "dependencies": {
     "@emotion/react": "^11.11.0",

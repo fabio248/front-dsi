@@ -33,15 +33,35 @@ jobs:
         run: npm run build
 
       - name: Start app
-        run: npm start &
+        run: npm run start -- --port 3000 &
         env:
           CI: true
+          VITE_BASE_API: https://dsi-nest-backend-development.up.railway.app/api/v1
+          VITE_BASE_PATH: https://dsi-nest-backend-development.up.railway.app/
+          VITE_BASE_SUPABASE: https://vet-mitsun-development.vercel.app/login
+          VITE_MEDICALHISTORIES: medical-histories
+          VITE_BILLS: bills
+          VITE_PRODUCTS: products
+          VITE_LOGIN: auth/login
+          VITE_GOOGLEAUTH: auth/login-google
+          VITE_FORGOTPASSWORD: auth/change-password
+          VITE_USERS: users
+          VITE_REFRESH_ACCESS_TOKEN: auth/refresh-token
+          VITE_PETS: pets
+          VITE_SPECIES: species
+          VITE_APPOINTMENTS: appointments
+          VITE_FILE: files
+          VITE_ACCESS: access
+          VITE_REFRESH: refresh
+          VITE_PROVIDERTOKEN: providerToken
 
       - name: Run Playwright tests
         run: npm run test:e2e
         env:
           CI: true
-          PLAYWRIGHT_BASE_URL: http://localhost:5173
+          URL: http://localhost:3000
+          ADMIN_EMAIL: ${{ vars.ADMIN_EMAIL }}
+          ADMIN_PASSWORD: ${{ vars.ADMIN_PASSWORD }}
 
       - name: Upload Playwright report
         if: always()

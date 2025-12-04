@@ -36,6 +36,8 @@ jobs:
       URL: http://127.0.0.1:5173
       ADMIN_EMAIL: fabioflores021@gmail.com
       ADMIN_PASSWORD: VRE_fdu8jyu1quz*kjm
+      VITE_SUPABASEURL: ${{ secrets.VITE_SUPABASEURL }}
+      VITE_SUPABASEKEY: ${{ secrets.VITE_SUPABASEKEY }}
 
     steps:
       - name: Checkout repo

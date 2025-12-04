@@ -293,7 +293,7 @@ export function Login() {
               sx={{ mt: 3, mb: 2 }}
               disabled={loginMutation.isLoading ? true : false}
             >
-              {loginMutation.isLoading ? <CircularProgress /> : 'Inicia sesión'}
+              {loginMutation.isLoading ? <CircularProgress /> : 'Login'}
             </Button>
 
             <Divider> O </Divider>

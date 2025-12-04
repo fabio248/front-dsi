@@ -28,6 +28,9 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
       console.log('[AUTH] Waiting for network idle...');
       await page.waitForLoadState('networkidle');
 
+      console.log('[AUTH] Waiting for domcontentloaded...');
+      await page.waitForLoadState('domcontentloaded');
+
       console.log('[AUTH] Attempting to login...');
       await loginPage.loginAs(
         requireEnv('ADMIN_EMAIL'),

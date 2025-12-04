@@ -21,12 +21,23 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
 
       const page = await context.newPage();
       const loginPage = new LoginPage(page);
+      
+      console.log(`[AUTH] Navigating to login page. BaseURL: ${baseURL}`);
       await loginPage.goto();
+      
+      console.log('[AUTH] Waiting for network idle...');
+      await page.waitForLoadState('networkidle');
+
+      console.log('[AUTH] Attempting to login...');
       await loginPage.loginAs(
         requireEnv('ADMIN_EMAIL'),
         requireEnv('ADMIN_PASSWORD')
       );
+      
+      console.log('[AUTH] Waiting for redirect to admin dashboard...');
       await page.waitForURL(new RegExp(AppRoutes.admin.base));
+      console.log('[AUTH] Login successful.');
+      
       await page.close();
 
       await use(context);

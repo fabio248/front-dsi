@@ -33,7 +33,7 @@ jobs:
       VITE_ACCESS: access
       VITE_REFRESH: refresh
       VITE_PROVIDERTOKEN: providerToken
-      URL: http://127.0.0.1:3000
+      URL: http://127.0.0.1:5173
       ADMIN_EMAIL: fabioflores021@gmail.com
       ADMIN_PASSWORD: VRE_fdu8jyu1quz*kjm
 

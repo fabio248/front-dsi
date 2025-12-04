@@ -1,8 +1,11 @@
 import { defineConfig, devices } from '@playwright/test';
-import dotenv from 'dotenv';
 import path from 'path';
 
-dotenv.config({ path: path.resolve(__dirname, '.env') });
+if (!process.env.CI) {
+  require('dotenv').config({
+    path: path.resolve(__dirname, '.env'),
+  });
+}
 
 const baseURL = process.env.URL || 'http://localhost:3000';
 

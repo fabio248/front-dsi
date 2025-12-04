@@ -18,7 +18,7 @@ import {
 } from '../../factories/clinical-sheet.factory';
 
 // Usamos test.describe.serial para asegurar que los tests se ejecuten en orden.
-test.describe.serial('Manejo de acciones de mascotas', () => {
+test.describe('Manejo de acciones de mascotas', () => {
   // Declaramos la variable aquí para compartirla entre los tests.
 
   test('debería crear una nueva mascota correctamente', async ({ page }) => {

@@ -55,6 +55,9 @@ jobs:
           VITE_REFRESH: refresh
           VITE_PROVIDERTOKEN: providerToken
 
+      - name: Wait for Localhost
+        run: npx wait-on http://localhost:3000 --timeout 60000
+
       - name: Run Playwright tests
         run: npm run test:e2e
         env:

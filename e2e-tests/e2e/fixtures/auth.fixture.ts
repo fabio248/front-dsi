@@ -20,6 +20,16 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
       });
 
       const page = await context.newPage();
+      
+      // Capture browser logs and errors during fixture setup
+      page.on('console', msg => {
+        if (msg.type() === 'error') console.log(`🔴 [AUTH FIXTURE] BROWSER ERROR: ${msg.text()}`);
+        else console.log(`⚪ [AUTH FIXTURE] BROWSER LOG: ${msg.text()}`);
+      });
+      page.on('pageerror', err => {
+        console.log(`☠️ [AUTH FIXTURE] UNCAUGHT EXCEPTION: ${err.message}`);
+      });
+
       const loginPage = new LoginPage(page);
       
       console.log(`[AUTH] Navigating to login page. BaseURL: ${baseURL}`);

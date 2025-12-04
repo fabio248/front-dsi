@@ -33,7 +33,7 @@ jobs:
         run: npm run build
 
       - name: Start app
-        run: npm run start -- --port 3000 &
+        run: npm run start -- --port 3000 --host &
         env:
           CI: true
           VITE_BASE_API: https://dsi-nest-backend-development.up.railway.app/api/v1
@@ -56,13 +56,13 @@ jobs:
           VITE_PROVIDERTOKEN: providerToken
 
       - name: Wait for Localhost
-        run: npx wait-on http://localhost:3000 --timeout 60000
+        run: npx wait-on tcp:127.0.0.1:3000 --timeout 60000
 
       - name: Run Playwright tests
         run: npm run test:e2e
         env:
           CI: true
-          URL: http://localhost:3000
+          URL: http://127.0.0.1:3000
           ADMIN_EMAIL: fabioflores021@gmail.com
           ADMIN_PASSWORD: VRE_fdu8jyu1quz*kjm
 

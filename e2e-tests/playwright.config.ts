@@ -54,5 +54,6 @@ export default defineConfig({
     url: 'http://127.0.0.1:5173',
     cwd: '..',
     reuseExistingServer: !process.env.CI,
+    env: process.env as Record<string, string>,
   },
 });

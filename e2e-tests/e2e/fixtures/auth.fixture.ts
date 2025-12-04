@@ -20,37 +20,14 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
       });
 
       const page = await context.newPage();
-      
-      // Capture browser logs and errors during fixture setup
-      page.on('console', msg => {
-        if (msg.type() === 'error') console.log(`🔴 [AUTH FIXTURE] BROWSER ERROR: ${msg.text()}`);
-        else console.log(`⚪ [AUTH FIXTURE] BROWSER LOG: ${msg.text()}`);
-      });
-      page.on('pageerror', err => {
-        console.log(`☠️ [AUTH FIXTURE] UNCAUGHT EXCEPTION: ${err.message}`);
-      });
-
       const loginPage = new LoginPage(page);
       
-      console.log(`[AUTH] Navigating to login page. BaseURL: ${baseURL}`);
       await loginPage.goto();
-      
-      console.log('[AUTH] Waiting for network idle...');
-      await page.waitForLoadState('networkidle');
-
-      console.log('[AUTH] Waiting for domcontentloaded...');
-      await page.waitForLoadState('domcontentloaded');
-
-      console.log('[AUTH] Attempting to login...');
       await loginPage.loginAs(
         requireEnv('ADMIN_EMAIL'),
         requireEnv('ADMIN_PASSWORD')
       );
-      
-      console.log('[AUTH] Waiting for redirect to admin dashboard...');
       await page.waitForURL(new RegExp(AppRoutes.admin.base));
-      console.log('[AUTH] Login successful.');
-      
       await page.close();
 
       await use(context);

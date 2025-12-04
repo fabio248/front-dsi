@@ -15,9 +15,9 @@ jobs:
 
     env:
       CI: true
-      VITE_BASE_API: https://dsi-nest-backend-development.up.railway.app/api/v1
-      VITE_BASE_PATH: https://dsi-nest-backend-development.up.railway.app/
-      VITE_BASE_SUPABASE: https://vet-mitsun-development.vercel.app/login
+      VITE_BASE_API: ${{ secrets.VITE_BASE_API }}
+      VITE_BASE_PATH: ${{ secrets.VITE_BASE_PATH }}
+      VITE_BASE_SUPABASE: ${{ secrets.VITE_BASE_SUPABASE }}
       VITE_MEDICALHISTORIES: medical-histories
       VITE_BILLS: bills
       VITE_PRODUCTS: products

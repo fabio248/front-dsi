@@ -13,6 +13,30 @@ jobs:
     permissions:
       contents: read
 
+    env:
+      CI: true
+      VITE_BASE_API: https://dsi-nest-backend-development.up.railway.app/api/v1
+      VITE_BASE_PATH: https://dsi-nest-backend-development.up.railway.app/
+      VITE_BASE_SUPABASE: https://vet-mitsun-development.vercel.app/login
+      VITE_MEDICALHISTORIES: medical-histories
+      VITE_BILLS: bills
+      VITE_PRODUCTS: products
+      VITE_LOGIN: auth/login
+      VITE_GOOGLEAUTH: auth/login-google
+      VITE_FORGOTPASSWORD: auth/change-password
+      VITE_USERS: users
+      VITE_REFRESH_ACCESS_TOKEN: auth/refresh-token
+      VITE_PETS: pets
+      VITE_SPECIES: species
+      VITE_APPOINTMENTS: appointments
+      VITE_FILE: files
+      VITE_ACCESS: access
+      VITE_REFRESH: refresh
+      VITE_PROVIDERTOKEN: providerToken
+      URL: http://127.0.0.1:3000
+      ADMIN_EMAIL: fabioflores021@gmail.com
+      ADMIN_PASSWORD: VRE_fdu8jyu1quz*kjm
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -34,42 +58,17 @@ jobs:
 
       - name: Start app
         run: npm run start -- --port 3000 --host &
-        env:
-          CI: true
-          VITE_BASE_API: https://dsi-nest-backend-development.up.railway.app/api/v1
-          VITE_BASE_PATH: https://dsi-nest-backend-development.up.railway.app/
-          VITE_BASE_SUPABASE: https://vet-mitsun-development.vercel.app/login
-          VITE_MEDICALHISTORIES: medical-histories
-          VITE_BILLS: bills
-          VITE_PRODUCTS: products
-          VITE_LOGIN: auth/login
-          VITE_GOOGLEAUTH: auth/login-google
-          VITE_FORGOTPASSWORD: auth/change-password
-          VITE_USERS: users
-          VITE_REFRESH_ACCESS_TOKEN: auth/refresh-token
-          VITE_PETS: pets
-          VITE_SPECIES: species
-          VITE_APPOINTMENTS: appointments
-          VITE_FILE: files
-          VITE_ACCESS: access
-          VITE_REFRESH: refresh
-          VITE_PROVIDERTOKEN: providerToken
 
       - name: Wait for Localhost
         run: npx wait-on tcp:127.0.0.1:3000 --timeout 60000
 
       - name: Run Playwright tests
         run: npm run test:e2e
-        env:
-          CI: true
-          URL: http://127.0.0.1:3000
-          ADMIN_EMAIL: fabioflores021@gmail.com
-          ADMIN_PASSWORD: VRE_fdu8jyu1quz*kjm
 
       - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
-          path: playwright-report/
-          if-no-files-found: ignore
+          path: e2e-tests/playwright-report/
+          if-no-files-found: warn

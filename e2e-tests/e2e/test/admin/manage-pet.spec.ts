@@ -132,4 +132,73 @@ test.describe('Manejo de acciones de mascotas', () => {
       firstDiagnosisDescription
     );
   });
+
+  test('debería eliminar una mascota existente', async ({ page }) => {
+    const petsPage = new PetsPage(page);
+    await petsPage.visit();
+    
+    const visiblePets = await petsPage.getVisiblePets();
+    const initialCount = visiblePets.length;
+    const petToDelete = visiblePets[0];
+    const petDetails = await petToDelete.getDetails();
+    
+    await petToDelete.clickDelete();
+    await page.getByRole('button', { name: /confirmar|eliminar|aceptar/i }).click();
+
+    // Wait for the success alert
+    await expect(page.getByText('¡Mascota Eliminada!')).toBeVisible();
+    await expect(page.getByText('Se ha eliminado correctamente la mascota')).toBeVisible();
+  });
+
+  test('debería mostrar errores al intentar crear mascota sin datos requeridos', async ({ page }) => {
+    await page.goto(AppRoutes.admin.users);
+    const usersPage = new AdminUsersPage(page);
+    const visibleUsers = await usersPage.getVisibleUsers();
+    const user = visibleUsers[0];
+    
+    await user.createPet();
+    
+    const petModal = new PetFormModal(page, 'create');
+    await petModal.submit();
+    
+    await expect(petModal.title).toBeVisible();
+    
+    const errorMessages = page.locator('.MuiFormHelperText-root.Mui-error');
+    expect(await errorMessages.count()).toBeGreaterThan(0);
+  });
+
+  test('debería validar que no se puede seleccionar una fecha futura', async ({ page }) => {
+    await page.goto(AppRoutes.admin.users);
+    const usersPage = new AdminUsersPage(page);
+    const visibleUsers = await usersPage.getVisibleUsers();
+    const user = visibleUsers[0];
+    
+    await user.createPet();
+    
+    const petModal = new PetFormModal(page, 'create');
+    
+    // Open date picker
+    await page.getByRole('button', { name: /Choose date/i }).click();
+    
+    // Calculate tomorrow
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
+    
+    // We need to handle the case where tomorrow is in the next month
+    // If tomorrow's month is different from today's month, we need to click "Next month"
+    if (tomorrow.getMonth() !== today.getMonth()) {
+       await page.getByRole('button', { name: 'Next month' }).click();
+    }
+
+    // Find the button for tomorrow using its day number
+    // We filter by text to be precise, and ensure it's a day button
+    const dayNumber = tomorrow.getDate().toString();
+    const dayButton = page.getByRole('gridcell', { name: dayNumber, exact: true });
+
+    // Verify it is disabled
+    await expect(dayButton).toBeDisabled();
+  });
+  
 });

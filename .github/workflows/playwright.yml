@@ -36,6 +36,8 @@ jobs:
       URL: http://127.0.0.1:5173
       ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
       ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+      CLIENT_EMAIL: ${{ secrets.CLIENT_EMAIL }}
+      CLIENT_PASSWORD: ${{ secrets.CLIENT_PASSWORD }}
       VITE_SUPABASEURL: ${{ secrets.VITE_SUPABASEURL }}
       VITE_SUPABASEKEY: ${{ secrets.VITE_SUPABASEKEY }}
 

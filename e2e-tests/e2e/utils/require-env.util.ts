@@ -1,4 +1,4 @@
-type RequiredEnvKey = 'ADMIN_EMAIL' | 'ADMIN_PASSWORD';
+type RequiredEnvKey = 'ADMIN_EMAIL' | 'ADMIN_PASSWORD' | 'CLIENT_EMAIL' | 'CLIENT_PASSWORD';
 
 export const requireEnv = (key: RequiredEnvKey): string => {
   const value = process.env[key];

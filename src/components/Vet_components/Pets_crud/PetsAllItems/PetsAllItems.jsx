@@ -34,7 +34,7 @@ const petController = new Pets();
 const authController = new ApiAuth();
 const defaultTheme = createTheme();
 
-export function PetsAllItems({ pet }) {
+export function PetsAllItems({ pet, index }) {
   const Demo = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
   }));
@@ -95,84 +95,98 @@ export function PetsAllItems({ pet }) {
   };
   return (
     <>
-    <ThemeProvider theme={defaultTheme}>
-      <Demo>
-        <ListItem sx={{ display: 'flex', flexWrap: 'wrap' }}>
-          <ListItemAvatar sx={{ margin: '0 auto' }}>
-            <Avatar sx={{ mx: 4, width: 60, height: 60, bgcolor: '#8EC167' }}>
-              <PetsIcon sx={{ fontSize: 45 }} />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText>
-            <div
-              className='estilos-pets'
-              style={{ justifyContent: 'space-around' }}
-            >
-              <br />
-              <b>Nombre de la mascota: </b>
-              {pet.name}
-              <br />
-              <b>Especie: </b>
-              {pet.specie.name}
-              <br />
-              <b>Raza: </b>
-              {pet.raza}
-              <br />
-              <b>Género: </b>
-              {pet.gender}
-              <br />
-              <b>Nacimiento de la mascota o Adquisición: </b>
-              {pet.birthday}
-              <br />
-              <b>Color del pelaje: </b>
-              {pet.color}
-              <br />
-              <b>Dueño: </b>
-              {pet.user.firstName} {pet.user.lastName}
-            </div>
-          </ListItemText>
-          <ListItemAvatar
-            sx={{ display: 'flex', flexDirection: 'row', margin: '0 auto' }}
+      <ThemeProvider theme={defaultTheme}>
+        <Demo>
+          <ListItem
+            data-testid={`pet-card-${index}`}
+            sx={{ display: 'flex', flexWrap: 'wrap' }}
           >
-            <NavLink to={`/admin/pets/${pet.id}`}>
+            <ListItemAvatar sx={{ margin: '0 auto' }}>
+              <Avatar sx={{ mx: 4, width: 60, height: 60, bgcolor: '#8EC167' }}>
+                <PetsIcon sx={{ fontSize: 45 }} />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText>
+              <div
+                className='estilos-pets'
+                style={{ justifyContent: 'space-around' }}
+              >
+                <br />
+                <b>Nombre de la mascota: </b>
+                {pet.name}
+                <br />
+                <b>Especie: </b>
+                {pet.specie.name}
+                <br />
+                <b>Raza: </b>
+                {pet.raza}
+                <br />
+                <b>Género: </b>
+                {pet.gender}
+                <br />
+                <b>Nacimiento de la mascota o Adquisición: </b>
+                {pet.birthday}
+                <br />
+                <b>Color del pelaje: </b>
+                {pet.color}
+                <br />
+                <b>Dueño: </b>
+                {pet.user.firstName} {pet.user.lastName}
+              </div>
+            </ListItemText>
+            <ListItemAvatar
+              sx={{ display: 'flex', flexDirection: 'row', margin: '0 auto' }}
+            >
+              <NavLink to={`/admin/pets/${pet.id}`}>
+                <Grid item>
+                  <IconButton color='info' aria-label='Details pet'>
+                    <VisibilityIcon sx={{ fontSize: 30 }} />
+                  </IconButton>
+                </Grid>
+              </NavLink>
               <Grid item>
-                <IconButton color='info'>
-                  <VisibilityIcon sx={{ fontSize: 30 }} />
+                <IconButton
+                  color='warning'
+                  aria-label='Edit pet'
+                  onClick={openUpdatePets}
+                >
+                  <ModeEditIcon sx={{ fontSize: 30 }} />
                 </IconButton>
               </Grid>
-            </NavLink>
-            <Grid item>
-              <IconButton color='warning' onClick={openUpdatePets}>
-                <ModeEditIcon sx={{ fontSize: 30 }} />
-              </IconButton>
-            </Grid>
-            <Grid item>
-              <IconButton color='error' onClick={openDeletePet}>
-                <DeleteIcon sx={{ fontSize: 30 }} />
-              </IconButton>
-              {success && (
-                <Alerta
-                  type={'info'}
-                  title={'¡Mascota Eliminada!'}
-                  message={'Se ha eliminado correctamente la mascota'}
-                  strong={pet.name}
-                />
-              )}
-              {error && (
-                <Alerta
-                  type={'error'}
-                  title={'¡Ha ocurrido un problema!'}
-                  message={'No se ha podido eliminar la mascota'}
-                  strong={pet.name}
-                />
-              )}
-            </Grid>
-          </ListItemAvatar>
-        </ListItem>
-        <Divider>
-          <PetsIcon color='action' style={{ width: '60px', height: '40px' }} />
-        </Divider>
-      </Demo>
+              <Grid item>
+                <IconButton
+                  aria-label='Delete pet'
+                  color='error'
+                  onClick={openDeletePet}
+                >
+                  <DeleteIcon sx={{ fontSize: 30 }} />
+                </IconButton>
+                {success && (
+                  <Alerta
+                    type={'info'}
+                    title={'¡Mascota Eliminada!'}
+                    message={'Se ha eliminado correctamente la mascota'}
+                    strong={pet.name}
+                  />
+                )}
+                {error && (
+                  <Alerta
+                    type={'error'}
+                    title={'¡Ha ocurrido un problema!'}
+                    message={'No se ha podido eliminar la mascota'}
+                    strong={pet.name}
+                  />
+                )}
+              </Grid>
+            </ListItemAvatar>
+          </ListItem>
+          <Divider>
+            <PetsIcon
+              color='action'
+              style={{ width: '60px', height: '40px' }}
+            />
+          </Divider>
+        </Demo>
       </ThemeProvider>
       <Modal_delete
         onOpen={showConfirm}

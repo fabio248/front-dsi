@@ -1,4 +1,4 @@
-import React, { useEffect ,useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import './ListeredAllPets.css';
 
 //import petitions of back
@@ -62,7 +62,11 @@ export function ListeredAllPets() {
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Grid container spacing={3} alignItems='center'>
           <Grid item>
-            <Tabs value={selectedTab} onChange={handleTabChange} aria-label='basic tabs example'>
+            <Tabs
+              value={selectedTab}
+              onChange={handleTabChange}
+              aria-label='basic tabs example'
+            >
               <Tab icon={<PetsIcon />} label='Mascotas' {...a11yProps(0)} />
             </Tabs>
           </Grid>
@@ -88,8 +92,8 @@ export function ListeredAllPets() {
               scrollThreshold={0.5}
               loader={<p>Loading...</p>}
             >
-              {map(pets, (pet) => (
-                <PetsAllItems key={pet.id} pet={pet} />
+              {map(pets, (pet, index) => (
+                <PetsAllItems key={pet.id} pet={pet} index={index} />
               ))}
             </InfiniteScroll>
           </div>

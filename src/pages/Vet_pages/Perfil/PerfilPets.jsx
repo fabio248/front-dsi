@@ -13,7 +13,7 @@ import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
 import { Modal_verInfoClientAndPet } from '../../../shared';
 import { HistoryAndAnneasis } from './HistoryAndAnneasis';
 
-export function PerfilPets({ pet }) {
+export function PerfilPets({ pet, index }) {
   //Modal informacion concreta
   const [showVisualizar, setShowVisualizar] = useState(false);
   const onOpenInfoClientAndPets = () =>
@@ -30,6 +30,7 @@ export function PerfilPets({ pet }) {
     <div>
       <ListItem
         sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}
+        data-testid={`list-pet-${index}`}
       >
         <Avatar sx={{ mx: 4, width: 50, height: 50 }}>
           <PetsIcon sx={{ fontSize: 40 }} />

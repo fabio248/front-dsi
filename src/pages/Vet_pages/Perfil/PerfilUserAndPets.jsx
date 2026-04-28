@@ -19,7 +19,7 @@ import { size, map } from 'lodash';
 import { Pets } from '../../../api/Pets.api';
 import { ApiAuth } from '../../../api/Auth.api';
 import { useQuery } from '@tanstack/react-query';
-import {Header} from "../../../shared/components/Header.jsx";
+import { Header } from '../../../shared/components/Header.jsx';
 
 const petsController = new Pets();
 const apiAuthController = new ApiAuth();
@@ -168,8 +168,8 @@ export function PerfilUserAndPets() {
                     flexDirection: 'column',
                   }}
                 >
-                  {map(userAndPet.pets, (pet) => (
-                    <PerfilPets key={pet.id} pet={pet} />
+                  {map(userAndPet.pets, (pet, index) => (
+                    <PerfilPets key={pet.id} pet={pet} index={index} />
                   ))}
                 </div>
               )}

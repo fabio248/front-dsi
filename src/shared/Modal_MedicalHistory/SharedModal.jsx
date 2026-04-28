@@ -11,6 +11,8 @@ export const modalStyle = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   maxWidth: 800,
+  maxHeight: '90vh',
+  overflowY: 'auto',
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 4,

@@ -37,6 +37,21 @@ export class ApiAuth {
   async registerUserForVet(data) {
     try {
       const url = `${config.baseApi}/${configApiBackend.users}`;
+
+      // Solo se envian los campos requeridos y los opcionales con valor.
+      // Los @IsOptional del backend ignoran null/undefined pero NO ''.
+      const body = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        phone: data.phone,
+      };
+      if (data.birthday) body.birthday = format(data.birthday, 'dd/MM/yyyy');
+      if (data.email) body.email = data.email;
+      if (data.password) body.password = data.password;
+      if (data.role) body.role = data.role;
+      if (data.direction) body.direction = data.direction;
+      if (data.dui) body.dui = data.dui;
+
       const params = {
         method: 'POST', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
         headers: {
@@ -44,18 +59,7 @@ export class ApiAuth {
           'Content-Type': 'application/json',
         },
         // Este puede variar si es texto plano del body es un stringfy o tambien puede ser formData
-        body: JSON.stringify({
-          // Parametros a enviar
-          firstName: data.firstName,
-          lastName: data.lastName,
-          birthday: format(data.birthday, 'dd/MM/yyyy'),
-          email: data.email,
-          password: data.password,
-          role: data.role,
-          phone: data.phone,
-          direction: data.direction,
-          dui: data.dui,
-        }),
+        body: JSON.stringify(body),
       };
 
       const response = await fetch(url, params);

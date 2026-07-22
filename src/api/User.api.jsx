@@ -131,6 +131,22 @@ export class UserApi {
         delete petData.whichPets;
       }
       const url = `${config.baseApi}/${configApiBackend.users}/${configApiBackend.pets}`;
+
+      // Solo se envian los campos requeridos y los opcionales con valor.
+      // Los @IsOptional del backend ignoran null/undefined pero NO ''.
+      const client = {
+        firstName: clientData.firstName,
+        lastName: clientData.lastName,
+      };
+      if (clientData.birthday)
+        client.birthday = format(clientData.birthday, 'dd/MM/yyyy');
+      if (clientData.email) client.email = clientData.email;
+      if (clientData.password) client.password = clientData.password;
+      if (clientData.role) client.role = clientData.role;
+      if (clientData.phone) client.phone = clientData.phone;
+      if (clientData.direction) client.direction = clientData.direction;
+      if (clientData.dui) client.dui = clientData.dui;
+
       const params = {
         method: 'POST', // Tipo de peticion, puede ser (PUT, DELETE, POST. etc.)
         headers: {
@@ -141,15 +157,7 @@ export class UserApi {
         // Este puede variar si es texto plano del body es un stringfy o tambien puede ser formData
         body: JSON.stringify({
           // Parametros a enviar
-          firstName: clientData.firstName,
-          lastName: clientData.lastName,
-          birthday: format(clientData.birthday, 'dd/MM/yyyy'),
-          email: clientData.email,
-          password: clientData.password,
-          role: clientData.role,
-          phone: clientData.phone,
-          direction: clientData.direction,
-          dui: clientData.dui,
+          ...client,
           pet: {
             name: petData.name,
             specieId: petData.specie.id,

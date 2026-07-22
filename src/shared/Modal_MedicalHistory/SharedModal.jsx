@@ -12,7 +12,7 @@ export const modalStyle = {
   transform: 'translate(-50%, -50%)',
   maxWidth: 800,
   maxHeight: '90vh',
-  overflowY: 'auto',
+  overflowY: 'scroll',
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 4,

@@ -279,13 +279,13 @@ const UserForm = (props) => {
     onSubmit: async (formValue) => {
       if (!user) {
         createUserMutation.mutate(formValue);
+      } else {
+        updateUserMutation.mutate({
+          accessToken,
+          userId: user.id,
+          formValue,
+        });
       }
-
-      updateUserMutation.mutate({
-        accessToken,
-        userId: user.id,
-        formValue,
-      });
     },
   });
 

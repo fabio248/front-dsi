@@ -26,11 +26,13 @@ export function validationSchemaRegister(user) {
     firstName: yup.string().required('El nombre es obligatorio'),
     lastName: yup.string().required('El apellido es obligatorio'),
     email: yup
-      .string().trim()
+      .string()
+      .trim()
       .email('El email no es válido')
-      .required('El email obligatorio'),
+      .notRequired(),
     birthday: yup
       .date()
+      .nullable()
       .max(new Date(), 'La fecha no puede ser posterior al día de hoy')
       .transform((value, originalValue) => {
         if (originalValue) {
@@ -39,15 +41,12 @@ export function validationSchemaRegister(user) {
         }
         return null;
       })
-      .required('La fecha es requerida')
-      .typeError('Ingrese una fecha válida'),
-    password: user
-      ? yup.string()
-      : yup.string().required('La contraseña es obligatoria'),
+      .notRequired(),
+    password: yup.string().notRequired(),
     role: yup
       .string()
-      .oneOf(['admin', 'client'])
-      .required('El campo de rol solo acepta admin o client'),
+      .oneOf(['admin', 'client'], 'El campo de rol solo acepta admin o client')
+      .notRequired(),
     phone: yup
       .string()
       .matches(/^\d{4}-\d{4}$/, 'El teléfono debe tener el formato 0000-0000')
@@ -55,10 +54,13 @@ export function validationSchemaRegister(user) {
     direction: yup
       .string()
       .min(5, 'La dirección debe ser válida')
-      .required('La dirección es obligatoria'),
+      .notRequired(),
     dui: yup
       .string()
-      .matches(/^\d{8}-\d$/, 'El DUI debe tener el formato 00000000-0')
-      .required('El DUI es obligatorio'),
+      .matches(/^\d{8}-\d$/, {
+        message: 'El DUI debe tener el formato 00000000-0',
+        excludeEmptyString: true,
+      })
+      .notRequired(),
   });
 }

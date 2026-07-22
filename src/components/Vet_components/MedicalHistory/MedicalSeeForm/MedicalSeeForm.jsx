@@ -1,29 +1,98 @@
-import React, {useState} from 'react';
-import { Typography, Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, IconButton} from '@mui/material';
+import React, { useState } from 'react';
+import {
+  Typography,
+  Paper,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  IconButton,
+  Box,
+  Grid,
+  Divider,
+  Chip,
+} from '@mui/material';
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 import { NavLink } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Alerta } from "../../../../shared"
+import { Alerta } from '../../../../shared';
 //API SERVICE BACK
-import { Files } from "../../../../api/files.api"
-import { ApiAuth } from "../../../../api/Auth.api"
+import { Files } from '../../../../api/files.api';
+import { ApiAuth } from '../../../../api/Auth.api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 //elimination modal for files
-import { Modal_delete } from "../../../../shared/modal_delete"
+import { Modal_delete } from '../../../../shared/modal_delete';
 
+const filesController = new Files();
+const authController = new ApiAuth();
 
-const filesController = new Files()
-const authController = new ApiAuth()
+//Seccion con titulo, divisor y contenido responsivo
+function SectionPaper({ title, children, sx }) {
+  return (
+    <Paper
+      elevation={3}
+      sx={{ p: { xs: 2, sm: 3 }, mb: 2, borderRadius: 2, ...sx }}
+    >
+      <Typography variant='h6' sx={{ fontWeight: 600 }}>
+        {title}
+      </Typography>
+      <Divider sx={{ my: 1.5 }} />
+      {children}
+    </Paper>
+  );
+}
+
+//Par etiqueta/valor. 1 columna en movil, 2 en escritorio.
+//Se oculta cuando el valor esta vacio (para los campos opcionales).
+function Detail({ label, value, full = false }) {
+  if (value === null || value === undefined || value === '') return null;
+  return (
+    <Grid item xs={12} sm={full ? 12 : 6}>
+      <Typography
+        variant='caption'
+        sx={{
+          display: 'block',
+          color: 'text.secondary',
+          textTransform: 'uppercase',
+          letterSpacing: 0.5,
+          fontWeight: 600,
+        }}
+      >
+        {label}
+      </Typography>
+      <Typography variant='body2' sx={{ wordBreak: 'break-word' }}>
+        {value}
+      </Typography>
+    </Grid>
+  );
+}
+
+//Tabla envuelta para permitir scroll horizontal en movil
+function ResponsiveTable({ children, minWidth = 480 }) {
+  return (
+    <TableContainer component={Paper} variant='outlined' sx={{ mt: 1 }}>
+      <Table sx={{ minWidth }} size='small'>
+        {children}
+      </Table>
+    </TableContainer>
+  );
+}
+
 export function MedicalSeeForm({ medicalHistory }) {
-  const [fileId, setFileId] = useState(null)
+  const [fileId, setFileId] = useState(null);
   //funcion que habilita la eliminacion
   const [showConfirm, setShowConfirm] = useState(false);
+  //feedback al eliminar
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
 
   //funcion que cancela la accion de eliminar
   const onCloseConfirm = () => setShowConfirm((prevState) => !prevState);
-  
+
   //mensaje al eliminar
   const [confirmMessage, setConfirmMessage] = useState('');
 
@@ -60,211 +129,154 @@ export function MedicalSeeForm({ medicalHistory }) {
   const onDeleteProduct = async () => {
     deleteFileMutation.mutate({ accessToken });
   };
+
+  const { physicalExam, food, otherPet, diagnostic, files } = medicalHistory;
+
+  //Rotulo Si/No reutilizable para los campos booleanos
+  const yesNo = (condition, yes, no) => (
+    <Chip
+      size='small'
+      color={condition ? 'success' : 'default'}
+      variant='outlined'
+      label={condition ? yes : no}
+    />
+  );
+
   return (
-    <div>
-      {/* Render medical history details */}
-      <Paper elevation={3} style={{ padding: '20px', marginBottom: '20px' }}>
-        <Typography variant="h6">Detalles del historial médico:</Typography>
-        <Typography>
-          <div>
-            <b>Fecha de Creación:  </b>
-            {medicalHistory.createdAt}
-          </div>
-        </Typography>
-        <Typography>
-          <div>
-            <b>Evaluación de Días:  </b>
-            {medicalHistory.diasesEvaluation}
-          </div>
-        </Typography>
-        <Typography>
-          <div>
-            <b>¿Posee todas sus vacunas?:  </b>
-            {medicalHistory.isHaveAllVaccine ? " Si posee todas sus vacunas":"No posee todas sus vacunas"}
-          </div>
-        </Typography>
-        <Typography>
-          <div>
-            <b>¿Se ha reproducido?:  </b>
-            {medicalHistory.isReproduced ? " Si se ha reproducido" : "No se ha reproducido"}
-          </div>
-        </Typography>
-        <Typography>
-          <div>
-            <b>Observaciones: </b>
-            {medicalHistory.observation}
-          </div>
-        </Typography>
-        <Typography>
-          <div>
-            <b>Habitaculo: </b>
-            {medicalHistory.room}
-          </div>
-        </Typography>
-        <br />
-        <div  style={{ fontWeight:"bold" }}>Diagnóstico</div>
-        <Typography>
-          <div>
-            <b>Descripción del diagnóstico: </b>
-            {medicalHistory.diagnostic.description}
-          </div>
-        </Typography>
-<br />
-    <div  style={{ fontWeight:"bold" }}>Alimentación</div>
-        <Typography>
-          <div>
-            <b>Cantidad de alimento: </b>
-            {medicalHistory.food.quantity}
-          </div>
-        </Typography>
-        <Typography>
-          <div>
-            <b>Tipo de alimento: </b>
-            {medicalHistory.food.type}
-          </div>
-        </Typography>
-        <br />
-        <div style={{ fontWeight:"bold" }}>Otras mascotas</div>
-    <Typography>
-          <div>
-            <b>Convive con otras mascotas: </b>
-            {medicalHistory.otherPet.isLiveOtherPets ? "Si convive con otras mascotas ": "No convive con otras mascotas"}
-          </div>
-        </Typography>
-        <br />
-        <Typography>
-          <div>
-            {medicalHistory.food.type ? (
-            null
-            ) : (<Typography>
-                <div>
-                    <b>Con cuáles mascotas convive: </b>
-                    {medicalHistory.otherPet.type ? medicalHistory.otherPet.type : "No convive con otras mascotas"}
-                </div>
-            </Typography>)
-            
-            }
-            
-          </div>
-        </Typography>
+    <Box sx={{ width: '100%', maxWidth: 900, mx: 'auto' }}>
+      {/* Detalles generales del historial medico */}
+      <SectionPaper title='Detalles del historial médico'>
+        <Grid container spacing={2}>
+          <Detail label='Fecha de Creación' value={medicalHistory.createdAt} />
+          <Detail
+            label='Evaluación de Días'
+            value={medicalHistory.diasesEvaluation}
+          />
+          <Detail
+            label='¿Posee todas sus vacunas?'
+            value={yesNo(
+              medicalHistory.isHaveAllVaccine,
+              'Sí posee todas sus vacunas',
+              'No posee todas sus vacunas',
+            )}
+          />
+          <Detail
+            label='¿Se ha reproducido?'
+            value={yesNo(
+              medicalHistory.isReproduced,
+              'Sí se ha reproducido',
+              'No se ha reproducido',
+            )}
+          />
+          <Detail label='Habitáculo' value={medicalHistory.room} />
+          <Detail
+            label='Observaciones'
+            value={medicalHistory.observation}
+            full
+          />
+        </Grid>
+      </SectionPaper>
 
-        <div  style={{ fontWeight:"bold" }}>Examen Físico</div>
-        <Typography>
-          <div>
-            <b>Peso: </b>
-            {medicalHistory.physicalExam.weight}
-            <b>  Kg</b>
-          </div>
-        </Typography>
-        <Typography>
-          <div>
-            <b>Palpitaciones: </b>
-            {medicalHistory.physicalExam.palpitations}
-            <b>  latidos por minuto</b>
-          </div>
-        </Typography>
-        <Typography>
-        <div>
-            {medicalHistory.physicalExam.laboratoryExam ? (
-            <Typography>
-            <div>
-                <b>Examen de laboratorio: </b>
-                {medicalHistory.physicalExam.laboratoryExam }
-            </div>
-        </Typography>
-            ) : (null)
-            
-            }
-            
-          </div>
-        </Typography>
-        <Typography>
-        <div>
-            {medicalHistory.physicalExam.cardiacRate ? (
-            <Typography>
-            <div>
-                <b>Ritmo Cardiáco: </b>
-                {medicalHistory.physicalExam.cardiacRate }
-                <b>  latidos por minuto</b>
-            </div>
-        </Typography>
-            ) : (null)
-            
-            }
-            
-          </div>
-        </Typography>
-        <Typography>
-        <div>
-            {medicalHistory.physicalExam.temperature ? (
-            <Typography>
-            <div>
-                <b>Temperatura: </b>
-                {medicalHistory.physicalExam.temperature }
-                <b>  °C</b>
-            </div>
-        </Typography>
-            ) : (null)
-            
-            }
-            
-          </div>
-        </Typography>
-        <Typography>
-        <div>
-            {medicalHistory.physicalExam.respiratoryRate ? (
-            <Typography>
-            <div>
-                <b>Ritmo de respiración: </b>
-                {medicalHistory.physicalExam.respiratoryRate }
-                <b>  respiraciones por minuto</b>
-            </div>
-        </Typography>
-            ) : (null)
-            
-            }
-            
-          </div>
-        </Typography>
-        <Typography>
-        <div>
-            {medicalHistory.physicalExam.pulse ? (
-            <Typography>
-            <div>
-                <b>Pulso: </b>
-                {medicalHistory.physicalExam.pulse }
-                <b>  latidos por minuto</b>
-            </div>
-        </Typography>
-            ) : (null)
-            
-            }
-            
-          </div>
-        </Typography>
-        <Typography>
-        <div>
-            {medicalHistory.physicalExam.mucous ? (
-            <Typography>
-            <div>
-                <b>Mucosa: </b>
-                {medicalHistory.physicalExam.mucous }
-            </div>
-        </Typography>
-            ) : (null)
-            
-            }
-            
-          </div>
-        </Typography>
-      </Paper>
+      {/* Diagnostico */}
+      <SectionPaper title='Diagnóstico'>
+        <Grid container spacing={2}>
+          <Detail
+            label='Descripción del diagnóstico'
+            value={diagnostic?.description}
+            full
+          />
+        </Grid>
+      </SectionPaper>
 
-      {/* Render surgical interventions if available */}
-      {medicalHistory.diagnostic.surgicalIntervations && medicalHistory.diagnostic.surgicalIntervations.length > 0 && (
-        <Paper elevation={3} style={{ padding: '20px', marginBottom: '20px', maxHeight: '300px', overflow: 'auto' }}>
-          <Typography variant="h6">Intervenciones Quirúrgicas:</Typography>
-          <TableContainer component={Paper}>
-            <Table>
+      {/* Alimentacion */}
+      <SectionPaper title='Alimentación'>
+        <Grid container spacing={2}>
+          <Detail label='Cantidad de alimento' value={food?.quantity} />
+          <Detail label='Tipo de alimento' value={food?.type} />
+        </Grid>
+      </SectionPaper>
+
+      {/* Otras mascotas */}
+      <SectionPaper title='Otras mascotas'>
+        <Grid container spacing={2}>
+          <Detail
+            label='Convive con otras mascotas'
+            value={yesNo(
+              otherPet?.isLiveOtherPets,
+              'Sí convive con otras mascotas',
+              'No convive con otras mascotas',
+            )}
+          />
+          {otherPet?.isLiveOtherPets && (
+            <Detail
+              label='Con cuáles mascotas convive'
+              value={otherPet?.whichPets}
+            />
+          )}
+        </Grid>
+      </SectionPaper>
+
+      {/* Examen fisico */}
+      <SectionPaper title='Examen Físico'>
+        <Grid container spacing={2}>
+          <Detail
+            label='Peso'
+            value={
+              physicalExam?.weight != null ? `${physicalExam.weight} Kg` : ''
+            }
+          />
+          <Detail
+            label='Palpitaciones'
+            value={
+              physicalExam?.palpitations
+                ? `${physicalExam.palpitations} latidos por minuto`
+                : ''
+            }
+          />
+          <Detail
+            label='Ritmo Cardíaco'
+            value={
+              physicalExam?.cardiacRate
+                ? `${physicalExam.cardiacRate} latidos por minuto`
+                : ''
+            }
+          />
+          <Detail
+            label='Ritmo de respiración'
+            value={
+              physicalExam?.respiratoryRate
+                ? `${physicalExam.respiratoryRate} respiraciones por minuto`
+                : ''
+            }
+          />
+          <Detail
+            label='Pulso'
+            value={
+              physicalExam?.pulse
+                ? `${physicalExam.pulse} latidos por minuto`
+                : ''
+            }
+          />
+          <Detail
+            label='Temperatura'
+            value={
+              physicalExam?.temperature ? `${physicalExam.temperature} °C` : ''
+            }
+          />
+          <Detail label='Mucosa' value={physicalExam?.mucous} />
+          <Detail
+            label='Examen de laboratorio'
+            value={physicalExam?.laboratoryExam}
+            full
+          />
+        </Grid>
+      </SectionPaper>
+
+      {/* Intervenciones quirurgicas */}
+      {diagnostic?.surgicalIntervations &&
+        diagnostic.surgicalIntervations.length > 0 && (
+          <SectionPaper title='Intervenciones Quirúrgicas'>
+            <ResponsiveTable>
               <TableHead>
                 <TableRow>
                   <TableCell>Nombre de la intervención</TableCell>
@@ -273,7 +285,7 @@ export function MedicalSeeForm({ medicalHistory }) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {medicalHistory.diagnostic.surgicalIntervations.map((intervention, index) => (
+                {diagnostic.surgicalIntervations.map((intervention, index) => (
                   <TableRow key={index}>
                     <TableCell>{intervention.name}</TableCell>
                     <TableCell>{intervention.description}</TableCell>
@@ -281,85 +293,106 @@ export function MedicalSeeForm({ medicalHistory }) {
                   </TableRow>
                 ))}
               </TableBody>
-            </Table>
-          </TableContainer>
-        </Paper>
+            </ResponsiveTable>
+          </SectionPaper>
+        )}
+
+      {/* Tratamientos */}
+      {diagnostic?.treatments && diagnostic.treatments.length > 0 && (
+        <SectionPaper title='Tratamientos'>
+          <ResponsiveTable>
+            <TableHead>
+              <TableRow>
+                <TableCell>Nombre del tratamiento</TableCell>
+                <TableCell>Días</TableCell>
+                <TableCell>Frecuencia</TableCell>
+                <TableCell>Cantidad</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {diagnostic.treatments.map((treatment, index) => (
+                <TableRow key={index}>
+                  <TableCell>{treatment.name}</TableCell>
+                  <TableCell>{treatment.days}</TableCell>
+                  <TableCell>{treatment.frequency}</TableCell>
+                  <TableCell>{treatment.quantity}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </ResponsiveTable>
+        </SectionPaper>
       )}
 
-      {/* Render treatments if available */}
-      {medicalHistory.diagnostic.treatments && medicalHistory.diagnostic.treatments.length > 0 && (
-        <Paper elevation={3} style={{ padding: '20px', maxHeight: '300px', overflow: 'auto' }}>
-          <Typography variant="h6">Tratamientos:</Typography>
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-              <TableCell>Nombre del tratamiento</TableCell>
-              <TableCell>Días</TableCell>
-              <TableCell>Frecuencia</TableCell>
-              <TableCell>Cantidad</TableCell>
-              </TableHead>
-              <TableBody>
-                {medicalHistory.diagnostic.treatments.map((treatment, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{treatment.name}</TableCell>
-                    <TableCell>{treatment.days}</TableCell>
-                    <TableCell>{treatment.frequency}</TableCell>
-                    <TableCell>{treatment.quantity}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Paper>
+      {/* Documentos de la mascota */}
+      {files && files.length > 0 && (
+        <SectionPaper title='Documentos de la mascota'>
+          <ResponsiveTable minWidth={320}>
+            <TableHead>
+              <TableRow>
+                <TableCell>Documentos médicos</TableCell>
+                <TableCell align='right'>Acciones</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {files.map((file, index) => (
+                <TableRow key={index}>
+                  <TableCell>
+                    <NavLink
+                      to={`${file.url}`}
+                      target='_blank'
+                      style={{ textDecoration: 'none' }}
+                    >
+                      <Button
+                        variant='outlined'
+                        endIcon={<SendIcon />}
+                        size='small'
+                        sx={{ textTransform: 'none' }}
+                      >
+                        Visualizar: {file.name.split('-')[5]}
+                      </Button>
+                    </NavLink>
+                  </TableCell>
+                  <TableCell align='right'>
+                    <IconButton
+                      onClick={() =>
+                        openDeleteProduct(file.name.split('-')[5], file.id)
+                      }
+                    >
+                      <DeleteIcon color='error' />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </ResponsiveTable>
+        </SectionPaper>
+      )}
 
-    )}
-    <br />
-      {/*render information about files for medical history*/}
-      {medicalHistory.files && medicalHistory.files.length > 0 && (
-  <Paper elevation={3} style={{ padding: '20px', marginBottom: '20px', maxHeight: '300px', overflow: 'auto' }}>
-    <Typography variant="h6">Documentos de la mascota:</Typography>
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Documentos médicos</TableCell>
-            <TableCell></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-        {medicalHistory.files.map((files, index) => (
-          <React.Fragment key={index}>
-            <TableRow>
-              <TableCell>
-                <NavLink to={`${files.url}`} target="_blank"  style={{ textDecoration: 'none' }} >
-                  <Button variant="outlined" endIcon={<SendIcon />} style={{ marginTop: "5px" }}
-                   >
-                    Visualizar Archivo: {files.name.split("-")[5]}
-                  </Button>
-                </NavLink>
-              </TableCell>
-              <TableCell>
-                <IconButton onClick={() => openDeleteProduct(files.name.split("-")[5], files.id)}>
-                  <DeleteIcon color='error'/>
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          </React.Fragment>
-        ))}
-      </TableBody>
-      </Table>
-    </TableContainer>
-  </Paper>
-)}
-      <Modal_delete 
-      onOpen={showConfirm}
-      onCancel={onCloseConfirm}
-      onConfirm={onDeleteProduct}
-      content={confirmMessage}
-      title={titleDelete}
-      size='mini'
+      {success && (
+        <Alerta
+          type='success'
+          title='Archivo eliminado'
+          message='El archivo se eliminó correctamente.'
+          strong='Documento eliminado'
+        />
+      )}
+      {error && (
+        <Alerta
+          type='error'
+          title='¡Ha ocurrido un problema!'
+          message='No se ha podido eliminar el archivo.'
+          strong='Intenta nuevamente'
+        />
+      )}
+
+      <Modal_delete
+        onOpen={showConfirm}
+        onCancel={onCloseConfirm}
+        onConfirm={onDeleteProduct}
+        content={confirmMessage}
+        title={titleDelete}
+        size='mini'
       ></Modal_delete>
-    </div>
-
+    </Box>
   );
 }

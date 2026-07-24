@@ -143,7 +143,7 @@ test.describe('Manejo de acciones de mascotas', () => {
     const petDetails = await petToDelete.getDetails();
     
     await petToDelete.clickDelete();
-    await page.getByRole('button', { name: /confirmar|eliminar|aceptar/i }).click();
+    await petsPage.deleteConfirmButton.click();
 
     // Wait for the success alert
     await expect(page.getByText('¡Mascota Eliminada!')).toBeVisible();

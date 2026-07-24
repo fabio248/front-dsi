@@ -64,6 +64,62 @@ export class UserApi {
       next(error);
     }
   }
+  /**
+   * Listado paginado para la tabla de usuarios.
+   *
+   * Convive con `getAllUsers`, que sigue sirviendo al scroll infinito de los
+   * otros listados. Aquí el servidor ordena, filtra y pagina; el cliente solo
+   * traduce el estado de la tabla a query params.
+   *
+   * Los parámetros se arman con URLSearchParams en vez de interpolarlos: una
+   * búsqueda con `&` o `#` rompe la URL si se concatena a mano.
+   */
+  async getUsersPage(
+    accessToken,
+    {
+      page = 1,
+      limit = 10,
+      search,
+      sortBy,
+      sortOrder,
+      role,
+      birthdayFrom,
+      birthdayTo,
+    } = {}
+  ) {
+    const query = new URLSearchParams({ page, limit });
+
+    // Los vacíos se omiten: el backend los trata como "no filtrar", pero
+    // mandarlos ensucia la query key de react-query y duplica caché.
+    const optionalParams = {
+      search,
+      sortBy,
+      sortOrder,
+      role,
+      birthdayFrom,
+      birthdayTo,
+    };
+
+    Object.entries(optionalParams).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        query.set(key, value);
+      }
+    });
+
+    const url = `${config.baseApi}/${configApiBackend.users}?${query.toString()}`;
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) throw result;
+
+    return result;
+  }
+
   // ACTUALIZAR UN USUARIO
   async updateUser(accessToken, idUser, data) {
     try {

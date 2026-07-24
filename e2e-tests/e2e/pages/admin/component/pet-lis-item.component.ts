@@ -11,6 +11,23 @@ export type PetDetails = {
   dueño: string;
 };
 
+/**
+ * Encabezado de la columna del data grid del que sale cada campo.
+ *
+ * Se resuelve por texto de encabezado y no por posición fija: la tabla permite
+ * ocultar columnas, así que el índice de una celda depende de la preferencia
+ * guardada en localStorage.
+ */
+const COLUMN_BY_FIELD: Record<keyof PetDetails, string> = {
+  nombre: 'Mascota',
+  especie: 'Especie',
+  raza: 'Raza',
+  genero: 'Género',
+  nacimiento: 'Nacimiento',
+  colorPelaje: 'Color',
+  dueño: 'Dueño',
+};
+
 export class PetListItem {
   public readonly rootLocator: Locator;
 
@@ -19,40 +36,46 @@ export class PetListItem {
   public readonly editButton: Locator;
   public readonly deleteButton: Locator;
 
-  constructor(locator: Locator) {
+  // Índice de cada columna visible, por texto de encabezado.
+  private readonly columnIndex: Record<string, number>;
+
+  constructor(locator: Locator, columnIndex: Record<string, number> = {}) {
     this.rootLocator = locator;
+    this.columnIndex = columnIndex;
 
     // Usamos botones accesibles expuestos con aria-label
     this.viewButton = this.rootLocator.getByRole('button', {
-      name: /Details pet/i,
+      name: /ver detalle de/i,
     });
     this.editButton = this.rootLocator.getByRole('button', {
-      name: /edit pet/i,
+      name: /editar a/i,
     });
     this.deleteButton = this.rootLocator.getByRole('button', {
-      name: /delete pet/i,
+      name: /eliminar a/i,
     });
   }
 
   /**
-   * Extrae y devuelve los detalles de la mascota parseando el texto.
+   * Devuelve los detalles de la mascota leyendo las celdas de la fila.
    */
   async getDetails(): Promise<PetDetails> {
-    const textContent = await this.rootLocator
-      .locator('.MuiListItemText-root')
-      .innerText();
+    const cells = await this.rootLocator.getByRole('cell').allInnerTexts();
 
-    const extract = (regex: RegExp) =>
-      textContent.match(regex)?.[1].trim() ?? '';
+    const read = (field: keyof PetDetails) => {
+      const index = this.columnIndex[COLUMN_BY_FIELD[field]];
+      if (index === undefined) return '';
+
+      return cells[index]?.trim() ?? '';
+    };
 
     return {
-      nombre: extract(/Nombre de la mascota: (.*)/),
-      especie: extract(/Especie: (.*)/),
-      raza: extract(/Raza: (.*)/),
-      genero: extract(/Género: (.*)/),
-      nacimiento: extract(/Nacimiento de la mascota o Adquisición: (.*)/),
-      colorPelaje: extract(/Color del pelaje: (.*)/),
-      dueño: extract(/Dueño: (.*)/),
+      nombre: read('nombre'),
+      especie: read('especie'),
+      raza: read('raza'),
+      genero: read('genero'),
+      nacimiento: read('nacimiento'),
+      colorPelaje: read('colorPelaje'),
+      dueño: read('dueño'),
     };
   }
 

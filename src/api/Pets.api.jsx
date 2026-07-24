@@ -73,6 +73,70 @@ export class Pets {
     }
   }
 
+  /**
+   * Listado paginado para la tabla de mascotas.
+   *
+   * Convive con `getAllPets`, que sigue sirviendo al scroll infinito de los
+   * otros listados. Aquí el servidor ordena, filtra y pagina; el cliente solo
+   * traduce el estado de la tabla a query params.
+   *
+   * Los parámetros se arman con URLSearchParams en vez de interpolarlos: una
+   * búsqueda con `&` o `#` rompe la URL si se concatena a mano.
+   */
+  async getPetsPage(
+    accessToken,
+    {
+      page = 1,
+      limit = 10,
+      search,
+      sortBy,
+      sortOrder,
+      specieId,
+      gender,
+      pedigree,
+      isHaveTatto,
+      userId,
+      birthdayFrom,
+      birthdayTo,
+    } = {}
+  ) {
+    const query = new URLSearchParams({ page, limit });
+
+    // Los vacíos se omiten: el backend los trata como "no filtrar", pero
+    // mandarlos ensucia la query key de react-query y duplica caché.
+    const optionalParams = {
+      search,
+      sortBy,
+      sortOrder,
+      specieId,
+      gender,
+      pedigree,
+      isHaveTatto,
+      userId,
+      birthdayFrom,
+      birthdayTo,
+    };
+
+    Object.entries(optionalParams).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        query.set(key, value);
+      }
+    });
+
+    const url = `${config.baseApi}/${configApiBackend.pets}?${query.toString()}`;
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) throw result;
+
+    return result;
+  }
+
   // CREAR MASCOTA
   async createPets(accessToken, idUser, pet) {
     try {

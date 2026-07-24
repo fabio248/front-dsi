@@ -1,49 +1,94 @@
-import React, { useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { ApiAuth } from '../../../../api/Auth.api';
-import { map } from 'lodash';
-import { UserItem } from '../UserItem';
-import {
-  Typography,
-  Tab,
-  Tabs,
-  Box,
-  CircularProgress,
-  Grid,
-  Button,
-  TextField,
-} from '@mui/material';
+import { Tab, Tabs, Box, Grid, Alert } from '@mui/material';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import { useDebounce, useUser } from '../../../../hooks';
+
+import {
+  useDebounce,
+  useLocalStorageState,
+  useTableUrlState,
+  useUsersTable,
+} from '../../../../hooks';
 import { SearchInput } from '../../../../shared/components/SearchInput';
-import { useSearchParams } from 'react-router-dom';
+import {
+  DataGrid,
+  DataGridColumnVisibility,
+  DataGridPagination,
+  useDataGrid,
+} from '../../../../shared/components/DataGrid';
+import { usersColumns } from '../UsersTable';
 
 const authController = new ApiAuth();
 
-export function ListUsers() {
-  const [query] = useSearchParams();
-  const search = query.get('search');
+const DEFAULT_SORTING = [{ id: 'firstName', desc: false }];
+const SEARCH_DEBOUNCE_MS = 500;
+const COLUMN_VISIBILITY_KEY = 'users-table:column-visibility';
+const DEFAULT_COLUMN_VISIBILITY = { direction: false };
 
+// Se identifica cada fila por el id del usuario, no por su índice: así la
+// selección sigue apuntando al mismo usuario al cambiar de página o de orden.
+const getUserRowId = (user) => String(user.id);
+
+export function ListUsers() {
   const accessToken = authController.getAccessToken();
 
-  const deboncedQuery = useDebounce(search, 500);
-
+  // Estado que vive en la URL y se manda al servidor: orden, paginación y
+  // búsqueda. La vista queda enlazable y sobrevive al refresh.
   const {
-    isLoading,
-    users,
-    hasNextPage,
-    fetchNextPage,
-    isFetching,
-    refetch,
-    totalUsers,
-  } = useUser({
-    accessToken,
-    search: deboncedQuery,
+    sorting,
+    setSorting,
+    pagination,
+    setPagination,
+    globalFilter,
+    setGlobalFilter,
+    queryParams,
+  } = useTableUrlState({
+    defaultSorting: DEFAULT_SORTING,
+    defaultPageSize: 10,
   });
 
-  useEffect(() => {
-    refetch();
-  }, [deboncedQuery]);
+  // Las columnas visibles persisten, pero en localStorage y no en la URL:
+  // es una preferencia de cada usuario, no parte de la vista que se comparte.
+  const [columnVisibility, setColumnVisibility] = useLocalStorageState(
+    COLUMN_VISIBILITY_KEY,
+    DEFAULT_COLUMN_VISIBILITY
+  );
+
+  // Solo la búsqueda se retrasa. El input responde al instante contra la URL,
+  // pero la petición espera a que el usuario deje de teclear.
+  const debouncedSearch = useDebounce(queryParams.search, SEARCH_DEBOUNCE_MS);
+
+  const requestParams = useMemo(
+    () => ({ ...queryParams, search: debouncedSearch }),
+    [queryParams, debouncedSearch]
+  );
+
+  const { users, totalItems, totalPages, isLoading, isFetching, isError, error } =
+    useUsersTable({ accessToken, params: requestParams });
+
+  const table = useDataGrid({
+    data: users,
+    columns: usersColumns,
+    getRowId: getUserRowId,
+
+    // Ordenar, filtrar y paginar los hace el servidor: la tabla no reordena
+    // ni recorta lo que recibe, solo refleja la página que llegó.
+    manualSorting: true,
+    manualFiltering: true,
+    manualPagination: true,
+    pageCount: totalPages,
+    rowCount: totalItems,
+
+    sorting,
+    onSortingChange: setSorting,
+    pagination,
+    onPaginationChange: setPagination,
+    globalFilter,
+    onGlobalFilterChange: setGlobalFilter,
+
+    columnVisibility,
+    onColumnVisibilityChange: setColumnVisibility,
+  });
 
   return (
     <div>
@@ -61,13 +106,28 @@ export function ListUsers() {
           <Grid item sx={{ flexGrow: 1 }}>
             {/* Espacio flexible */}
           </Grid>
-          <Grid item>Total usuarios registrados: {totalUsers}</Grid>
+          <Grid item>Total usuarios registrados: {totalItems}</Grid>
           <Grid item>
-            <SearchInput isFetching={isFetching} />
+            <DataGridColumnVisibility table={table} />
+          </Grid>
+          <Grid item>
+            <SearchInput
+              isFetching={isFetching}
+              value={globalFilter}
+              onChange={setGlobalFilter}
+            />
           </Grid>
         </Grid>
       </Box>
       <br />
+
+      {isError && (
+        <Alert severity='error' sx={{ mx: 2, mb: 2 }}>
+          No se pudieron cargar los usuarios
+          {error?.message ? `: ${error.message}` : '.'}
+        </Alert>
+      )}
+
       <div
         style={{
           margin: '16px',
@@ -78,35 +138,18 @@ export function ListUsers() {
           overflow: 'hidden',
         }}
       >
-        <InfiniteScroll
-          dataLength={users.length}
-          hasMore={hasNextPage || isLoading}
-          next={() => fetchNextPage()}
-          scrollThreshold={0.5}
-        >
-          {map(users, (user) => (
-            <UserItem key={user.id} user={user} />
-          ))}
-        </InfiniteScroll>
+        <DataGrid
+          table={table}
+          caption='Usuarios registrados'
+          isLoading={isLoading}
+          isFetching={isFetching}
+          emptyMessage={
+            globalFilter ? 'No hay usuarios con este filtro' : 'No hay usuarios'
+          }
+        />
+
+        <DataGridPagination table={table} label='usuarios' />
       </div>
-
-      {hasNextPage & !isFetching ? (
-        <Button onClick={() => fetchNextPage()}>Cargar más usuarios</Button>
-      ) : undefined}
-
-      {isFetching ? <CircularProgress /> : undefined}
-
-      {!hasNextPage & (users.length !== 0) ? (
-        <Typography style={{ textAlign: 'center', fontWeight: 500 }}>
-          Ya tienes todos los usuarios cargados
-        </Typography>
-      ) : undefined}
-
-      {users.length === 0 && !isFetching ? (
-        <Typography style={{ textAlign: 'center', fontWeight: 500 }}>
-          No hay usuarios {search ? 'con este filtro' : undefined}
-        </Typography>
-      ) : undefined}
     </div>
   );
 }

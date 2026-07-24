@@ -3,8 +3,23 @@ import { Breadcrumbs as MuiBreadcrumbs, Link, Typography } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { NavLink } from 'react-router-dom';
+import { readListQuery } from '../listQueryMemory';
 
 const LOADING_LABEL = '…';
+
+/**
+ * Reconstruye el destino de una miga hacia un listado.
+ *
+ * Si el `to` ya trae query se respeta tal cual; si no, se le devuelve la última
+ * que tuvo ese listado, para que volver de un detalle no borre la búsqueda, el
+ * orden ni la página en la que se estaba.
+ */
+function resolveTo(to) {
+  if (typeof to !== 'string' || to.includes('?')) return to;
+
+  const search = readListQuery(to);
+  return search ? { pathname: to, search } : to;
+}
 
 /**
  * Migas de pan para las páginas de detalle.
@@ -17,6 +32,10 @@ const LOADING_LABEL = '…';
  * Cada `item` es `{ label, to }`. Sin `to` el elemento no es navegable, lo que
  * sirve tanto para la página actual como para niveles intermedios que no tienen
  * pantalla propia.
+ *
+ * Los enlaces hacia un listado recuperan la query con la que se dejó ese
+ * listado (ver `listQueryMemory`): quien entra a un detalle desde la página 3
+ * de un resultado filtrado espera volver ahí, no al listado en blanco.
  *
  * El nombre del registro suele venir de una petición, así que `label` puede
  * llegar vacío en el primer render: se muestra un placeholder en vez de una
@@ -68,7 +87,7 @@ export function Breadcrumbs({
           <Link
             key={`${label}-${index}`}
             component={NavLink}
-            to={crumb.to}
+            to={resolveTo(crumb.to)}
             underline='hover'
             color='inherit'
             sx={{ display: 'flex', alignItems: 'center' }}

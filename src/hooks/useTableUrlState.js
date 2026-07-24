@@ -1,5 +1,6 @@
-import { useCallback, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useCallback, useEffect, useMemo } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
+import { rememberListQuery } from '../shared/listQueryMemory';
 
 // Referencias estables: si se devolviera `[]` nuevo en cada render, el estado
 // controlado de la tabla cambiaría de identidad sin cambiar de valor.
@@ -37,6 +38,13 @@ export function useTableUrlState({
   filterKeys = [],
 } = {}) {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { pathname, search } = useLocation();
+
+  // Se anota la vista actual del listado para que las migas de pan de las
+  // páginas de detalle puedan volver a ella con el filtro y el orden puestos.
+  useEffect(() => {
+    rememberListQuery(pathname, search);
+  }, [pathname, search]);
 
   const update = useCallback(
     (mutate) => {

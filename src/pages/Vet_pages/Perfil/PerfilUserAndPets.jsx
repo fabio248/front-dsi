@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 // MUI Material
 import {
+  Box,
   Container,
   Grid,
   Paper,
@@ -19,7 +20,8 @@ import { size, map } from 'lodash';
 import { Pets } from '../../../api/Pets.api';
 import { ApiAuth } from '../../../api/Auth.api';
 import { useQuery } from '@tanstack/react-query';
-import { Header } from '../../../shared/components/Header.jsx';
+import { BackButton } from '../../../shared/components/BackButton.jsx';
+import { Breadcrumbs } from '../../../shared/components/Breadcrumbs.jsx';
 
 const petsController = new Pets();
 const apiAuthController = new ApiAuth();
@@ -32,7 +34,7 @@ export function PerfilUserAndPets() {
       const accessToken = apiAuthController.getAccessToken();
       const response = await petsController.getPetsForUsers(
         accessToken,
-        params.userId
+        params.userId,
       );
       return response;
     },
@@ -40,8 +42,29 @@ export function PerfilUserAndPets() {
 
   return (
     <>
-      <Header />
       <Container maxWidth='xl' sx={{ mt: 4, mb: 4 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 2,
+            mb: 2,
+          }}
+        >
+          <Breadcrumbs
+            items={[
+              { label: 'Clientes', to: '/admin/users' },
+              {
+                label: userAndPet
+                  ? `${userAndPet.firstName} ${userAndPet.lastName}`
+                  : undefined,
+              },
+            ]}
+          />
+          <BackButton />
+        </Box>
         <Grid container spacing={2}>
           <Grid item xs={18} md={4} sx={{ height: '100%' }}>
             <Paper style={{ padding: '20px', fontSize: '18px' }}>

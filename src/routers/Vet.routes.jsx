@@ -37,8 +37,14 @@ export function Vet_routes() {
         ></Route>
         <Route path='products' element={Layout(Vet_Layouts, ProductCatalog)}></Route>
         <Route path='facturations' element={Layout(Vet_Layouts, BillsPage)}></Route>
-        <Route path='users/:userId' element={<PerfilUserAndPets />} />
-        <Route path='pets/:petId' element={<CompletePetPerfil />} />
+        <Route
+          path='users/:userId'
+          element={Layout(Vet_Layouts, PerfilUserAndPets)}
+        />
+        <Route
+          path='pets/:petId'
+          element={Layout(Vet_Layouts, CompletePetPerfil)}
+        />
         <Route path='pets/:petId/medical-history/:medicalHistoryId' element={<GenerateMedicalHistory />} />
       </Route>    
     </Routes>

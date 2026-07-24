@@ -45,7 +45,8 @@ import {useAuth, useModal} from "../../../hooks";
 import {
   HealthCertificationPdfForm
 } from "../../../components/Vet_components/MedicalHistory/GenerateHealthCertificatePdf/HealthCertificatePdfForm.jsx";
-import {Header} from "../../../shared/components/Header.jsx";
+import {BackButton} from "../../../shared/components/BackButton.jsx";
+import {Breadcrumbs} from "../../../shared/components/Breadcrumbs.jsx";
 
 const petsController = new Pets();
 const apiAuthController = new ApiAuth();
@@ -99,9 +100,25 @@ export function CompletePetPerfil() {
 
   return (
     <>
-      <Header />
-
       <Container maxWidth='xl' sx={{ mt: 4, mb: 4 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 2,
+            mb: 2,
+          }}
+        >
+          <Breadcrumbs
+            items={[
+              { label: 'Mascotas', to: '/admin/userAndPets' },
+              { label: pet?.name },
+            ]}
+          />
+          <BackButton />
+        </Box>
         <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }}>
           <Grid item xs={4} sm={8} md={4}>
             <Grid item>

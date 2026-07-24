@@ -40,6 +40,19 @@ export function PerfilUserAndPets() {
     },
   });
 
+  // Ruta hasta este cliente. Se usa para las migas de esta página y también se
+  // pasa a las mascotas: quien llegó por Clientes espera seguir viendo esa ruta
+  // al abrir una mascota, no la de Mascotas.
+  const trail = [
+    { label: 'Clientes', to: '/admin/users' },
+    {
+      label: userAndPet
+        ? `${userAndPet.firstName} ${userAndPet.lastName}`
+        : undefined,
+      to: `/admin/users/${params.userId}`,
+    },
+  ];
+
   return (
     <>
       <Container maxWidth='xl' sx={{ mt: 4, mb: 4 }}>
@@ -53,16 +66,7 @@ export function PerfilUserAndPets() {
             mb: 2,
           }}
         >
-          <Breadcrumbs
-            items={[
-              { label: 'Clientes', to: '/admin/users' },
-              {
-                label: userAndPet
-                  ? `${userAndPet.firstName} ${userAndPet.lastName}`
-                  : undefined,
-              },
-            ]}
-          />
+          <Breadcrumbs items={trail} />
           <BackButton />
         </Box>
         <Grid container spacing={2}>
@@ -192,7 +196,12 @@ export function PerfilUserAndPets() {
                   }}
                 >
                   {map(userAndPet.pets, (pet, index) => (
-                    <PerfilPets key={pet.id} pet={pet} index={index} />
+                    <PerfilPets
+                      key={pet.id}
+                      pet={pet}
+                      index={index}
+                      trail={trail}
+                    />
                   ))}
                 </div>
               )}

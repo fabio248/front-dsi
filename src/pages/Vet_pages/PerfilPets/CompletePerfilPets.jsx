@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 
 // MUI Material
 import {
@@ -52,12 +52,20 @@ const petsController = new Pets();
 const apiAuthController = new ApiAuth();
 const generatePdfController = new GeneratePdfApi();
 
+// A una mascota se llega por el listado de Mascotas o por el perfil de su
+// dueño. En el segundo caso el origen manda su ruta en el state; si no viene
+// (enlace directo, recarga) se asume el listado de Mascotas.
+const DEFAULT_TRAIL = [{ label: 'Mascotas', to: '/admin/userAndPets' }];
+
 export function CompletePetPerfil() {
   const allTreatments = [];
   const allIntervations = [];
   const { accessToken } = useAuth();
 
   let params = useParams();
+  const location = useLocation();
+
+  const trail = location.state?.trail ?? DEFAULT_TRAIL;
 
   const [selectedTab, setSelectedTab] = useState(0);
   const [showModal, setShowModal] = useState(false);
@@ -111,12 +119,7 @@ export function CompletePetPerfil() {
             mb: 2,
           }}
         >
-          <Breadcrumbs
-            items={[
-              { label: 'Mascotas', to: '/admin/userAndPets' },
-              { label: pet?.name },
-            ]}
-          />
+          <Breadcrumbs items={[...trail, { label: pet?.name }]} />
           <BackButton />
         </Box>
         <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }}>
@@ -364,7 +367,15 @@ export function CompletePetPerfil() {
                 <div className='box-container'>
                 <Box sx={{ width: '100%' }}>
                   {map(pet.medicalHistories, (hojaClinica) => (
-                    <PetMedicalHistory key={hojaClinica.id} medicalHistory={hojaClinica} petId={params.petId} />
+                    <PetMedicalHistory
+                      key={hojaClinica.id}
+                      medicalHistory={hojaClinica}
+                      petId={params.petId}
+                      trail={[
+                        ...trail,
+                        { label: pet.name, to: `/admin/pets/${params.petId}` },
+                      ]}
+                    />
                   ))}
                 </Box>
                 </div>

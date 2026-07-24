@@ -15,7 +15,7 @@ import {useNavigate, useParams} from "react-router-dom";
 
 const defaultTheme = createTheme();
 
-export function PetMedicalHistory({ medicalHistory, petId }) {
+export function PetMedicalHistory({ medicalHistory, petId, trail }) {
   let params = useParams();
   const navigate = useNavigate();
   //Modal informacion concreta
@@ -106,7 +106,7 @@ export function PetMedicalHistory({ medicalHistory, petId }) {
                   <ModeEdit sx={{ fontSize: 30 }} />
                 </Tooltip>
               </IconButton>
-                <IconButton color="success" onClick={()=>navigate(`medical-history/${medicalHistory.id}`)}>
+                <IconButton color="success" onClick={()=>navigate(`medical-history/${medicalHistory.id}`, { state: { trail } })}>
                   <Tooltip title="Generar PDF" arrow={true}>
                     <AdfScanner sx={{ fontSize: 30 }} />
                   </Tooltip>

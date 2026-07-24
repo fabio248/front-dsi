@@ -13,7 +13,7 @@ import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
 import { Modal_verInfoClientAndPet } from '../../../shared';
 import { HistoryAndAnneasis } from './HistoryAndAnneasis';
 
-export function PerfilPets({ pet, index }) {
+export function PerfilPets({ pet, index, trail }) {
   //Modal informacion concreta
   const [showVisualizar, setShowVisualizar] = useState(false);
   const onOpenInfoClientAndPets = () =>
@@ -60,7 +60,9 @@ export function PerfilPets({ pet, index }) {
         </ListItemText>
         <ListItemAvatar>
           <Grid container justifyContent='flex-end'>
-            <NavLink to={`/admin/pets/${pet.id}`}>
+            {/* La ruta recorrida viaja en el state para que el perfil de la
+                mascota muestre las migas del cliente por el que se entró. */}
+            <NavLink to={`/admin/pets/${pet.id}`} state={{ trail }}>
               <Grid item>
                 <IconButton>
                   <HistoryEduIcon sx={{ fontSize: 30 }} />

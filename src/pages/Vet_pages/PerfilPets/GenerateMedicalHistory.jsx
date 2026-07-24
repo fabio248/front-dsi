@@ -1,6 +1,6 @@
 import { Header } from "../../../shared/components/Header.jsx";
 import { Box, Container, Typography } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
     GenerateMedicalHistoryForm
@@ -14,6 +14,7 @@ const apiAuthController = new ApiAuth();
 
 export function GenerateMedicalHistory() {
     const { petId } = useParams();
+    const location = useLocation();
 
     // Misma queryKey que usa el formulario: la mascota se pide una sola vez y
     // aquí solo se lee del caché para poner su nombre en la miga de pan.
@@ -30,8 +31,10 @@ export function GenerateMedicalHistory() {
                 <Box sx={{ mb: 2 }}>
                     <Breadcrumbs
                         items={[
-                            { label: 'Mascotas', to: '/admin/userAndPets' },
-                            { label: pet?.name, to: `/admin/pets/${petId}` },
+                            ...(location.state?.trail ?? [
+                                { label: 'Mascotas', to: '/admin/userAndPets' },
+                                { label: pet?.name, to: `/admin/pets/${petId}` },
+                            ]),
                             { label: 'Hoja clínica' },
                         ]}
                     />
